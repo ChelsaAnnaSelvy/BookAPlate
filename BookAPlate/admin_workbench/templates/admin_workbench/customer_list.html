@@ -1,0 +1,203 @@
+{% extends 'admin_workbench/base.html'%}
+{% block title %}
+BookAPLate | Customer List
+{% endblock %}
+{% block content %}
+
+{% if messages %}
+    
+        {% for message in messages %}
+            <script>alert('{{ message }}')</script>
+        {% endfor %}
+    
+{% endif %}
+
+
+<h5 class="card-title fw-semibold mb-4">Customers</h5>
+              <div class="card">
+                <div class="card-body p-4">
+                  <ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">All</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="active-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Active</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="inactive-tab" data-bs-toggle="tab" data-bs-target="#inactive" type="button" role="tab" aria-controls="inactive" aria-selected="false">Inactive</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+    <div class="table-responsive-sm"> 
+    <table class="table table-hover ">
+  
+    <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Phone</th>
+      <th scope="col">Address</th>
+      <th scope="col">State</th>
+      <th scope="col">Place</th>
+      <th scope="col">Status</th>
+      <th scope="col"></th>
+     
+    </tr>
+  </thead>
+  <tbody>
+    {% for customer in customers %}
+    <tr>
+      <th scope="row">{{ customer.customer_id }}</th>
+      <td>{{customer.user.first_name}}&nbsp;{{customer.user.last_name}}</td>
+      <td>{{customer.user.email}}</td>
+      <td>{{customer.phone}}</td>
+      <td>{{customer.address}}</td>
+      <td>{{customer.state}}</td>
+      <td>{{customer.place}}</td>
+      {% if customer.status == 'Active' %}
+        <td><label class="bg bg-success-subtle">{{customer.status}}</label></td>
+      {% else %}
+        <td><label class="bg bg-danger-subtle">{{customer.status}}</label></td>
+      {% endif %}
+      <td> <div class="btn-group">
+  <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+   Action
+  </button>
+  <ul class="dropdown-menu">
+    
+    <li><form method="POST" action="{% url 'customer_details' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Details</button>        
+        <input type="hidden" value="{{ customer.customer_id }}" name="customer_id" id="customer_id"/>
+      </form></li>
+   
+  </ul>
+</div></td>
+    </tr>
+    {% endfor %}
+   
+  </tbody>
+</table></div>
+</div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"> 
+    <div class="table-responsive-sm"> 
+      <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Phone</th>
+      <th scope="col">Address</th>
+      <th scope="col">State</th>
+      <th scope="col">Place</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for customer in active_customers %}
+    <tr>
+      <th scope="row">{{ customer.customer_id }}</th>
+      <td>{{customer.user.first_name}}&nbsp;{{customer.user.last_name}}</td>
+      <td>{{customer.user.email}}</td>
+      <td>{{customer.phone}}</td>
+      <td>{{customer.address}}</td>
+      <td>{{customer.state}}</td>
+      <td>{{customer.place}}</td>    
+      
+      <td>
+         <div class="btn-group">
+  <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+   Action
+  </button>
+  <ul class="dropdown-menu">
+    
+    <li><form method="POST" action="{% url 'customer_details' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Details</button>        
+        <input type="hidden" value="{{ customer.customer_id }}" name="customer_id" id="customer_id"/>
+      </form></li>
+    <li>
+      <!-- Your form goes here -->
+      <form method="POST" action="{% url 'customer_status' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Deactivate</button>
+        <input type="hidden" value="Deactivate" name="status" id="status"/>
+        <input type="hidden" value="{{ customer.customer_id }}" name="customer_id" id="customer_id"/>
+      </form>
+    </li>
+  </ul>
+</div>
+      </td>
+    </tr>
+    {% endfor %}
+   
+  </tbody>
+</table></div>
+   
+</div>
+  <div class="tab-pane fade" id="inactive" role="tabpanel" aria-labelledby="inactive-tab"> 
+    <div class="table-responsive-sm"> 
+    <table class="table" >
+    <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Phone</th>
+      <th scope="col">Address</th>
+      <th scope="col">State</th>
+      <th scope="col">Place</th>     
+      <th scope="col"></th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for customer in inactive_customers %}
+    <tr>
+      <th scope="row">{{ customer.customer_id }}</th>
+      <td>{{customer.user.first_name}}&nbsp;{{customer.user.last_name}}</td>
+      <td>{{customer.user.email}}</td>
+      <td>{{customer.phone}}</td>
+      <td>{{customer.address}}</td>
+      <td>{{customer.state}}</td>
+      <td>{{customer.place}}</td>     
+      
+      <td>
+        <div class="btn-group">
+  <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+   Action
+  </button>
+  <ul class="dropdown-menu">
+    
+    <li><form method="POST" action="{% url 'customer_details' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Details</button>        
+        <input type="hidden" value="{{ customer.customer_id }}" name="customer_id" id="customer_id"/>
+      </form></li>
+    <li>
+      <!-- Your form goes here -->
+      <form method="POST" action="{% url 'customer_status' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Activate</button>
+        <input type="hidden" value="Activate" name="status" id="status"/>
+        <input type="hidden" value="{{ customer.customer_id }}" name="customer_id" id="customer_id"/>
+      </form>
+    </li>
+  </ul>
+</div>
+
+  </td>
+      
+    </tr>
+    {% endfor %}
+   
+  </tbody>
+</table></div></div>
+</div>
+                </div>
+              </div>
+{% endblock %}
+

@@ -1,0 +1,208 @@
+{% extends 'customer/base.html'%} {% load static %} {% block title %} BookAPlate
+| MyProfile {% endblock %} {% block head %}
+<style>
+  .modal-body {
+    max-height: 400px; /* Set the maximum height for the scrollable area */
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  }
+  /* Hide the Bootstrap dropdown arrow */
+  #my_actions::after {
+    display: none !important;
+  }
+</style>
+{% endblock %} {% block content %}
+ {% if messages %}
+  {% for message in messages%}
+<script>
+  alert("{{ message }}");
+</script>
+{% endfor %} 
+{% endif %}
+<div class="container-xxl position-relative p-0">
+  <div class="container-xxl py-5 bg-dark hero-header mb-5">
+    <div class="container text-center my-5 pt-5 pb-4">
+      <h1 class="display-3 text-white mb-3 animated slideInDown">
+        Profile Details
+      </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center text-uppercase">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item text-white active" aria-current="page">
+            Profile
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+<div class="container py-5">
+  <div class="row g-5">
+    <div class="col-sm-12 col-md-6 col-lg-4">
+      <pre class="ms-0">Profile Photo</pre>
+      <img src="{{customer.profile_photo.url}}" class="img-fluid"/>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-4">
+      <h6>Name</h6>
+      <label class="text-primary">{{logged_user.first_name}}&nbsp;{{logged_user.last_name}}</label>
+
+      <h6>Email</h6>
+      <label class="text-primary">{{logged_user.email}}</label>
+
+      <h6>Address</h6>
+      <label class="text-primary">{{customer.address}}&nbsp;</label>
+
+      <h6>Place</h6>
+      <label class="text-primary">{{customer.place}}&nbsp;</label>
+
+      <h6>Phone</h6>
+      <label class="text-primary">{{customer.phone}}&nbsp;</label>
+
+      <h6>State</h6>
+      <label class="text-primary">{{customer.state}}&nbsp;</label>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-4">
+      <pre>ID Proof</pre>
+      <img src="{{customer.id_proof.url}}" class="img-fluid"/>
+    </div>
+    <div class="col-12">
+      <div class="row g-3">
+        <div class="col-sm-12 col-md-6 col-lg-4"></div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <button type="submit" class="btn btn-primary" id="myModalBtn">
+            EDIT NOW
+          </button>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title text-primary">Edit Details</h4>
+        <button
+          type="button"
+          class="close btn btn-outline-primary"
+          data-dismiss="modal"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <!-- Modal Body -->
+     <!-- Modal Body -->
+<div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
+  <div class="container-fluid">
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-12">
+              <form
+                method="post"
+                action="{% url 'customer_profile'%}"
+                enctype="multipart/form-data"
+              >
+                {% csrf_token %}
+                <div class="row g-3">
+                  {% for field in form1 %}
+                  <div class="col-md-12">
+                    {{ field.label_tag }} {{ field }}{% if field.errors %}
+                    <ul class="errorlist">
+                      {% for error in field.errors %}
+                      <li>{{ error }}</li>
+                      {% endfor %}
+                    </ul>
+                    {% endif %}
+                  </div>
+
+                  {% endfor %}
+                  {% csrf_token %}
+                  <div class="row g-3">
+                    {% for field in form2 %}
+                    <div class="col-md-12">
+                      {{ field.label_tag }} {{ field }}{% if field.errors %}
+                      <ul class="errorlist">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
+                      {% endif %}
+                    </div>
+
+                    {% endfor %}
+
+                    <div class="col-12">
+                      <button
+                        type="submit"
+                        class="btn btn-primary w-100 py-3"
+                      >
+                        UPDATE
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-4"></div>
+              <div class="col-sm-8"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+<!-- Your custom script to trigger the modal -->
+<script>
+  // Wait for the document to be ready
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the modal element
+    var myModal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var myModalBtn = document.getElementById("myModalBtn");
+
+    // When the user clicks the button, open the modal
+    myModalBtn.addEventListener("click", function () {
+      myModal.style.display = "block";
+    });
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.addEventListener("click", function (event) {
+      if (event.target == myModal) {
+        myModal.style.display = "none";
+      }
+    });
+
+    // When the user clicks the close button, close the modal
+    var closeModalBtn = document.querySelector(".modal-header .close");
+    closeModalBtn.addEventListener("click", function () {
+      myModal.style.display = "none";
+    });
+
+    // When the user presses the Escape key, close the modal
+    window.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        myModal.style.display = "none";
+      }
+    });
+  });
+</script>
+<!-- Button to trigger the modal -->
+<script>
+  // Enable Bootstrap dropdown
+  var dropdown = new bootstrap.Dropdown(
+    document.getElementById("dropdownMenuButton")
+  );
+</script>
+
+{% endblock %}

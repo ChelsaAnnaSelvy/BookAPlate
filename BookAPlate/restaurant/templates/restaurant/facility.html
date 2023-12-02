@@ -1,0 +1,251 @@
+{% extends 'restaurant/base.html'%} {% load static %} {% block title %}
+BookAPlate | Facility {% endblock %} 
+{% block head %}
+<style>
+   .modal-body {
+        max-height: 400px; /* Set the maximum height for the scrollable area */
+        overflow-y: auto; /* Enable vertical scrolling if content overflows */
+    }
+     /* Hide the Bootstrap dropdown arrow */
+#my_actions::after {
+    display: none !important;
+}
+</style>
+{% endblock %} 
+{% block content %}
+{% if messages %}
+    
+        {% for message in messages %}
+            <script>alert('{{ message }}')</script>
+        {% endfor %}
+    
+{% endif %}
+<div class="container-xxl position-relative p-0">
+  <div class="container-xxl py-5 bg-dark hero-header mb-5">
+    <div class="container text-center my-5 pt-5 pb-4">
+      <h1 class="display-3 text-white mb-3 animated slideInDown">Facility</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center text-uppercase">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item text-white active" aria-current="page">
+            Facilities
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+<div class="container-xxl py-5">
+  <div class="row g-3">
+    <div class="col-sm-9"></div>
+    <div class="col-sm-3">
+      <button type="submit" class="btn btn-primary" id="myModalBtn">
+        ADD NEW FACILITY
+      </button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+      <h5 class="section-title ff-secondary text-center text-primary fw-normal">
+        Facility
+      </h5>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row g-4 mt-4 mb-2">
+      <div class="col-md-12">
+        <div class="wow fadeInUp" data-wow-delay="0.2s">
+          <div class="table-responsive-sm mt-2 mb-2">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Facility Name</th>
+                  <th scope="col">Facility Number</th>
+                  <th scope="col">Number of Seats</th>
+                  <th scope="col">Position</th>
+                  <th scope="col">Seat Arrangement</th>
+                   <th scope="col">Floor</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for facility in facilities %}
+                <tr>
+                  <th scope="row">{{ facility.facility_id }}</th>
+                  <td>{{facility.facility_name}}</td>
+                  <td>{{facility.facility_number}}</td>
+                  <td>{{facility.seat_count}}</td>
+                  <td>{{facility.position}}</td>
+                  <td>{{facility.seat_arrangement}}</td>
+                  <td>{{facility.floor_number}}</td>
+
+                  <td>
+                    <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        id="my_actions"
+                      >
+                        <span class="bi bi-three-dots-vertical"></span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <form
+                            method="POST"
+                            action="{% url 'edit_facility_item' %}"
+                          >
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item">
+                              View
+                            </button>
+                            <input
+                              type="hidden"
+                              value="{{ facility.facility_id }}"
+                              name="facility_id"
+                              id="facility_id"
+                            />
+                          </form>
+                        </li>
+                        <li>
+                          <!-- Your form goes here -->
+                          <form
+                            method="POST"
+                            action="{% url 'delete_facility_item' %}"
+                          >
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-item">
+                              Delete
+                            </button>
+
+                            <input
+                              type="hidden"
+                              value="{{ facility.facility_id }}"
+                              name="facility_id"
+                              id="facility_id"
+                            />
+                          </form>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title text-primary">Add New Facility</h4>
+        <button
+          type="button"
+          class="close btn btn-outline-primary"
+          data-dismiss="modal"
+          >
+          <span aria-hidden="true">&times;</span>
+          
+        </button>
+      </div>
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="container-fluid">
+            <div class="card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-12">                   
+                    <form
+                      method="post"
+                      action="{% url 'facility_details'%}"
+                      enctype="multipart/form-data"
+                    >
+                      {% csrf_token %}
+                      <div class="row g-3">
+                        {% for field in form %}
+                        <div class="col-md-12">
+                          {{ field.label_tag }} {{ field }}{% if field.errors %}
+                          <ul class="errorlist">
+                            {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                          </ul>
+                          {% endif %}
+                        </div>
+
+                        {% endfor %}
+
+                        <div class="col-12">
+                          <button
+                            type="submit"
+                            class="btn btn-primary w-100 py-3"
+                          >
+                            ADD NEW FACILITY
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                                </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-4"></div>
+                  <div class="col-sm-8"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Your custom script to trigger the modal -->
+<script>
+  // Wait for the document to be ready
+  document.addEventListener("DOMContentLoaded", function () {
+    // Get the modal element
+    var myModal = document.getElementById("myModal");
+
+    // Get the button that opens the modal
+    var myModalBtn = document.getElementById("myModalBtn");
+
+    // When the user clicks the button, open the modal
+    myModalBtn.addEventListener("click", function () {
+      myModal.style.display = "block";
+    });
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.addEventListener("click", function (event) {
+      if (event.target == myModal) {
+        myModal.style.display = "none";
+      }
+    });
+
+    // When the user clicks the close button, close the modal
+    var closeModalBtn = document.querySelector(".modal-header .close");
+    closeModalBtn.addEventListener("click", function () {
+      myModal.style.display = "none";
+    });
+
+    // When the user presses the Escape key, close the modal
+    window.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        myModal.style.display = "none";
+      }
+    });
+  });
+</script>
+<!-- Button to trigger the modal -->
+<script>
+    // Enable Bootstrap dropdown
+    var dropdown = new bootstrap.Dropdown(document.getElementById('dropdownMenuButton'));
+</script>
+{% endblock %}

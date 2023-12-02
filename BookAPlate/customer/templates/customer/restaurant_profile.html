@@ -1,0 +1,200 @@
+{% extends 'customer/base.html'%}
+{% load static %}
+{% block title %}
+Home
+{% endblock %}
+{% block content %}
+<div class="container-xxl position-relative p-0" >
+    <div class="container-xxl py-5 bg-dark hero-header mb-5" style="background-image: url('{{restaurant_user.restaurant.profile_photo.url}}');">
+                <div class="container text-center my-5 pt-5 pb-5">
+                   
+                    
+                </div>
+            </div>
+</div>
+
+             <!-- About Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    
+                    <div class="col-lg-12 text-center">
+                        
+                    <h5 class="section-title ff-secondary text-center text-primary fw-normal">About Us</h5>
+                        <h1 class="mb-4">Welcome to <i class="fa fa-utensils text-primary me-2"></i>{{restaurant_user.first_name}}&nbsp;{{restaurant_user.last_name}}</h1>
+                        <div class="wow fadeInUp justify-content-between ms-sm-4 me-sm-4" data-wow-delay="0.2s">
+          {% if restaurant_user.restaurant.description %} 
+                <p class="mb-4">{{restaurant_user.restaurant.description}}</p>
+          {% else %}
+
+          <p>No Description is available</p>
+          {% endif %}
+        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                
+        <!-- About End -->
+        <!-- Reservation Start -->
+       
+
+
+        <!-- Team Start -->
+        <div class="container-xxl pt-5 pb-3">
+            <div class="container">
+                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Gallery</h5>
+                    <h1 class="mb-5">{{restaurant_user.first_name}}&nbsp;{{restaurant_user.last_name}}</h1>
+                </div>
+                <div class="row g-4">
+                   {% for gallery in restaurant_galleries %}
+      <div class="col-md-4">
+        <div class="wow fadeInUp" data-wow-delay="0.2s">
+          <div class="card container-fluid" >
+            <img
+              class="card-img-top img-fluid pt-4" style="height:300px;"
+              src="{{gallery.photo.url}}"
+              alt="Card image cap"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{gallery.title}}</h5>
+              <p class="card-text">{{gallery.description}}</p>
+            </div>
+          
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- Team End -->
+        <!-- Team Start -->
+        <div class="container-xxl pt-5 pb-3">
+            <div class="container">
+                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Menu</h5>
+                    <h1 class="mb-5">{{restaurant_user.first_name}}&nbsp;{{restaurant_user.last_name}}</h1>
+                </div>
+                <div class="row g-4">
+                    {% for gallery in menu_galleries %}
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="team-item text-center rounded overflow-hidden"  style="height:400px">
+                            <div class="rounded-circle overflow-hidden  m-4" style="height:200px" >
+                                <img class=" img-fluid" src="{{gallery.photo.url}}" alt="" >
+                            </div>
+                            <div class="card-body">
+              <h5 class="card-title">{{gallery.title}}</h5>
+              <p class="card-text">{{gallery.description}}</p>
+            </div> 
+                            
+                            
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- Team End -->
+
+<!-- About Start -->
+        <div class="container-xxl py-5">
+            <div class="container">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-6">
+                        <div class="row g-3">
+                            <div class="col-6 text-start">
+                                <img class="img-fluid rounded w-100 wow zoomIn" data-wow-delay="0.1s" src="{% static 'book_a_plate/img/restaurant.jpg'%}">
+                            </div>
+                            <div class="col-6 text-center">
+                                <img class="img-fluid rounded w-75 wow zoomIn" data-wow-delay="0.5s" src="{% static 'book_a_plate/img/restaurant.jpg'%}">
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h5 class="section-title ff-secondary text-start text-primary fw-normal">Contact Us</h5>
+                        <h1 class="mb-4">{{restaurant_user.first_name}}&nbsp;{{restaurant_user.last_name}}</h1>
+                        
+                        
+                            <h6 class="mb-4"><i class="fa fa-home"></i>&nbsp;&nbsp;Address:</h6>
+                            <p>
+                                {{restaurant.address}},
+                                {{restaurant.place}},
+                                {{restaurant.state}}</p>
+                        
+                        <h6 class="mb-4"><i class="fa fa-envelope"></i>&nbsp;&nbsp;Email :</h6><p>{{restaurant_user.email}}</p>
+                        <h6 class="mb-4"><i class="fa fa-phone-square"></i>&nbsp;&nbsp;Phone :</h6><p>{{restaurant.phone}}</p>
+                        
+                       
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- About End -->
+        <!-- Testimonial Start -->
+        <!-- <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="container">
+                <div class="text-center">
+                    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Testimonial</h5>
+                    <h1 class="mb-5">Our Clients Say!!!</h1>
+                </div>
+                <div class="owl-carousel testimonial-carousel">
+                    <div class="testimonial-item bg-transparent border rounded p-4">
+                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
+                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
+                        <div class="d-flex align-items-center">
+                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-1.jpg' %}" style="width: 50px; height: 50px;">
+                            <div class="ps-3">
+                                <h5 class="mb-1">Client Name</h5>
+                                <small>Profession</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-item bg-transparent border rounded p-4">
+                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
+                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
+                        <div class="d-flex align-items-center">
+                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-2.jpg' %}" style="width: 50px; height: 50px;">
+                            <div class="ps-3">
+                                <h5 class="mb-1">Client Name</h5>
+                                <small>Profession</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-item bg-transparent border rounded p-4">
+                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
+                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
+                        <div class="d-flex align-items-center">
+                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-3.jpg' %}" style="width: 50px; height: 50px;">
+                            <div class="ps-3">
+                                <h5 class="mb-1">Client Name</h5>
+                                <small>Profession</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-item bg-transparent border rounded p-4">
+                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
+                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
+                        <div class="d-flex align-items-center">
+                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-4.jpg' %}" style="width: 50px; height: 50px;">
+                            <div class="ps-3">
+                                <h5 class="mb-1">Client Name</h5>
+                                <small>Profession</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+       
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+   
+
+    </div> -->
+
+        </div>
+
+{% endblock %}

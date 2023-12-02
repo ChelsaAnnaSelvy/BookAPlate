@@ -1,0 +1,87 @@
+Gallery
+function previewFile() {
+  var preview = document.querySelector('img');
+  var file    = document.querySelector('input[type=file]').files[0];
+  var reader  = new FileReader();
+
+  reader.onloadend = function () {
+    preview.src = reader.result;
+  }
+
+  if (file) {
+    reader.readAsDataURL(file);
+  } else {
+    preview.src = "";
+  }
+}
+<input type="file" onchange="previewFile()"><br>
+<img src="" height="200" alt="Image preview...">
+
+
+-----------------------------------------------------------
+<form>
+  <label for="file-upload" class="custom-file-upload">
+    <i class="fa fa-cloud-upload"></i> Upload Image
+  </label>
+  <input id="file-upload" name='upload_cont_img' type="file" style="display:none;">
+</form> 
+------------------------------------------------------------------------------------
+
+  <div class="col-12">
+          <label for="description" class="form-label">Description</label>
+          <div id="description">
+          <span class="ql-formats">
+            <select class="ql-font"></select>
+            <select class="ql-size"></select>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+            <button class="ql-strike"></button>
+          </span>
+          <span class="ql-formats">
+            <select class="ql-color"></select>
+            <select class="ql-background"></select>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-script" value="sub"></button>
+            <button class="ql-script" value="super"></button>
+          </span>
+          <span class="ql-formats">
+            <button class="ql-header" value="1"></button>
+            <button class="ql-header" value="2"></button>
+            <button class="ql-blockquote"></button>
+            <button class="ql-code-block"></button>
+          </span>
+        </div>
+         
+        
+        <div id="snow-editor">
+          </div>
+      
+    
+  </div>
+   <input type="hidden" name="editor_content" id="editor_content">
+  <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Initialize Quill with your options
+            const snowEditor = new Quill('#snow-editor', {
+                bounds: '#snow-editor',
+                modules: {
+                    formula: true,
+                    toolbar: '#description'
+                },
+                theme: 'snow'
+            });
+
+            // Update the hidden input field with the Quill content
+        snowEditor.on('text-change', function () {
+        const editorContent = snowEditor.root.innerHTML;
+        document.getElementById('editor_content').value = editorContent;
+    });
+        });
+    </script>
+
+
+.........................................................................

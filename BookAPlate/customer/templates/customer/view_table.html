@@ -1,0 +1,217 @@
+{% extends 'customer/base.html'%} {% load static %} {% block title %} BookAPlate
+| Book Table {% endblock %} {% block head %}
+<style>
+  .modal-body {
+    max-height: 400px; /* Set the maximum height for the scrollable area */
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+  }
+  /* Hide the Bootstrap dropdown arrow */
+  #my_actions::after {
+    display: none !important;
+  }
+</style>
+{% endblock %} {% block content %}
+ {% if messages %}
+  {% for message in messages%}
+<script>
+  alert("{{ message }}");
+</script>
+{% endfor %} 
+{% endif %}
+<div class="container-xxl position-relative p-0">
+  <div class="container-xxl py-5 bg-dark hero-header mb-5">
+    <div class="container text-center my-5 pt-5 pb-4">
+      <h1 class="display-3 text-white mb-3 animated slideInDown">
+        Book Table
+      </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center text-uppercase">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item">
+           Restaurants
+          </li>
+          <li class="breadcrumb-item text-white active" aria-current="page">
+           Book Table
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+<div class="container py-5">
+  <form action="{% url 'view_table' %}" method="post">
+            {% csrf_token %}
+  <div class="row g-5">
+    <div class="col-lg-3 col-md-3 col-sm-3 mb-3"> 
+      <input type="date" class="form-control w-100 py-3" placeholder="DD-MM-YYYY" id="due_date" name="due_date" value="{{date}}"/>
+    <script>
+  var dueDateInput = document.getElementById("due_date");
+
+  // Function to validate and format the date
+  function formatDate(dateString) {
+    var inputDate = dateString.split("-");
+    if (inputDate.length === 3) {
+      var day = parseInt(inputDate[0]);
+      var month = parseInt(inputDate[1]);
+      var year = parseInt(inputDate[2]);
+
+      // Validate the date
+      var selectedDate = new Date(year, month - 1, day);
+
+      if (
+        selectedDate.getFullYear() === year &&
+        selectedDate.getMonth() === month - 1 &&
+        selectedDate.getDate() === day
+      ) {
+        // Format the date as DD-MM-YYYY
+        var formattedDate = day.toString().padStart(2, '0') + "-" +
+          month.toString().padStart(2, '0') + "-" +
+          year;
+
+        return formattedDate;
+      }
+    }
+
+    return null;
+  }
+
+  dueDateInput.addEventListener("input", function() {
+    var formattedDate = formatDate(dueDateInput.value);
+    if (formattedDate) {
+      dueDateInput.value = formattedDate;
+    }
+  });
+
+   var tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1); // Set the date to tomorrow
+  var minDate = tomorrow.toISOString().split("T")[0];
+  dueDateInput.setAttribute("min", minDate);
+</script>
+    </div>
+     <div class="col-lg-3 col-md-3 col-sm-3 mb-3">            
+              <select class="form-select w-100 py-3" id="meal_time" name="meal_time" aria-label="Default select example" >
+               {% if meal %}
+                <option value="{{meal}}">{{meal}}</option>
+                {% endif %}
+                {% for i in meal_time %}
+                {% if i.0 != meal %}
+                <option value="{{i.0}}">{{i.1}}</option>
+                {% endif %}
+                {% endfor%}
+              </select>
+          </div>
+          
+        <div class="col-lg-3 col-md-3 col-sm-3 mb-3">
+               
+            <input type="hidden" value="{{restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+            <button type="submit" class="btn btn-outline-primary w-100 py-3 "><i class="fa fa-2x fa-search  me-sm-1"></i><span class="d-none d-sm-inline-block">SEARCH</span></button>
+         
+          </div>
+    
+  </div>
+   </form>
+   {% if meal and date %}
+   <div class="row g-3 pt-3">
+    <div class="col-lg-12 col-md-9 col-sm-6">
+      <label class="text-center text-secondary" ><i class="fa fa-clipboard-list "></i>&nbsp;&nbsp;CLICK ON THE FOLLOWING GREEN SLOTS TO PROCCEED YOUR BOOKING</label>
+ 
+    </div>
+   </div>
+      {% endif %}
+<!-- Add this script at the end of your HTML body or in a separate script file -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get all labels with the class 'btn'
+        var labels = document.querySelectorAll('.btn');
+
+        // Add a click event listener to each label
+        labels.forEach(function(label) {
+            label.addEventListener('click', function() {
+                // Toggle the color between green and red
+                if (label.classList.contains('btn-success')) {
+                    label.classList.remove('btn-success');
+                    label.classList.add('btn-outline-danger');
+                } 
+                else if (label.classList.contains('btn-outline-danger')) {
+                    label.classList.remove('btn-outline-danger');
+                    label.classList.add('btn-success');
+                }
+            });
+        });
+
+        // Get the form element
+        var bookingForm = document.getElementById('booking-form');
+
+        // Add a submit event listener to the form
+        bookingForm.addEventListener('submit', function(event) {
+            // Prevent the default form submission
+            event.preventDefault();
+
+            // Collect the selected values
+            var selectedFacilities = [];
+            labels.forEach(function(label) {
+                if (label.classList.contains('btn-outline-danger')) {
+                    // Extract the facility number and seat count from the label text
+                    var facilityNumber = label.textContent.split('\n')[0];
+                    var seatCount = label.textContent.split('[')[1].split(']')[0];
+                    
+                    // Push the selected values to the array
+                    selectedFacilities.push({
+                        facilityNumber: facilityNumber,
+                        seatCount: seatCount
+                    });
+                }
+            });
+
+            // Add the selected values to a hidden input field in the form
+            var selectedFacilitiesInput = document.createElement('input');
+            selectedFacilitiesInput.type = 'hidden';
+            selectedFacilitiesInput.name = 'selected_facilities';
+            selectedFacilitiesInput.value = JSON.stringify(selectedFacilities);
+            bookingForm.appendChild(selectedFacilitiesInput);
+
+            // Submit the form
+            bookingForm.submit();
+        });
+    });
+</script>
+<!-- Add this form below your existing code -->
+<form id="booking-form" method="post" action="{% url 'book_table' %}">
+{% csrf_token %}
+<div class="row row-cols-4 row-cols-sm-4 row-cols-md-4 row-cols-lg-6 g-3 pt-3">
+    {% for facility in facilities %}
+        <div class="cols">
+           {% if facility in available %}
+                <label class="btn btn-success">{{ facility.facility_number }}<br/>[{{ facility.seat_count }}]</label>
+                
+            {% else %}
+                <label class="btn btn-danger">{{ facility.facility_number }}<br/>[{{ facility.seat_count }}]</label>
+           
+              {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+<div class="row g-3 pt-3">
+  <!-- Add a button to submit the form -->
+  <div class="col-sm-2 col-md-2 col-lg-2"></div>
+  <div class="col-sm-6 col-md-6 col-lg-6">
+    <button type="submit" class="btn btn-outline-primary w-100 py-3">BOOK NOW</button>
+</div>
+    </div>
+    
+</form>
+
+
+   
+      
+    
+ 
+  
+</div>
+
+
+</div>
+
+
+{% endblock %}
