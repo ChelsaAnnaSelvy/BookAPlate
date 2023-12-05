@@ -38,7 +38,7 @@
             <div class="container">
                 
                 <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Our Services</h5>
+                    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Reservations</h5>
                     <h1 class="mb-5">My Bookings</h1>
                 </div>
                 <div class="row g-4">
@@ -51,12 +51,11 @@
     <tr>
       <th scope="col">ID</th>
       <th scope="col">Date</th>
-      <th scope="col">Restaurant</th>
+      <th scope="col">Restaurant Name</th>
       <th scope="col">Facilities Booked</th>
       <th scope="col">Contact Number</th>
-      <th scope="col">Contact Email</th>
-      
-      <th scope="col"></th>
+      <th scope="col">Contact Email</th>      
+      <th scope="col">Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -64,22 +63,28 @@
     <tr>
       <th scope="row">{{ booking.booking_id }}</th>
       <td>{{booking.date}}</td>
-      <td>{{booking.facility.restaurant.user.email}}</td>
-      <td>{{head_count}}</td>
-      <td>{{booking.facility.restaurant.phone}}</td>
-      <td>{{booking.facility.restaurant.user.email}}</td>
+      <td>
+        {{ booking.facility.first.restaurant.user.first_name}}&nbsp;{{ booking.facility.first.restaurant.user.last_name}}
+        <!-- {% for facility in booking.facility.all %}
+          {{ facility.facility_number }}{% if not forloop.last %}, {% endif %}
+        {% endfor %} -->
+      </td>
+      <td>{{ booking.facility.count }}</td>
+      <td>{{ booking.facility.first.restaurant.phone }}</td>
+      <td>{{ booking.facility.first.restaurant.user.email}}</td>
+     
       
       <td>
          <div class="btn-group">
-  <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-   Action
+  <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+   <i class="fas fa-cog"></i> 
   </button>
   <ul class="dropdown-menu">
     
-    <li><form method="POST" action="{% url 'restaurant_profile' %}">
+    <li><form method="POST" action="#">
         {% csrf_token %}
-        <button type="submit" class="dropdown-item  text-secondary">VIEW RESTAURANT</button>        
-        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+        <button type="submit" class="dropdown-item  text-secondary">BOOKING DETAILS</button>        
+        <input type="hidden" value="{{ booking.facility.first.restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
       </form></li>
        <hr/>
     
@@ -89,27 +94,18 @@
       <!-- Your form goes here -->
       <form method="POST" action="{% url 'view_table' %}">
         {% csrf_token %}
-        <button type="submit" class="dropdown-item text-secondary">BOOK TABLE</button>
-        <input type="hidden" value="Table" name="facility_name" id="facility_name"/>
-        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
-      </form></li>
-      <li>
-      <!-- Your form goes here -->
-      <form method="POST" action="#">
+        <button type="submit" class="dropdown-item text-secondary">CANCEL BOOKING</button>
+       
+        <input type="hidden" value="{{ booking.booking_id }}" name="booking_id" id="booking_id"/>
+      </form>
+    </li>
+     <hr>
+      <li><form method="POST" action="{% url 'restaurant_profile' %}">
         {% csrf_token %}
-        <button type="submit" class="dropdown-item text-secondary">BOOK BANQUET HALL</button>
-        <input type="hidden" value="Banquet Hall" name="facility_name" id="facility_name"/>
-        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+        <button type="submit" class="dropdown-item  text-secondary">VIEW RESTAURANT</button>        
+        <input type="hidden" value="{{ booking.facility.first.restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
       </form></li>
-      <li>
-      <!-- Your form goes here -->
-      <form method="POST" action="#">
-        {% csrf_token %}
-        <button type="submit" class="dropdown-item text-secondary">BOOK CONFERENCE HALL</button>
-        <input type="hidden" value="Conference Hall" name="facility_name" id="facility_name"/>
-        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
-      </form></li>
-      
+       
     
   </ul>
 </div>

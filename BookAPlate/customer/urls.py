@@ -11,7 +11,7 @@ urlpatterns=[
     path('view_table/',TableView,name='view_table'),
     path('confirm_book_table/',ConfirmBookTableView,name='confirm_booking_table'),
     path('book_table/',BookTableView,name='book_table'),
-    path('reservations/',BookTableView,name='my_reservations'),
+    path('reservations/',BookingHistoryView,name='my_reservations'),
     
     
 ]

@@ -11,8 +11,8 @@
   }
 </style>
 {% endblock %} {% block content %}
- {% if messages %}
-  {% for message in messages%}
+ {% if messages %} 
+ {% for message in messages%}
 <script>
   alert("{{ message }}");
 </script>
@@ -21,14 +21,12 @@
 <div class="container-xxl position-relative p-0">
   <div class="container-xxl py-5 bg-dark hero-header mb-5">
     <div class="container text-center my-5 pt-5 pb-4">
-      <h1 class="display-3 text-white mb-3 animated slideInDown">
-        Home
-      </h1>
+      <h1 class="display-3 text-white mb-3 animated slideInDown">Home</h1>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb justify-content-center text-uppercase">
           <li class="breadcrumb-item"><a href="#">Home</a></li>
           <li class="breadcrumb-item text-white active" aria-current="page">
-        Restaurants
+            Restaurants
           </li>
         </ol>
       </nav>
@@ -36,103 +34,165 @@
   </div>
 </div>
 
-   <!-- Service Start -->
-        <div class="container-xxl py-5">
-            <div class="container">
-                
-                <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Our Services</h5>
-                    <h1 class="mb-5">Restaurants</h1>
-                </div>
-                <div class="row g-4">
-                    <div class="col-lg-12 col-sm-12 wow fadeInUp" data-wow-delay="0.1s">
-                        
-                            <div class="p-4">
-                                <div class="table-responsive-sm"> 
-      <table class="table">
-    <thead>
-    <tr>
-      <th scope="col">ID</th>
-      <th scope="col">Name</th>
-      <th scope="col">Email</th>
-      <th scope="col">Phone</th>
-      <th scope="col">Address</th>
-      <th scope="col">State</th>
-      <th scope="col">Place</th>
-      <th scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for restaurant in restaurants %}
-    <tr>
-      <th scope="row">{{ restaurant.restaurant_id }}</th>
-      <td>{{restaurant.user.first_name}}&nbsp;{{restaurant.user.last_name}}</td>
-      <td>{{restaurant.user.email}}</td>
-      <td>{{restaurant.phone}}</td>
-      <td>{{restaurant.address}}</td>
-      <td>{{restaurant.state}}</td>
-      <td>{{restaurant.place}}</td>    
-      
-      <td>
-         <div class="btn-group">
-  <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-   Action
-  </button>
-  <ul class="dropdown-menu">
-    
-    <li><form method="POST" action="{% url 'restaurant_profile' %}">
-        {% csrf_token %}
-        <button type="submit" class="dropdown-item  text-secondary">DETAILS</button>        
-        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
-      </form></li>
-       <hr/>
-    
-  
-        <li>
-          
-      <!-- Your form goes here -->
-      <form method="POST" action="{% url 'view_table' %}">
-        {% csrf_token %}
-        <button type="submit" class="dropdown-item text-secondary">BOOK TABLE</button>
-        <input type="hidden" value="Table" name="facility_name" id="facility_name"/>
-        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
-      </form></li>
-      <li>
-      <!-- Your form goes here -->
-      <form method="POST" action="#">
-        {% csrf_token %}
-        <button type="submit" class="dropdown-item text-secondary">BOOK BANQUET HALL</button>
-        <input type="hidden" value="Banquet Hall" name="facility_name" id="facility_name"/>
-        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
-      </form></li>
-      <li>
-      <!-- Your form goes here -->
-      <form method="POST" action="#">
-        {% csrf_token %}
-        <button type="submit" class="dropdown-item text-secondary">BOOK CONFERENCE HALL</button>
-        <input type="hidden" value="Conference Hall" name="facility_name" id="facility_name"/>
-        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
-      </form></li>
-      
-    
-  </ul>
-</div>
-      </td>
-    </tr>
-    {% endfor %}
-   
-  </tbody>
-</table>
-                            </div>
-                        </div>
-                    
-                   
-                </div>
-            </div>
+<!-- Service Start -->
+<div class="container-xxl py-5">
+  <div class="container">
+    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+      <h5 class="section-title ff-secondary text-center text-primary fw-normal">
+        Our Services
+      </h5>
+      <h1 class="mb-5">Restaurants</h1>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-12 col-sm-12 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="p-4">
+          <div class="table-responsive-sm">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">State</th>
+                  <th scope="col">Place</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for restaurant in restaurants %}
+                <tr>
+                  <th scope="row">{{ restaurant.restaurant_id }}</th>
+                  <td>
+                    {{restaurant.user.first_name}}&nbsp;{{restaurant.user.last_name}}
+                  </td>
+                  <td>{{restaurant.user.email}}</td>
+                  <td>{{restaurant.phone}}</td>
+                  <td>{{restaurant.address}}</td>
+                  <td>{{restaurant.state}}</td>
+                  <td>{{restaurant.place}}</td>
+
+                  <td>
+                    <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i class="fa fa-cog"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <form
+                            method="POST"
+                            action="{% url 'restaurant_profile' %}"
+                          >
+                            {% csrf_token %}
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              DETAILS
+                            </button>
+                            <input
+                              type="hidden"
+                              value="{{ restaurant.restaurant_id }}"
+                              name="restaurant_id"
+                              id="restaurant_id"
+                            />
+                          </form>
+                        </li>
+                        <hr />
+
+                        <li>
+                          <!-- Your form goes here -->
+                          <form method="POST" action="{% url 'view_table' %}">
+                            {% csrf_token %}
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              BOOK TABLE
+                            </button>
+                            <input
+                              type="hidden"
+                              value="Table"
+                              name="facility_name"
+                              id="facility_name"
+                            />
+                            <input
+                              type="hidden"
+                              value="{{ restaurant.restaurant_id }}"
+                              name="restaurant_id"
+                              id="restaurant_id"
+                            />
+                          </form>
+                        </li>
+                        <hr />
+                        <li>
+                          <!-- Your form goes here -->
+                          <form method="POST" action="#">
+                            {% csrf_token %}
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              BOOK BANQUET HALL
+                            </button>
+                            <input
+                              type="hidden"
+                              value="Banquet Hall"
+                              name="facility_name"
+                              id="facility_name"
+                            />
+                            <input
+                              type="hidden"
+                              value="{{ restaurant.restaurant_id }}"
+                              name="restaurant_id"
+                              id="restaurant_id"
+                            />
+                          </form>
+                        </li>
+                        <hr />
+                        <li>
+                          <!-- Your form goes here -->
+                          <form method="POST" action="#">
+                            {% csrf_token %}
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              BOOK CONFERENCE HALL
+                            </button>
+                            <input
+                              type="hidden"
+                              value="Conference Hall"
+                              name="facility_name"
+                              id="facility_name"
+                            />
+                            <input
+                              type="hidden"
+                              value="{{ restaurant.restaurant_id }}"
+                              name="restaurant_id"
+                              id="restaurant_id"
+                            />
+                          </form>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <!-- Service End -->
-
+      </div>
+    </div>
+  </div>
+  <!-- Service End -->
 </div>
-
 
 {% endblock %}

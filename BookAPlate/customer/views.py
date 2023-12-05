@@ -149,24 +149,24 @@ def ConfirmBookTableView(request):
         facility_details_data = list(facility_details_list.values())
         meal = request.POST.get('meal', '')
         date = request.POST['date']
-        if coins.coin_quantity > total * 10:
+        if coins and coins.coin_quantity >= total * 10:  # Ensure coins is not None
             request.session['facility_details_data'] = facility_details_data
             request.session['coin_count'] = total * 10
             request.session['date'] = date
             request.session['meal_time'] = meal
 
-        context = {
-            'facilities': facility_details_data,
-            'head_count': total,
-            'coin_count': total * 10,
-            'logged_user': logged_user,
-            'customer': customer,
-            'coins': coins,
-            'meal': meal,
-            'date': date,
-        }
+            context = {
+                'facilities': facility_details_data,
+                'head_count': total,
+                'coin_count': total * 10,
+                'logged_user': logged_user,
+                'customer': customer,
+                'coins': coins,
+                'meal': meal,
+                'date': date,
+            }
 
-        return render(request, 'customer/booking_confirmation.html', context)
+            return render(request, 'customer/booking_confirmation.html', context)
 
     context = {
         'facilities': [],
@@ -181,90 +181,69 @@ def ConfirmBookTableView(request):
 
     return render(request, 'customer/booking_confirmation.html', context)
 
-
 # BookTableView
 def BookTableView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
 
-    # Check if data processing is needed
-    if request.session.get('booking_processed', False):
-        # Retrieve data from the session
-        facility_details_data = request.session.get('facility_details_data', [])
-        coin_count = request.session.get('coin_count', 0)
-        meal_time = request.session.get('meal_time', 0)
-        date = request.session.get('date')
-        remaining_coins = coins.coin_quantity
+    # Retrieve data from the session
+    facility_details_data = request.session.get('facility_details_data', [])
+    coin_count = request.session.get('coin_count', 0)
+    meal_time = request.session.get('meal_time', 0)
+    date = request.session.get('date')
+    remaining_coins = coins.coin_quantity if coins else 0
 
-        if remaining_coins >= coin_count and meal_time:
-            
-            coins.coin_quantity -= coin_count
-            coins.save()
+    print(f'MYCOINS->{remaining_coins}, REQUIRED AMOUNT->{coin_count}')
 
-            # Create a BookingDetails object and set its fields
-            booking = BookingDetails.objects.create(
-                date=date,
-                status='Booked',
-                meal_time=meal_time,
-                customer=customer,
-            )
+    if remaining_coins >= coin_count and meal_time:
+        coins.coin_quantity -= coin_count
+        coins.save()
 
-            # Get or create Facility instances and add them to the booking
-            facilities = []
-            for facility_data in facility_details_data:
-                facility, created = FacilityDetails.objects.get_or_create(**facility_data)
-                facilities.append(facility)
+        # Create a BookingDetails object and set its fields
+        booking = BookingDetails.objects.create(
+            date=date,
+            status='Booked',
+            meal_time=meal_time,
+            customer=customer,
+        )
 
-            # Use the set() method to add related objects for the many-to-many field
-            booking.facility.set(facilities)
+        # Get or create Facility instances and add them to the booking
+        facilities = []
+        for facility_data in facility_details_data:
+            facility, created = FacilityDetails.objects.get_or_create(**facility_data)
+            facilities.append(facility)
 
-            # Save the booking after setting the facilities
-            booking.save()
+        # Use the set() method to add related objects for the many-to-many field
+        booking.facility.set(facilities)
 
-            # Clear session variables after successful processing
-            if 'facility_details_data' in request.session:
-                del request.session['facility_details_data']
-            if 'coin_count' in request.session:
-                del request.session['coin_count']
-            if 'date' in request.session:
-                del request.session['date']
-            if 'meal_time' in request.session:
-                del request.session['meal_time']
+        # Save the booking after setting the facilities
+        booking.save()
 
-            # Set the processing flag
-            request.session['booking_processed'] = True
+        # Clear session variables after successful processing
+        request.session.pop('facility_details_data', None)
+        request.session.pop('coin_count', None)
+        request.session.pop('date', None)
+        request.session.pop('meal_time', None)
+        
+        messages.success(request, 'You have successfully booked tables.Happy Dining!!!')
 
-            messages.success(request, 'You have successfully booked tables. Happy Dining!!!')
-            return redirect('my_reservations')
-        else:
-            # Clear session variables even if processing is not successful
-            if 'facility_details_data' in request.session:
-                del request.session['facility_details_data']
-            if 'coin_count' in request.session:
-                del request.session['coin_count']
-            if 'date' in request.session:
-                del request.session['date']
-            if 'meal_time' in request.session:
-                del request.session['meal_time']
+        # Redirect to my_reservations
+        return redirect('my_reservations')
+    else:
+        # If the condition is not met, display an error message and redirect to restaurants
+        messages.error(request, 'Sorry, you have insufficient coins. Kindly contact customer care to buy our coin pack')
 
-            # Set the processing flag
-            request.session['booking_processed'] = True
+        # Clear session variables
+        request.session.pop('facility_details_data', None)
+        request.session.pop('coin_count', None)
+        request.session.pop('date', None)
+        request.session.pop('meal_time', None)
 
-            messages.error(request, 'Sorry, you have insufficient coins. Kindly contact customer care to buy our coin pack')
-            return redirect('restaurants')
-    my_booking = BookingDetails.objects.filter(customer=customer)
-    context = {
-        'bookings': my_booking,
-        'logged_user': logged_user,
-        'customer': customer,
-        'coins': coins,
-    }
-    return render(request, 'customer/booking_history.html', context)
-
+        return redirect('restaurants')
 
 # Booking history view
 def BookingHistoryView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
-    my_booking = BookingDetails.objects.filter(customer=customer)
+    my_booking = BookingDetails.objects.filter(customer=customer).order_by('-date')
     context = {
         'bookings': my_booking,
         'logged_user': logged_user,
