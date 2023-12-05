@@ -120,7 +120,7 @@ class FacilityDetails(models.Model):
         ('Conference Hall', 'Conference Hall')
     ]
     facility_name = models.CharField(max_length=100, choices=FACILITY_CHOICES,default='Table')
-    facility_number =models.CharField(max_length=10,unique = True)
+    facility_number =models.CharField(max_length=10)
     seat_count = models.IntegerField(default=2)     
     SEATING_LOCATION_CHOICES = [
         ('','Select Location'),
@@ -134,18 +134,17 @@ class FacilityDetails(models.Model):
     
 
 class BookingDetails(models.Model):
-    booking_id = models.AutoField(primary_key=True)    
+    booking_id = models.AutoField(primary_key=True)   
     
-    date = models.DateField()
+    date = models.DateField(null=True)
     STATUS_CHOICES = [
-        ('Requested', 'Requested'),
+        ('Booked', 'Booked'),
         ('Completed', 'Completed'), 
         ('Cancelled','Cancelled') ,    
     ]
     status =models.CharField(max_length=100, choices=STATUS_CHOICES,default='Requested') 
     # Define meal choices as a list of tuples
     MEAL_CHOICES = [
-        ('','Select Meal Time'),
         ('Breakfast', 'Breakfast'),
         ('Lunch', 'Lunch'),
         ('Supper', 'Supper'),

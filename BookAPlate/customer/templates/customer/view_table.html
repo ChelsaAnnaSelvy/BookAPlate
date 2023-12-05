@@ -117,7 +117,36 @@
  
     </div>
    </div>
-      {% endif %}
+      
+
+<!-- Add this form below your existing code -->
+<form id="booking-form" method="post" action="{% url 'confirm_booking_table' %}">
+    {% csrf_token %}
+    <div class="row row-cols-4 row-cols-sm-4 row-cols-md-4 row-cols-lg-6 g-3 pt-3">
+        {% for facility in facilities %}
+            <div class="cols">
+               {% if facility in available %}
+                    <label class="btn btn-success" data-facility-id="{{ facility.facility_id }}">{{ facility.facility_number }}<br/>[{{ facility.seat_count }}]</label>
+                    <input type="hidden" name="facility_ids[]" value="{{ facility.facility_id }}"/>
+                {% else %}
+                    <label class="btn btn-danger">{{ facility.facility_number }}<br/>[{{ facility.seat_count }}]</label>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row g-3 pt-3">
+        <!-- Add a button to submit the form -->
+        <div class="col-sm-2 col-md-2 col-lg-2"></div>
+        <div class="col-sm-6 col-md-6 col-lg-6">
+          <input type="hidden" value="{{restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+          <input type="hidden" value="{{meal}}" name="meal" id="meal"/>
+          <input type="hidden" value="{{date }}" name="date" id="date"/>
+            <button type="submit" class="btn btn-outline-primary w-100 py-3">PROCEED TO BOOK</button>
+        </div>
+    </div>
+</form>
+{% endif %}
 <!-- Add this script at the end of your HTML body or in a separate script file -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -131,8 +160,7 @@
                 if (label.classList.contains('btn-success')) {
                     label.classList.remove('btn-success');
                     label.classList.add('btn-outline-danger');
-                } 
-                else if (label.classList.contains('btn-outline-danger')) {
+                } else if (label.classList.contains('btn-outline-danger')) {
                     label.classList.remove('btn-outline-danger');
                     label.classList.add('btn-success');
                 }
@@ -149,58 +177,50 @@
 
             // Collect the selected values
             var selectedFacilities = [];
+            var selectedFacilityIds = [];
+
             labels.forEach(function(label) {
                 if (label.classList.contains('btn-outline-danger')) {
                     // Extract the facility number and seat count from the label text
                     var facilityNumber = label.textContent.split('\n')[0];
                     var seatCount = label.textContent.split('[')[1].split(']')[0];
-                    
-                    // Push the selected values to the array
+                    var facilityId = label.getAttribute('data-facility-id');
+
+                    // Push the selected values to the arrays
                     selectedFacilities.push({
                         facilityNumber: facilityNumber,
                         seatCount: seatCount
                     });
+                    selectedFacilityIds.push(facilityId);
                 }
             });
 
-            // Add the selected values to a hidden input field in the form
+            // Add the selected values to hidden input fields in the form
             var selectedFacilitiesInput = document.createElement('input');
             selectedFacilitiesInput.type = 'hidden';
             selectedFacilitiesInput.name = 'selected_facilities';
             selectedFacilitiesInput.value = JSON.stringify(selectedFacilities);
             bookingForm.appendChild(selectedFacilitiesInput);
 
-            // Submit the form
-            bookingForm.submit();
+            var selectedFacilityIdsInput = document.createElement('input');
+            selectedFacilityIdsInput.type = 'hidden';
+            selectedFacilityIdsInput.name = 'selected_facility_ids';
+            selectedFacilityIdsInput.value = JSON.stringify(selectedFacilityIds);
+            bookingForm.appendChild(selectedFacilityIdsInput);
+
+            // Check if any facility is selected before submitting the form
+            if (selectedFacilities.length > 0) {
+                // Submit the form
+                bookingForm.submit();
+            } else {
+                // No facility selected, you can display a message or take other actions
+                alert('Please select at least one facility before booking.');
+            }
         });
     });
 </script>
-<!-- Add this form below your existing code -->
-<form id="booking-form" method="post" action="{% url 'book_table' %}">
-{% csrf_token %}
-<div class="row row-cols-4 row-cols-sm-4 row-cols-md-4 row-cols-lg-6 g-3 pt-3">
-    {% for facility in facilities %}
-        <div class="cols">
-           {% if facility in available %}
-                <label class="btn btn-success">{{ facility.facility_number }}<br/>[{{ facility.seat_count }}]</label>
-                
-            {% else %}
-                <label class="btn btn-danger">{{ facility.facility_number }}<br/>[{{ facility.seat_count }}]</label>
-           
-              {% endif %}
-        </div>
-    {% endfor %}
-</div>
 
-<div class="row g-3 pt-3">
-  <!-- Add a button to submit the form -->
-  <div class="col-sm-2 col-md-2 col-lg-2"></div>
-  <div class="col-sm-6 col-md-6 col-lg-6">
-    <button type="submit" class="btn btn-outline-primary w-100 py-3">BOOK NOW</button>
-</div>
-    </div>
-    
-</form>
+
 
 
    

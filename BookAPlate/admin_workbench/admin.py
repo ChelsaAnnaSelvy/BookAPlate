@@ -3,24 +3,53 @@ from .models import Customer, Restaurant, BookingDetails, FacilityDetails, Galle
 
 # Register your models here.
 
-# Register the CustomerProfile model with the admin site
-admin.site.register(Customer)
+class FacilityDetailsInline(admin.TabularInline):
+    model = FacilityDetails
+    extra = 1
 
-# Register the RestaurantProfile model with the admin site
-admin.site.register(Restaurant)
+class GalleryInline(admin.TabularInline):
+    model = Gallery
+    extra = 1
 
-# Register the BookingDetails model with the admin site
-admin.site.register(BookingDetails)
+class BookingDetailsInline(admin.TabularInline):
+    model = BookingDetails
+    extra = 1
 
-# Register the FacilityDetails model with the admin site
-admin.site.register(FacilityDetails)
+class CustomerAdmin(admin.ModelAdmin):
+    inlines = [BookingDetailsInline]
+    list_display = ('customer_id', 'phone', 'address', 'place', 'state', 'status')
+    search_fields = ['phone']
 
-# Register the Gallery model with the admin site
-admin.site.register(Gallery)
+class RestaurantAdmin(admin.ModelAdmin):
+    inlines = [FacilityDetailsInline, GalleryInline]
+    list_display = ('restaurant_id', 'phone', 'address', 'place', 'state', 'status')
+    search_fields = ['phone']
 
+class FacilityDetailsAdmin(admin.ModelAdmin):
+    list_display = ('facility_id', 'facility_name', 'facility_number', 'seat_count', 'seat_arrangement', 'restaurant')
+    search_fields = ['facility_number']
 
-# Register the Feedback model with the admin site
-admin.site.register(Feedback)
+class GalleryAdmin(admin.ModelAdmin):
+    list_display = ('gallery_id', 'title', 'category', 'restaurant')
+    search_fields = ['title']
 
-# Register the Coins model with the admin site
-admin.site.register(Coins)
+class BookingDetailsAdmin(admin.ModelAdmin):
+    list_display = ('booking_id', 'date', 'status', 'meal_time', 'customer')
+    search_fields = ['booking_id']
+
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ('feedback_id', 'rating', 'feedback', 'booking')
+    search_fields = ['feedback_id']
+
+class CoinsAdmin(admin.ModelAdmin):
+    list_display = ('coin_id', 'coin_quantity', 'user')
+    search_fields = ['coin_id']
+
+# Register the models with the admin site
+admin.site.register(Customer, CustomerAdmin)
+admin.site.register(Restaurant, RestaurantAdmin)
+admin.site.register(FacilityDetails, FacilityDetailsAdmin)
+admin.site.register(Gallery, GalleryAdmin)
+admin.site.register(BookingDetails, BookingDetailsAdmin)
+admin.site.register(Feedback, FeedbackAdmin)
+admin.site.register(Coins, CoinsAdmin)

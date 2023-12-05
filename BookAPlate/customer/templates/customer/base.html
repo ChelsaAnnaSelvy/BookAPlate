@@ -60,6 +60,17 @@
 
     <div class="collapse navbar-collapse justify-content-end px-0" id="navbarNav">
         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+           
+           <li class="nav-item">
+                <label class="text-primary">
+                 
+                <i class="fa fa-coins"></i>  &nbsp;  &nbsp; 
+                </label></li>
+                 <li class="nav-item">
+                <label class="text-primary">
+                <h6 class="text-primary">{{coins.coin_quantity}}</h6>  
+               
+                </label></li>
             <li class="nav-item dropdown">
                 <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
                     {% if logged_user.is_authenticated and customer.profile_photo.url %}
@@ -79,11 +90,12 @@
                             <i class="fa fa-user"></i>
                             <p class="mb-0">My Profile</p>
                         </a>
+                        
                         <a href="{% url 'restaurants' %}" class="d-flex align-items-center gap-2 dropdown-item">
                             <i class="fa fa-hotel"></i>
                             <p class="mb-0">Restaurants</p>
                         </a>
-                        <a href="{% url 'customer_profile' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                        <a href="{% url 'my_reservations' %}" class="d-flex align-items-center gap-2 dropdown-item">
                             <i class="fa fa-list "></i>
                             <p class="mb-0">My Bookings</p>
                         </a>
@@ -98,6 +110,7 @@
         </ul>
     </div>
 </nav>
+
 
         </div>
 

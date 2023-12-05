@@ -33,7 +33,8 @@ def LoginView(request):
                             'customer': customer_data,
                             'logged_user':request.user,
                         }
-                        return render(request, 'customer/home.html')
+                        return redirect('customer_home')
+                        # return render(request, 'customer/home.html')
                     else:
                         msg="Sorry the User doesnot exist. Kindly reach us through complaints@bookaplate.com"
                         return render(request, 'user_authentication/home.html',{'msg': msg})
@@ -45,11 +46,19 @@ def LoginView(request):
                             'restaurant': restaurant_data,
                             'logged_user':request.user,
                         }
-                        return render(request, 'restaurant/home.html',context)
+                        return redirect('restaurant_home')
+                        # return render(request, 'restaurant/home.html',context)
                     else:
                         msg="Sorry the User doesnot exist. Kindly reach us through complaints@bookaplate.com"
                         return render(request, 'user_authentication/home.html',{'msg': msg}) 
-
+                else:
+                    admin_data= User.objects.filter(username=username,is_superuser=True)
+                    context={
+                            'admin': admin_data,
+                            'logged_user':request.user,
+                        }
+                    return redirect('admin_home')
+                    # return render(request, 'admin_workbench/home.html',context)
         else:
             form = LoginForm()
             error = "Invalid username or password"
@@ -101,7 +110,7 @@ def RestaurantRegistrationView(request):
             restaurant.user = user  # Link the restaurant to the user
             restaurant.save()  # Save the restaurant details
             messages.success(request, 'You have successfully registered as a restaurant. Please be patient while we go through your documents. You can login to the system once  we verify your details. Thank you!!')
-            return redirect('login')  # Redirect to login page
+            return redirect('home')  # Redirect to home page
 
     else:
         userform = UserAuthenticationForm()

@@ -3,7 +3,7 @@ from admin_workbench.models import FacilityDetails, Restaurant
 
 def add_dummy_facility_records():
     # Assuming there is a Restaurant with id=1
-    restaurant_id = 1
+    restaurant_id = 2
     restaurant = Restaurant.objects.get(pk=restaurant_id)
 
     # Facility details to be used for generating dummy records

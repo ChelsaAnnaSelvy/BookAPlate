@@ -82,7 +82,7 @@
     
     <li><form method="POST" action="{% url 'restaurant_profile' %}">
         {% csrf_token %}
-        <button type="submit" class="dropdown-item  text-seconadray">DETAILS</button>        
+        <button type="submit" class="dropdown-item  text-secondary">DETAILS</button>        
         <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
       </form></li>
        <hr/>
@@ -93,7 +93,7 @@
       <!-- Your form goes here -->
       <form method="POST" action="{% url 'view_table' %}">
         {% csrf_token %}
-        <button type="submit" class="dropdown-item text-seconadray">BOOK TABLE</button>
+        <button type="submit" class="dropdown-item text-secondary">BOOK TABLE</button>
         <input type="hidden" value="Table" name="facility_name" id="facility_name"/>
         <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
       </form></li>
@@ -101,7 +101,7 @@
       <!-- Your form goes here -->
       <form method="POST" action="#">
         {% csrf_token %}
-        <button type="submit" class="dropdown-item text-seconadray">BOOK BANQUET HALL</button>
+        <button type="submit" class="dropdown-item text-secondary">BOOK BANQUET HALL</button>
         <input type="hidden" value="Banquet Hall" name="facility_name" id="facility_name"/>
         <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
       </form></li>
@@ -109,7 +109,7 @@
       <!-- Your form goes here -->
       <form method="POST" action="#">
         {% csrf_token %}
-        <button type="submit" class="dropdown-item text-seconadray">BOOK CONFERENCE HALL</button>
+        <button type="submit" class="dropdown-item text-secondary">BOOK CONFERENCE HALL</button>
         <input type="hidden" value="Conference Hall" name="facility_name" id="facility_name"/>
         <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
       </form></li>
