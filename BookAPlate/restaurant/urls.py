@@ -1,16 +1,21 @@
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
-from restaurant.views import HomeView, GalleryDetailsView, DeleteGalleryItem, EditGalleryItem, FacilityDetailsView, DeleteFacilityItem,EditFacilityItem
+from .views import HomeView,ProfileDetailsView, GalleryDetailsView, DeleteGalleryItem, EditGalleryItem, FacilityDetailsView, DeleteFacilityItem,EditFacilityItem,LogoutView,BookingDetailsView,BookingReceiptView,MarkAsCompleteView
 
 urlpatterns=[
     path('',HomeView,name='restaurant_home'),
+    path('profile_details',ProfileDetailsView,name='profile_details'),
     path('gallery_details/',GalleryDetailsView,name='gallery_details'),
     path('delete_gallery_item/',DeleteGalleryItem,name='delete_gallery_item'),
     path('edit_gallery_item/',EditGalleryItem,name='edit_gallery_item'),
     path('facility_details/',FacilityDetailsView,name='facility_details'),
     path('delete_facility_item/',DeleteFacilityItem,name='delete_facility_item'),
     path('edit_facility_item/',EditFacilityItem,name='edit_facility_item'),
+    path('reservations/',BookingDetailsView,name='reservations'),
+    path('logout/',LogoutView,name='logout'), 
+    path('booking_receipt/',BookingReceiptView,name='booking_receipt'),
+    path('complete/',MarkAsCompleteView,name='mark_as_complete')
    
 ]
 if settings.DEBUG:

@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .forms import LoginForm,UserAuthenticationForm,CustomerRegistrationForm,RestaurantRegistrationForm
+from .forms import LoginForm,UserAuthenticationForm,CustomerRegistrationForm,RestaurantRegistrationForm,RestaurantAuthenticationForm
 from django.contrib.auth.models  import User
 from admin_workbench.models import Customer,Restaurant,Coins
 from django.contrib.auth import authenticate, login
@@ -28,41 +28,23 @@ def LoginView(request):
                 if customer !=0:
                     customer= Customer.objects.filter(user__username=username,status='Active').count()
                     if customer!=0:
-                        customer_data= Customer.objects.filter(user__username=username,status='Active')
-                        context={
-                            'customer': customer_data,
-                            'logged_user':request.user,
-                        }
                         return redirect('customer_home')
-                        # return render(request, 'customer/home.html')
                     else:
-                        msg="Sorry the User doesnot exist. Kindly reach us through complaints@bookaplate.com"
-                        return render(request, 'user_authentication/home.html',{'msg': msg})
+                        messages.success(request,'Sorry the User doesnot exist. Kindly reach us through complaints@bookaplate.com')
+                        return render('home')
                 elif restaurant !=0:
                     restaurant =Restaurant.objects.filter(user__username= username,status='Active').count()
                     if restaurant!=0:
-                        restaurant_data= Restaurant.objects.filter(user__username=username,status='Active')
-                        context={
-                            'restaurant': restaurant_data,
-                            'logged_user':request.user,
-                        }
                         return redirect('restaurant_home')
-                        # return render(request, 'restaurant/home.html',context)
                     else:
-                        msg="Sorry the User doesnot exist. Kindly reach us through complaints@bookaplate.com"
-                        return render(request, 'user_authentication/home.html',{'msg': msg}) 
+                        messages.success(request,'Sorry the User doesnot exist. Kindly reach us through complaints@bookaplate.com')
+                        return render('home') 
                 else:
-                    admin_data= User.objects.filter(username=username,is_superuser=True)
-                    context={
-                            'admin': admin_data,
-                            'logged_user':request.user,
-                        }
                     return redirect('admin_home')
-                    # return render(request, 'admin_workbench/home.html',context)
         else:
             form = LoginForm()
-            error = "Invalid username or password"
-            return render(request, 'user_authentication/login.html', {'form': form, 'error': error})
+            messages.success(request, 'Invalid username or password')
+            return render(request, 'user_authentication/login.html', {'form': form})
     else:
         form = LoginForm()
     return render(request, 'user_authentication/login.html', {'form': form})
@@ -94,13 +76,12 @@ def CustomerRegistrationView(request):
         userform = UserAuthenticationForm()
         customerdetailsform = CustomerRegistrationForm()
     
-    return render(request, 'user_authentication/customer_registration.html', {'form': userform, 'form1': customerdetailsform})
-   
+    return render(request, 'user_authentication/customer_registration.html', {'form': userform, 'form1': customerdetailsform}) 
 
 #View for registering Restaurants
 def RestaurantRegistrationView(request):   
     if request.method == 'POST':
-        userform = UserAuthenticationForm(request.POST)
+        userform = RestaurantAuthenticationForm(request.POST)
         restaurantdetailsform = RestaurantRegistrationForm(request.POST, request.FILES)
         
         if userform.is_valid() and restaurantdetailsform.is_valid():
@@ -113,7 +94,7 @@ def RestaurantRegistrationView(request):
             return redirect('home')  # Redirect to home page
 
     else:
-        userform = UserAuthenticationForm()
+        userform = RestaurantAuthenticationForm()
         restaurantdetailsform = RestaurantRegistrationForm()
     
     return render(request, 'user_authentication/restaurant_registration.html', {'form': userform, 'form1': restaurantdetailsform})

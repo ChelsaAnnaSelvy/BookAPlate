@@ -58,28 +58,24 @@ BookAPlate | Facility {% endblock %}
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Facility Name</th>
-                  <th scope="col">Facility Number</th>
-                  <th scope="col">Number of Seats</th>
-                  <th scope="col">Position</th>
-                  <th scope="col">Seat Arrangement</th>
-                   <th scope="col">Floor</th>
-                  <th scope="col"></th>
+                  <th scope="col" class="text-center">ID</th>
+                  <th scope="col" class="text-center">Facility Name</th>
+                  <th scope="col" class="text-center">Facility Number</th>
+                  <th scope="col" class="text-center">Number of Seats</th>
+                  <th scope="col" class="text-center">Seat Arrangement</th>
+                  <th scope="col" class="text-center"></th>
                 </tr>
               </thead>
               <tbody>
                 {% for facility in facilities %}
                 <tr>
-                  <th scope="row">{{ facility.facility_id }}</th>
-                  <td>{{facility.facility_name}}</td>
-                  <td>{{facility.facility_number}}</td>
-                  <td>{{facility.seat_count}}</td>
-                  <td>{{facility.position}}</td>
-                  <td>{{facility.seat_arrangement}}</td>
-                  <td>{{facility.floor_number}}</td>
+                  <th scope="row" class="text-center">{{ facility.facility_id }}</th>
+                  <td class="text-center">{{facility.facility_name}}</td>
+                  <td class="text-center">{{facility.facility_number}}</td>
+                  <td class="text-center">{{facility.seat_count}}</td>
+                  <td class="text-center">{{facility.seat_arrangement}}</td>
 
-                  <td>
+                  <td class="text-center">
                     <div class="btn-group">
                       <button
                         type="button"

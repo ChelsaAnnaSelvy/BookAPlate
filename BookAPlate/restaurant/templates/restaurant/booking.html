@@ -1,0 +1,431 @@
+{% extends 'restaurant/base.html'%} {% load static %} {% block title %}
+BookAPlate | Restaurants {% endblock %} {% block head %}
+<style>
+  /* Hide the Bootstrap dropdown arrow */
+  #my_actions::after {
+    display: none !important;
+  }
+</style>
+{% endblock %} {% block content %} {% if messages %} 
+{% for message in messages%}
+<script>
+  alert("{{ message }}");
+</script>
+{% endfor %} {% endif %}
+<div class="container-xxl position-relative p-0">
+  <div class="container-xxl py-5 bg-dark hero-header mb-5">
+    <div class="container text-center my-5 pt-5 pb-4">
+      <h1 class="display-3 text-white mb-3 animated slideInDown">Home</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center text-uppercase">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item text-white active" aria-current="page">
+            Bookings History
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Service Start -->
+<div class="container-xxl py-5">
+  <div class="container">
+    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+      <h5 class="section-title ff-secondary text-center text-primary fw-normal">
+        Reservations
+      </h5>
+      <h1 class="mb-5">Our Reservations</h1>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-12 col-sm-12 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="card">
+          <div class="card-body p-4">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link active"
+                  id="all-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#all"
+                  type="button"
+                  role="tab"
+                  aria-controls="all"
+                  aria-selected="true"
+                >
+                  All
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="booked-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#booked"
+                  type="button"
+                  role="tab"
+                  aria-controls="booked"
+                  aria-selected="false"
+                >
+                  Booked
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="completed-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#completed"
+                  type="button"
+                  role="tab"
+                  aria-controls="completed"
+                  aria-selected="false"
+                >
+                  Completed
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="cancelled-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#cancelled"
+                  type="button"
+                  role="tab"
+                  aria-controls="cancelled"
+                  aria-selected="false"
+                >
+                  Cancelled
+                </button>
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+              <div
+                class="tab-pane fade show active"
+                id="all"
+                role="tabpanel"
+                aria-labelledby="all-tab"
+              >
+                <div class="table-responsive-sm">
+<table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Facilities Booked</th>
+                  <th scope="col">Contact Number</th>
+                  <th scope="col">Contact Email</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {% for booking in bookings %}
+                <tr>
+                  <th scope="row">{{ booking.booking_id }}</th>
+                  <td>{{booking.date}}</td>
+                  <td>
+                    {{ booking.customer.user.first_name}}&nbsp;{{booking.customer.user.last_name}}
+                  </td>
+                  <td>{{ booking.facility.count }}</td>
+                  <td>{{ booking.customer.phone }}</td>
+                  <td>{{ booking.customer.user.email}}</td>
+                  <td>
+                   <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i class="fas fa-cog"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <form method="POST" action="{% url 'booking_receipt' %}">
+                            {% csrf_token %}
+                            <input
+                              type="hidden"
+                              value="{{ booking.booking_id }}"
+                              name="booking_id"
+                              id="booking_id"
+                            />
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              BOOKING DETAILS
+                            </button>
+                          </form>
+                        </li>
+
+                        
+                      </ul>
+                    </div>
+                        </td>
+                  
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+                </div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="booked"
+                role="tabpanel"
+                aria-labelledby="booked-tab"
+              >
+                <div class="table-responsive-sm">
+                  <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Facilities Booked</th>
+                  <th scope="col">Contact Number</th>
+                  <th scope="col">Contact Email</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for booking in booked %}
+                <tr>
+                  <th scope="row">{{ booking.booking_id }}</th>
+                  <td>{{booking.date}}</td>
+                  <td>
+                    {{ booking.customer.user.first_name}}&nbsp;{{booking.customer.user.last_name}}
+                  </td>
+                  <td>{{ booking.facility.count }}</td>
+                  <td>{{ booking.customer.phone }}</td>
+                  <td>{{ booking.customer.user.email}}</td>
+
+                  <td>
+                    <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i class="fas fa-cog"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <form method="POST" action="{% url 'booking_receipt' %}">
+                            {% csrf_token %}
+                            <input
+                              type="hidden"
+                              value="{{ booking.booking_id }}"
+                              name="booking_id"
+                              id="booking_id"
+                            />
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              BOOKING DETAILS
+                            </button>
+                          </form>
+                        </li>
+                        <hr />
+
+                        <li>
+                          <!-- Your form goes here -->
+                          <form method="POST" action="{% url 'mark_as_complete' %}">
+                            {% csrf_token %}
+                            <input
+                              type="hidden"
+                              value="{{ booking.booking_id }}"
+                              name="booking_id"
+                              id="booking_id"
+                            />
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              MARK AS COMPLETE
+                            </button>
+                          </form>
+                        </li>
+                       
+                      
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+                </div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="completed"
+                role="tabpanel"
+                aria-labelledby="completed-tab"
+              >
+                <div class="table-responsive-sm">
+                  <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Facilities Booked</th>
+                  <th scope="col">Contact Number</th>
+                  <th scope="col">Contact Email</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for booking in completed %}
+                <tr>
+                  <th scope="row">{{ booking.booking_id }}</th>
+                  <td>{{booking.date}}</td>
+                  <td>
+                    {{ booking.customer.user.first_name}}&nbsp;{{booking.customer.user.last_name}}
+                    
+                  </td>
+                  <td>{{ booking.facility.count }}</td>
+                  <td>{{ booking.customer.phone }}</td>
+                  <td>{{ booking.customer.user.email}}</td>
+
+                  <td>
+                    <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i class="fas fa-cog"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <form method="POST" action="{% url 'booking_receipt' %}">
+                            {% csrf_token %}
+                            <input
+                              type="hidden"
+                              value="{{ booking.booking_id }}"
+                              name="booking_id"
+                              id="booking_id"
+                            />
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              BOOKING DETAILS
+                            </button>
+                          </form>
+                        </li>
+                        <hr />
+
+                        <li>
+                          <!-- Your form goes here -->
+                          <form method="POST" action="#">
+                            {% csrf_token %}
+                            <input
+                              type="hidden"
+                              value="{{ booking.booking_id }}"
+                              name="booking_id"
+                              id="booking_id"
+                            />
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              MARK AS BOOKED
+                            </button>
+                          </form>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+                </div>
+              </div>
+               <div
+                class="tab-pane fade"
+                id="cancelled"
+                role="tabpanel"
+                aria-labelledby="cancelled-tab"
+              >
+                <div class="table-responsive-sm">
+                  <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Facilities Booked</th>
+                  <th scope="col">Contact Number</th>
+                  <th scope="col">Contact Email</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for booking in cancelled %}
+                <tr>
+                  <th scope="row">{{ booking.booking_id }}</th>
+                  <td>{{booking.date}}</td>
+                  <td>
+                    {{ booking.customer.user.first_name}}&nbsp;{{booking.customer.user.last_name}}
+                  </td>
+                  <td>{{ booking.facility.count }}</td>
+                  <td>{{ booking.customer.phone }}</td>
+                  <td>{{ booking.customer.user.email}}</td>
+
+                  <td>
+                    <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i class="fas fa-cog"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <form method="POST" action="{% url 'booking_receipt' %}">
+                            {% csrf_token %}
+                            <input
+                              type="hidden"
+                              value="{{ booking.booking_id }}"
+                              name="booking_id"
+                              id="booking_id"
+                            />
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              BOOKING DETAILS
+                            </button>
+                          </form>
+                        </li>
+                       
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+  <!-- Service End -->
+</div>
+
+{% endblock %}

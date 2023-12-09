@@ -14,6 +14,7 @@ urlpatterns = [
     path('customer_user/',include('customer.urls')),
     path('restaurant_user/',include('restaurant.urls')),
     path('admin_user/',include('admin_workbench.urls')),
+    
 
 ]
 

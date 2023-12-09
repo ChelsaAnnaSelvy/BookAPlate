@@ -52,8 +52,8 @@ class CustomerRegistrationForm(forms.ModelForm):
         'address': '',
         'place': '',
         'state': '',
-        'id_proof': '',
-        'profile_photo': '',
+        'id_proof': 'ID PROOF',
+        'profile_photo': 'PROFILE PHOTO',
         
         }
         
@@ -66,6 +66,31 @@ class CustomerRegistrationForm(forms.ModelForm):
             'id_proof': forms.ClearableFileInput(attrs={'accept': 'image/*', 'class': 'form-control w-100 py-3'}),
         }
 
+class RestaurantAuthenticationForm(UserCreationForm):
+    # Define a custom widget for the password fields
+    password1 = forms.CharField(
+        label='',
+        widget=forms.PasswordInput(attrs={'class': 'form-control w-100 py-3', 'placeholder': 'Password'})
+    )
+    password2 = forms.CharField(
+        label='',
+        widget=forms.PasswordInput(attrs={'class': 'form-control w-100 py-3', 'placeholder': 'Re-enter password'})
+    )
+    class Meta:
+        model = User
+        fields =['first_name','email','username','password1','password2']
+        labels = {
+        'first_name': '',
+        'email': '',
+        'username': '',
+        }
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control w-100 py-3 w-100 py-3', 'placeholder': 'Name of the Restaurant'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control w-100 py-3', 'placeholder': 'Email'}),
+            'username': forms.TextInput(attrs={'class': 'form-control w-100 py-3', 'placeholder': 'Username'}),
+             }
+
+
 class RestaurantRegistrationForm(forms.ModelForm):
     class Meta:
         model= Restaurant
@@ -76,8 +101,8 @@ class RestaurantRegistrationForm(forms.ModelForm):
         'address': '',
         'place': '',
         'state': '',
-        'pancard': '',
-        'profile_photo': '',
+        'pancard': 'BUSINESS PANCARD',
+        'profile_photo': 'PROFILE PHOTO',
         'fssai_registration_number':'',
         'license_number':'',
         

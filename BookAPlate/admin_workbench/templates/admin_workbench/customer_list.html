@@ -11,9 +11,10 @@ BookAPLate | Customer List
         {% endfor %}
     
 {% endif %}
-
-
-<h5 class="card-title fw-semibold mb-4">Customers</h5>
+<div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <h5 class="card-title fw-semibold mb-4">Customers</h5>
               <div class="card">
                 <div class="card-body p-4">
                   <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -61,7 +62,8 @@ BookAPLate | Customer List
       {% else %}
         <td><label class="bg bg-danger-subtle">{{customer.status}}</label></td>
       {% endif %}
-      <td> <div class="btn-group">
+      <td> 
+        <div class="btn-group">
   <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
    Action
   </button>
@@ -199,5 +201,11 @@ BookAPLate | Customer List
 </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+
+
+
 {% endblock %}
 

@@ -35,6 +35,15 @@
 
     <!-- Template Stylesheet -->
     <link href="{% static 'book_a_plate/css/style.css' %}" rel="stylesheet">
+    {% if messages %}
+  {% for message in messages%}
+<script>
+  alert("{{ message }}");
+</script>
+{% endfor %} 
+{% endif %}
+     {% block head %}
+    {% endblock %}
 </head>
 
 <body>
@@ -92,7 +101,7 @@
                             <i class="fa fa-lock"></i>
                             <p class="mb-0">Change Password</p>
                         </a>
-                        <a href="{% url 'customer_profile' %}" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                        <a href="{% url 'logout' %}" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
                     </div>
                 </div>
               

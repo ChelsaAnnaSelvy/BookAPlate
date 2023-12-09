@@ -112,14 +112,7 @@ class Gallery(models.Model):
 
 class FacilityDetails(models.Model):
     facility_id = models.AutoField(primary_key=True)
-    # Define facility choices as a list of tuples
-    FACILITY_CHOICES = [
-        ('','Select Facility'),
-        ('Table', 'Table'),
-        ('Banquet Hall', 'Banquet Hall'),
-        ('Conference Hall', 'Conference Hall')
-    ]
-    facility_name = models.CharField(max_length=100, choices=FACILITY_CHOICES,default='Table')
+    facility_name = models.CharField(max_length=100,default='Table')
     facility_number =models.CharField(max_length=10)
     seat_count = models.IntegerField(default=2)     
     SEATING_LOCATION_CHOICES = [
@@ -129,13 +122,10 @@ class FacilityDetails(models.Model):
        
     ]
     seat_arrangement =  models.CharField(max_length=100, choices=SEATING_LOCATION_CHOICES, default= 'Indoor',null=True) 
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-
-    
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)  
 
 class BookingDetails(models.Model):
-    booking_id = models.AutoField(primary_key=True)   
-    
+    booking_id = models.AutoField(primary_key=True) 
     date = models.DateField(null=True)
     STATUS_CHOICES = [
         ('Booked', 'Booked'),
@@ -151,8 +141,10 @@ class BookingDetails(models.Model):
         
     ]
     meal_time = models.CharField(max_length=100, choices=MEAL_CHOICES,default='Full Day')
-    facility = models.ManyToManyField(FacilityDetails)
+    coins_spend = models.IntegerField(default=0)
+    facility = models.ManyToManyField(FacilityDetails, related_name='booking_facilities')
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    booked_date= models.DateField(auto_now_add=True)
 
 class Feedback(models.Model):
     feedback_id = models.AutoField(primary_key=True)

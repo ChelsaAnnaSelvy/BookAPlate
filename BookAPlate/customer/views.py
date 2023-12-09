@@ -1,13 +1,18 @@
-from datetime import datetime
+import base64
 import json
+import qrcode
+from datetime import datetime
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.models import User
 from admin_workbench.models import Customer,Restaurant,FacilityDetails,Feedback,Coins,BookingDetails,Gallery
 from .forms import EditCustomerForm,UserForm
+from django.contrib.auth import logout
 from django.contrib import messages
-# Create your views here.
+from io import BytesIO
 
-# ... Import other necessary modules and models ...
+
+
+# Create your views here.
 
 # Helper function to get customer and coins
 def get_customer_and_coins(request):
@@ -16,6 +21,12 @@ def get_customer_and_coins(request):
     coins = get_object_or_404(Coins, user=customer)
     return logged_user, customer, coins
 
+def LogoutView(request):
+    # Logout the user
+    logout(request)
+    
+    # Redirect to homepage
+    return redirect('login')  
 # Home view
 def HomeView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
@@ -97,7 +108,7 @@ def TableView(request):
         meal_time = request.POST.get('meal_time', '')
 
         # Get booked facility IDs
-        exclude_facility_ids = BookingDetails.objects.filter(date=date, meal_time=meal_time).values_list('facility__facility_id', flat=True)
+        exclude_facility_ids = BookingDetails.objects.filter(date=date, meal_time=meal_time,status= 'Booked').values_list('facility__facility_id', flat=True)
 
         # Get available facilities
         available_facilities = FacilityDetails.objects.exclude(facility_id__in=exclude_facility_ids)
@@ -182,7 +193,7 @@ def ConfirmBookTableView(request):
     return render(request, 'customer/booking_confirmation.html', context)
 
 # BookTableView
-def BookTableView(request):
+def BookTable(request):
     logged_user, customer, coins = get_customer_and_coins(request)
 
     # Retrieve data from the session
@@ -192,7 +203,6 @@ def BookTableView(request):
     date = request.session.get('date')
     remaining_coins = coins.coin_quantity if coins else 0
 
-    print(f'MYCOINS->{remaining_coins}, REQUIRED AMOUNT->{coin_count}')
 
     if remaining_coins >= coin_count and meal_time:
         coins.coin_quantity -= coin_count
@@ -204,6 +214,7 @@ def BookTableView(request):
             status='Booked',
             meal_time=meal_time,
             customer=customer,
+            coins_spend= coin_count,
         )
 
         # Get or create Facility instances and add them to the booking
@@ -225,9 +236,10 @@ def BookTableView(request):
         request.session.pop('meal_time', None)
         
         messages.success(request, 'You have successfully booked tables.Happy Dining!!!')
-
+        request.session['booking_id']=booking.booking_id
+        
         # Redirect to my_reservations
-        return redirect('my_reservations')
+        return redirect('booking_details')
     else:
         # If the condition is not met, display an error message and redirect to restaurants
         messages.error(request, 'Sorry, you have insufficient coins. Kindly contact customer care to buy our coin pack')
@@ -244,10 +256,202 @@ def BookTableView(request):
 def BookingHistoryView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
     my_booking = BookingDetails.objects.filter(customer=customer).order_by('-date')
+    
     context = {
         'bookings': my_booking,
         'logged_user': logged_user,
         'customer': customer,
         'coins': coins,
+        
     }
     return render(request, 'customer/booking_history.html', context)
+
+def CancelBooking(request):
+    logged_user, customer, coins = get_customer_and_coins(request)
+    if request.method== 'POST':
+        booking_id = request.POST['booking_id']
+        if booking_id != 0:
+            booking= get_object_or_404(BookingDetails,booking_id=booking_id)
+            booking.status='Cancelled'
+            booking.save()
+            date=booking.date
+            meal=booking.meal_time
+            facilities=booking.facility.all()
+            first_facility=booking.facility.first()
+            restaurant=first_facility.restaurant            
+            name=restaurant.user.first_name
+            messages.success(request,f'Your booking for {date} in {name} for {meal} is cancelled ')
+            
+        return redirect('my_reservations')
+    
+def generate_qr_code(data):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=1,
+        border=1,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    buffer = BytesIO()
+    img.save(buffer)
+    return buffer.getvalue()      
+
+def BookingDetailsView(request):
+    logged_user, customer, coins = get_customer_and_coins(request)
+    if request.method== 'POST':
+        booking_id = request.POST['booking_id']
+        
+        if booking_id != 0 :
+            booking= get_object_or_404(BookingDetails,booking_id=booking_id)
+            facilities=booking.facility.all()
+            first_facility=booking.facility.first()
+            restaurant=first_facility.restaurant
+            my_facilities = " "
+            for facility in facilities:
+              my_facilities=my_facilities+ facility.facility_number +" "
+            # Generate QR code for the booking_id
+            # qr_code_data = f"Booking ID: {booking_id}"
+            if booking.meal_time == 'Breakfast':
+              time='8:00 AM - 12:00 PM'
+            elif booking.meal_time == 'Lunch':
+              time='12:00 PM - 4:00 PM'
+            else:
+              time='4:00 PM - 8:00 PM'
+            
+            qr_code_data = f"""           
+                        This is a receipt
+            ----------------------------------------------------                     
+            BOOKING ID:       {booking_id}
+            DATE OF BOOKING:  {booking.booked_date}
+            ----------------------------------------------------
+                        CUSTOMER DETAILS
+            ----------------------------------------------------
+            
+            Customer's Name: {logged_user.first_name} {logged_user.last_name}
+            Phone: {customer.phone}
+            Email: {logged_user.email}
+
+            ----------------------------------------------------
+                        BOOKING DETAILS
+            ----------------------------------------------------
+            
+            Date of Dining: {booking.date}
+            Meal: {booking.meal_time}
+            Time Allotted: {time}
+            Tables Reserved: { my_facilities}
+            Seats reserved: For {int(booking.coins_spend/10)} People
+            
+            ----------------------------------------------------
+                    RESTAURANT DETAILS                
+            ----------------------------------------------------
+            
+            Retaurant's Name: {restaurant.user.first_name}
+            Email: {restaurant.user.email}
+            Phone: {restaurant.phone}
+            Address:  {restaurant.address},
+                              {restaurant.place},
+                              {restaurant.state}. 
+                          
+            ----------------------------------------------------
+            Happy Dining!!! See You Soon...        
+            ----------------------------------------------------
+            
+            
+            
+            """
+            qr_code_image = generate_qr_code(qr_code_data)
+
+            # Convert the binary data to a base64-encoded string
+            qr_code_base64 = base64.b64encode(qr_code_image).decode("utf-8")
+            context={
+            'booking':booking,
+            'logged_user': logged_user,
+            'customer': customer,
+            'coins': coins, 
+            'facilities':facilities,  
+            'head_count':int(booking.coins_spend/10), 
+            'restaurant':restaurant,
+            'qr_code':qr_code_base64,  
+            }
+            return render(request,'customer/booking_details.html',context)
+    else:
+        booking_id=request.session.get('booking_id',0)
+        if booking_id != 0 :
+            booking= get_object_or_404(BookingDetails,booking_id=booking_id)
+            facilities=booking.facility.all()
+            first_facility=booking.facility.first()
+            restaurant=first_facility.restaurant
+            my_facilities=''
+            for facility in facilities:
+                my_facilities=my_facilities+ facility.facility_number +" "
+                
+            # Generate QR code for the booking_id
+            if booking.meal_time == 'Breakfast':
+              time='8:00 AM - 12:00 PM'
+            elif booking.meal_time == 'Lunch':
+              time='12:00 PM - 4:00 PM'
+            else:
+              time='4:00 PM - 8:00 PM'
+            qr_code_data = f"""           
+                        This is a receipt
+            ----------------------------------------------------                     
+            BOOKING ID:       {booking_id}
+            DATE OF BOOKING:  {booking.booked_date}
+            ----------------------------------------------------
+                        CUSTOMER DETAILS
+            ----------------------------------------------------
+            
+            Customer's Name: {logged_user.first_name} {logged_user.last_name}
+            Phone: {customer.phone}
+            Email: {logged_user.email}
+
+            ----------------------------------------------------
+                        BOOKING DETAILS
+            ----------------------------------------------------
+            
+            Date of Dining: {booking.date}
+            Meal: {booking.meal_time}
+            Time Allotted: {time}
+            Tables Reserved: { my_facilities}
+            Seats reserved: For {int(booking.coins_spend/10)} People
+            
+            ----------------------------------------------------
+                    RESTAURANT DETAILS                
+            ----------------------------------------------------
+            
+            Retaurant's Name: {restaurant.user.first_name}
+            Email: {restaurant.user.email}
+            Phone: {restaurant.phone}
+            Address:  {restaurant.address},
+                              {restaurant.place},
+                              {restaurant.state}. 
+                          
+            ----------------------------------------------------
+            Happy Dining!!! See You Soon...        
+            ----------------------------------------------------
+            """
+            
+            qr_code_image = generate_qr_code(qr_code_data)
+
+            # Convert the binary data to a base64-encoded string
+            qr_code_base64 = base64.b64encode(qr_code_image).decode("utf-8")
+
+            context={
+            'booking':booking,
+            'logged_user': logged_user,
+            'customer': customer,
+            'coins': coins, 
+            'facilities':facilities,  
+            'head_count':int(booking.coins_spend/10), 
+            'restaurant':restaurant,
+            'qr_code':qr_code_base64,  
+            }
+            return render(request,'customer/booking_details.html',context)
+        
+    return render(request,'customer/booking_details.html')
+
+            

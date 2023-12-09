@@ -1,146 +1,175 @@
 {% load static %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
+  <!-- Required meta tags -->
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>{% block title %}{% endblock %}</title>
-  <link rel="shortcut icon" type="image/png" href="{% static 'book_a_plate/img/customer_reg.png' %}" />
-  <link rel="stylesheet" href="{% static 'user_admin/css/styles.min.css' %}" />
+  <!-- base:css -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="{% static 'site_admin/vendors/mdi/css/materialdesignicons.min.css'%}">
+  <link rel="stylesheet" href="{% static 'site_admin/vendors/css/vendor.bundle.base.css'%}">
+  <!-- endinject -->
+  <!-- plugin css for this page -->
+  <!-- End plugin css for this page -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="{% static 'site_admin/css/style.css'%}">
+  <!-- endinject -->
+  <link rel="shortcut icon" href="{% static 'site_admin/images/favicon.png'%}" />
 </head>
 
 <body>
-  <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
-    <!-- Sidebar Start -->
-    <aside class="left-sidebar">
-      <!-- Sidebar scroll-->
-      <div>
-        <div class="brand-logo d-flex align-items-center justify-content-between">
-         
-          <a href="{% url 'admin_home' %}" class="text-nowrap logo-img">
-            <img src="{% static 'book_a_plate/img/logo.png' %}" class="img-fluid" alt="" />
-          </a>  
-        </div>
-        <!-- Sidebar navigation-->
-        <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
-          <ul id="sidebarnav">
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">HOME</span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="#" aria-expanded="false">
-                <span>
-                  <i class="ti ti-layout-dashboard"></i>
-                </span>
-                <span class="hide-menu">Dashboard</span>
-              </a>
-            </li>
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">USERS</span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'customer_list' %}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-article"></i>
-                </span>
-                <span class="hide-menu">Customers</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="{% url 'restaurant_list' %}" aria-expanded="false">
-                <span>
-                  <i class="ti ti-alert-circle"></i>
-                </span>
-                <span class="hide-menu">Restaurants</span>
-              </a>
-            </li>
-          
-            <li class="nav-small-cap">
-              <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-              <span class="hide-menu">BOOKING</span>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="#" aria-expanded="false">
-                <span>
-                  <i class="ti ti-mood-happy"></i>
-                </span>
-                <span class="hide-menu">Feedbacks</span>
-              </a>
-            </li>
-            <li class="sidebar-item">
-              <a class="sidebar-link" href="#" aria-expanded="false">
-                <span>
-                  <i class="ti ti-aperture"></i>
-                </span>
-                <span class="hide-menu">Option</span>
-              </a>
-            </li>
-          </ul>
-          
-        </nav>
-        <!-- End Sidebar navigation -->
-      </div>
-      <!-- End Sidebar scroll-->
-    </aside>
-    <!--  Sidebar End -->
-    <!--  Main wrapper -->
-    <div class="body-wrapper">
-      <!--  Header Start -->
-      <header class="app-header">
-        <nav class="navbar navbar-expand-lg navbar-light">
-          <ul class="navbar-nav">
-            <li class="nav-item d-block d-xl-none">
-              <a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
-                <i class="ti ti-menu-2"></i>
-              </a>
-            </li>
-           
-          </ul>
-          <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-            <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-              <li class="nav-item dropdown">
-                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
-                  aria-expanded="false">
-                  <img src="{% static 'user_admin/images/profile/user-1.jpg'%}" alt="" width="35" height="35" class="rounded-circle">
-                </a>
-                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
-                  <div class="message-body">
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-user fs-6"></i>
-                      <p class="mb-0 fs-3">My Profile</p>
-                    </a>
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-mail fs-6"></i>
-                      <p class="mb-0 fs-3">My Account</p>
-                    </a>
-                    <a href="javascript:void(0)" class="d-flex align-items-center gap-2 dropdown-item">
-                      <i class="ti ti-list-check fs-6"></i>
-                      <p class="mb-0 fs-3">My Task</p>
-                    </a>
-                    <a href="./authentication-login.html" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
-                  </div>
-                </div>
-              </li>
+  <div class="container-scroller d-flex">
+    <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <ul class="nav">
+        <li class="nav-item sidebar-category">
+          <p>Navigation</p>
+          <span></span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'admin_home' %}">
+            <i class="mdi mdi-view-quilt menu-icon"></i>
+            <span class="menu-title">Dashboard</span>
+            
+          </a>
+        </li>
+        <li class="nav-item sidebar-category">
+          <p>Components</p>
+          <span></span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+            <i class="mdi mdi-palette menu-icon"></i>
+            <span class="menu-title">USERS</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="ui-basic">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="{% url 'restaurant_list'%}">RESTAURANTS</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{% url 'customer_list'%}">CUSTOMERS</a></li>
             </ul>
           </div>
-        </nav>
-      </header>
-      <!--  Header End -->
-      <div class="container-fluid">
-       {% block content %}{% endblock %}
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <i class="mdi mdi-view-headline menu-icon"></i>
+            <span class="menu-title">OPTION</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <i class="mdi mdi-chart-pie menu-icon"></i>
+            <span class="menu-title">FEEDBACKS</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <!-- partial -->
+    <div class="container-fluid page-body-wrapper">
+      <!-- partial:{% static 'site_admin/partials/_navbar.html -->
+      <nav class="navbar col-lg-12 col-12 px-0 py-0 py-lg-4 d-flex flex-row">
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="mdi mdi-menu"></span>
+          </button>
+          <div class="navbar-brand-wrapper">
+            <a class="navbar-brand brand-logo" href="#" style="color: #fea116;"><h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">BookAPlate</h4></a>
+            <a class="navbar-brand brand-logo-mini" href="#" style="color: #fea116;"><h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">BookAPlate</h4></a>
+          </div>
+          <h4 class="font-weight-bold mb-0 d-none d-md-block mt-1">Welcome back, {{logged_user.first_name}}&nbsp;{{logged_user.last_name}}</h4>
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item">
+              <h4 class="mb-0 font-weight-bold d-none d-xl-block">{{today}}</h4>
+            </li>
+            
+           
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
+            <span class="mdi mdi-menu"></span>
+          </button>
+        </div>
+        <div class="navbar-menu-wrapper navbar-search-wrapper d-none d-lg-flex align-items-center">
+          <ul class="navbar-nav mr-lg-2">
+            <li class="nav-item nav-search d-none d-lg-block">
+              <div class="input-group">
+                 </div>
+            </li>
+          </ul>
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item nav-profile dropdown">
+              <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
+                <img src="{% static 'site_admin/images/my_admin.jpg'%}" alt="profile"/>
+                <span class="nav-profile-name">{{logged_user.username}}</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                <a class="dropdown-item">
+                  <i class="mdi mdi-settings text-primary"></i>
+                  Change Password
+                </a>
+                <a class="dropdown-item" href="{% url 'logout'%}">
+                  <i class="mdi mdi-logout text-primary"></i>
+                  Logout
+                </a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link icon-link">
+                <i class="mdi mdi-plus-circle-outline"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link icon-link">
+                <i class="mdi mdi-web"></i>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link icon-link">
+                <i class="mdi mdi-clock-outline"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="main-panel">{% block content %}{% endblock %}
+       
+        <!-- content-wrapper ends -->
+        <!-- partial:{% static 'site_admin/partials/_footer.html -->
+        <footer class="footer">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-sm-flex justify-content-center justify-content-sm-between">
+                <span class="text-muted d-block text-center text-sm-left d-sm-inline-block">Copyright © bootstrapdash.com 2020</span>
+                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center"> Free <a href="https://www.bootstrapdash.com/" target="_blank">Bootstrap dashboard templates</a> from Bootstrapdash.com</span>
+              </div>
+            </div>
+          </div>
+        </footer>
+        <!-- partial -->
       </div>
+      <!-- main-panel ends -->
     </div>
+    <!-- page-body-wrapper ends -->
   </div>
-  <script src="{% static 'user_admin/libs/jquery/dist/jquery.min.js' %}"></script>
-  <script src="{% static 'user_admin/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
-  <script src="{% static 'user_admin/js/sidebarmenu.js' %}"></script>
-  <script src="{% static 'user_admin/js/app.min.js' %}"></script>
-  <script src="{% static 'user_admin/libs/simplebar/dist/simplebar.js' %}"></script>
+  <!-- container-scroller -->
+  <!-- base:js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+  <script src="{% static 'site_admin/vendors/js/vendor.bundle.base.js'%}"></script>
+  <!-- endinject -->
+  <!-- Plugin js for this page-->
+  <!-- End plugin js for this page-->
+  <!-- inject:js -->
+  <script src="{% static 'site_admin/js/off-canvas.js'%}"></script>
+  <script src="{% static 'site_admin/js/hoverable-collapse.js'%}"></script>
+  <script src="{% static 'site_admin/js/template.js'%}"></script>
+  <!-- endinject -->
+  <!-- plugin js for this page -->
+  <!-- End plugin js for this page -->
+  <!-- Custom js for this page-->
+  <!-- End custom js for this page-->
 </body>
 
 </html>

@@ -1,13 +1,26 @@
+from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from .models import Customer,Restaurant
 from django.contrib import messages
 
+
 # Create your views here.
 def HomeView(request):
     logged_user=request.user
-    return render(request,'admin_workbench/home.html',{'logged_user': logged_user})
+    context={
+        'logged_user': logged_user,
+        'today':datetime.now()
+        }
+    return render(request,'admin_workbench/home.html',context)
 
+def LogoutView(request):
+    # Logout the user
+    logout(request)
+    
+    # Redirect to homepage
+    return redirect('login')  
 
 def CustomerListView(request):
 
@@ -20,6 +33,7 @@ def CustomerListView(request):
         'customers': customers,
         'active_customers': active_customers,
         'inactive_customers': inactive_customers,
+        'today':datetime.now(),
     }
     return render(request,'admin_workbench/customer_list.html',context)
 
@@ -34,6 +48,7 @@ def RestaurantListView(request):
         'restaurants': restaurants,
         'active_restaurants': active_restaurants,
         'inactive_restaurants': inactive_restaurants,
+        'today':datetime.now(),
     }
     return render(request,'admin_workbench/restaurant_list.html',context)
 
@@ -54,9 +69,7 @@ def RestaurantStatus(request):
             restaurant.status= 'Inactive'
             restaurant.save()
             # Add a success message
-            messages.success(request, 'The restaurant is successfully Deactivated.')
-
-        
+            messages.success(request, 'The restaurant is successfully Deactivated.')       
         
         return redirect('restaurant_list')
 
@@ -67,7 +80,7 @@ def RestaurantDetailsView(request):
         restaurant= get_object_or_404(Restaurant,restaurant_id= restaurant_id)
         
         
-    return render(request,'admin_workbench/restaurant_details.html',{'restaurant':restaurant})
+    return render(request,'admin_workbench/restaurant_details.html',{'restaurant':restaurant,'today':datetime.now()})
 
 def CustomerStatus(request):
     if request.method == 'POST':
@@ -95,4 +108,4 @@ def CustomerDetailsView(request):
         customer= get_object_or_404(Customer,customer_id= customer_id)
         
         
-    return render(request,'admin_workbench/customer_details.html',{'customer':customer})
+    return render(request,'admin_workbench/customer_details.html',{'customer':customer,'today':datetime.now()})

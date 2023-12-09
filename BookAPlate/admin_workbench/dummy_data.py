@@ -14,8 +14,8 @@ def add_dummy_facility_records():
     
 
     # Generate and add 10 records
-    for i in range(60):
-        facility_number = f'T0{i+10}'  # Assuming facility_number starts from T020
+    for i in range(10):
+        facility_number = f'F{i}'  # Assuming facility_number starts from T020
         seat_count = random.choice(seat_counts)
 
         FacilityDetails.objects.create(

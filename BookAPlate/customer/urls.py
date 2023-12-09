@@ -1,8 +1,7 @@
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
-from customer.views import HomeView, CustomerProfileView, RestaurantListView, RestaurantProfileView, TableView, ConfirmBookTableView, BookTableView,BookingHistoryView
-
+from .views import HomeView, CustomerProfileView, RestaurantListView, RestaurantProfileView, TableView, ConfirmBookTableView, BookTable,BookingHistoryView,BookingDetailsView,LogoutView,CancelBooking
 urlpatterns=[
     path('',HomeView,name='customer_home'),
     path('profile/',CustomerProfileView,name='customer_profile'),
@@ -10,8 +9,11 @@ urlpatterns=[
     path('restaurant_profile/',RestaurantProfileView,name='restaurant_profile'),
     path('view_table/',TableView,name='view_table'),
     path('confirm_book_table/',ConfirmBookTableView,name='confirm_booking_table'),
-    path('book_table/',BookTableView,name='book_table'),
+    path('book_table/',BookTable,name='book_table'),
     path('reservations/',BookingHistoryView,name='my_reservations'),
+    path('booking_details/',BookingDetailsView,name='booking_details'),
+    path('cancel_booking/',CancelBooking,name='cancel_booking'),
+    path('logout/',LogoutView,name='logout'),
     
     
 ]

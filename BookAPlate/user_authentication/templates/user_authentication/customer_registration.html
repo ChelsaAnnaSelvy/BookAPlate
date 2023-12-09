@@ -5,6 +5,14 @@
 Customer SignUp
 {% endblock %}
 {% block content %}
+{% if messages %}
+  {% for message in messages%}
+<script>
+  alert("{{ message }}");
+</script>
+{% endfor %} 
+{% endif %}
+    
 <div class="container-xxl position-relative p-0">
     <div class="container-xxl py-5 bg-dark hero-header mb-5">
                 <div class="container text-center my-5 pt-5 pb-4">
@@ -46,7 +54,7 @@ Customer SignUp
                         <div class="wow fadeInUp" data-wow-delay="0.2s">
                            <form method="post" action="{% url 'customer'%}" enctype="multipart/form-data">
         {% csrf_token %}
-         <div class="row">
+         <div class="row g-3">
         
             {% for field in form %}
              <div class="col-md-6">

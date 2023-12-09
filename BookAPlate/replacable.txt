@@ -1,6 +1,24 @@
 {% extends 'admin_workbench/base.html'%}
 {% block title %}
-
+<div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">Text colors</h4>
+                  <p class="card-description">
+                    CONTENT</p>
+                  <div class="row">
+                    <div class="col-md-12">
+                     
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 {% endblock %}
 {% block content %}
 
