@@ -3,27 +3,32 @@ import base64
 from io import BytesIO
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from admin_workbench.models import Restaurant, FacilityDetails, BookingDetails, Feedback, Gallery
-from .forms import AboutForm, FacilityDetailsForm, GalleryDetailsForm, EditRestaurantAuthenticationForm, EditRestaurantRegistrationForm
+from admin_workbench.models import Restaurant, FacilityDetails, BookingDetails, Gallery, Coins
+from .forms import AboutForm, FacilityDetailsForm, GalleryDetailsForm, EditRestaurantAuthenticationForm, EditRestaurantRegistrationForm,ChangePasswordForm
 from django.contrib import messages
-from django.contrib.auth import logout
+from django.contrib.auth import logout,update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+
 
 # Logout view
+@login_required
 def LogoutView(request):
     """
     Log out the user and redirect to the login page.
     """
     logout(request)
+    request.session['logged_out'] = True
     return redirect('login')  
 
 # Home view
+@login_required
 def HomeView(request):
     """
     Display and update restaurant information for logged-in users.
     """
     logged_user = request.user
     logged_restaurant = Restaurant.objects.filter(user=logged_user).first()
-
+    galleries=Gallery.objects.filter(restaurant=logged_restaurant)
     if logged_restaurant:
         if request.method == 'POST':
             form = AboutForm(request.POST, instance=logged_restaurant)
@@ -32,11 +37,19 @@ def HomeView(request):
                 return redirect('restaurant_home')
         else:
             form = AboutForm(instance=logged_restaurant)
-            return render(request, 'restaurant/home.html', {'form': form, 'logged_user': logged_user})
+            context= {
+                'form': form, 
+                'logged_user': logged_user,
+                'restaurant':logged_restaurant,
+                'menu_galleries':galleries.filter(category='Menu'),
+                'restaurant_galleries':galleries.filter(category='Gallery')
+                }
+            return render(request, 'restaurant/home.html', context)
     else:
         return redirect('login')
 
 # Profile details view
+@login_required
 def ProfileDetailsView(request):
     """
     Display and update user and restaurant profile details.
@@ -70,6 +83,7 @@ def ProfileDetailsView(request):
     return redirect('restaurant_home')
 
 # Gallery details view
+@login_required
 def GalleryDetailsView(request):
     """
     Display and manage restaurant gallery items.
@@ -108,6 +122,7 @@ def GalleryDetailsView(request):
         return redirect('login')
 
 # Delete gallery item
+@login_required
 def DeleteGalleryItem(request):
     """
     Delete a gallery item.
@@ -126,6 +141,7 @@ def DeleteGalleryItem(request):
         return redirect('login')
 
 # Edit gallery item
+@login_required
 def EditGalleryItem(request):
     """
     Edit details of a gallery item.
@@ -155,6 +171,7 @@ def EditGalleryItem(request):
         return redirect('login')
 
 # Facility details view
+@login_required
 def FacilityDetailsView(request):
     """
     Display and manage restaurant facility details.
@@ -193,6 +210,7 @@ def FacilityDetailsView(request):
         return redirect('login')
 
 # Delete facility item
+@login_required
 def DeleteFacilityItem(request):
     """
     Delete a facility item.
@@ -211,6 +229,7 @@ def DeleteFacilityItem(request):
         return redirect('login')
 
 # Edit facility item
+@login_required
 def EditFacilityItem(request):
     """
     Edit details of a facility item.
@@ -239,7 +258,8 @@ def EditFacilityItem(request):
                 return render(request, 'restaurant/update_facility.html', context)
     else:
         return redirect('login')
-    
+
+@login_required    
 def BookingDetailsView(request):
     logged_user = request.user
     logged_restaurant = Restaurant.objects.filter(user=logged_user).first()
@@ -257,6 +277,7 @@ def BookingDetailsView(request):
    
     return render(request, 'restaurant/booking.html', context)
 
+
 def generate_qr_code(data):
     qr = qrcode.QRCode(
         version=1,
@@ -273,6 +294,7 @@ def generate_qr_code(data):
     img.save(buffer)
     return buffer.getvalue()      
 
+@login_required
 def BookingReceiptView(request):
     logged_user = request.user
     restaurant = Restaurant.objects.filter(user=logged_user).first()
@@ -355,6 +377,7 @@ def BookingReceiptView(request):
     
     return render(request,'restaurant/booking_receipt.html')
 
+@login_required
 def MarkAsCompleteView(request):
     logged_user = request.user
     logged_restaurant = Restaurant.objects.filter(user=logged_user).first()
@@ -365,7 +388,42 @@ def MarkAsCompleteView(request):
             booking= get_object_or_404(BookingDetails,booking_id=booking_id)
             booking.status='Completed'
             booking.save()
+            customer=booking.customer
+            rewarding_coins=int((booking.coins_spend/30) *20)
+            coins=get_object_or_404(Coins,user=customer)
+            coins.coin_quantity=int(coins.coin_quantity+rewarding_coins)
+            coins.save()
             messages.success(request,'The booking is completed and the resources are free to be booked')
     
     return redirect('reservations')
+
+# View for changing password
+@login_required
+def ChangePasswordView(request):
+    logged_user = request.user
+    logged_restaurant = Restaurant.objects.filter(user=logged_user).first()
+    if request.method == 'POST':
+        form = ChangePasswordForm(logged_user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('restaurant_home')
+        else:
+            # Check for the specific error related to old password
+            if 'old_password' in form.errors:
+                messages.error(request, 'The old password you entered is incorrect. Please try again.')
+            else:
+                messages.error(request, 'Please correct the error below.')
+    else:
+        form = ChangePasswordForm(logged_user)
+
+    context = {
+        'form': form,
+        'logged_user': logged_user,
+        'restaurant': logged_restaurant,
+    }
+
+    return render(request, 'restaurant/change_password.html', context)
+            
     

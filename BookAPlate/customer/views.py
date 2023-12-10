@@ -4,30 +4,34 @@ import qrcode
 from datetime import datetime
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.models import User
-from admin_workbench.models import Customer,Restaurant,FacilityDetails,Feedback,Coins,BookingDetails,Gallery
-from .forms import EditCustomerForm,UserForm
-from django.contrib.auth import logout
+from admin_workbench.models import Customer,Restaurant,FacilityDetails,Coins,BookingDetails,Gallery
+from .forms import EditCustomerForm,UserForm,ChangePasswordForm
+from django.contrib.auth import logout,update_session_auth_hash
 from django.contrib import messages
 from io import BytesIO
-
-
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 # Helper function to get customer and coins
+@login_required
 def get_customer_and_coins(request):
     logged_user = request.user
     customer = get_object_or_404(Customer, user=logged_user)
     coins = get_object_or_404(Coins, user=customer)
     return logged_user, customer, coins
 
+@login_required
 def LogoutView(request):
     # Logout the user
     logout(request)
+    request.session['logged_out'] = True
     
     # Redirect to homepage
     return redirect('login')  
+
 # Home view
+@login_required
 def HomeView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
     context = {
@@ -38,6 +42,7 @@ def HomeView(request):
     return render(request, 'customer/home.html', context)
 
 # Customer profile view
+@login_required
 def CustomerProfileView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
 
@@ -64,6 +69,7 @@ def CustomerProfileView(request):
     return render(request, 'customer/profile.html', context)
 
 # Restaurant list view
+@login_required
 def RestaurantListView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
     restaurants = Restaurant.objects.filter(status='Active')
@@ -77,6 +83,7 @@ def RestaurantListView(request):
     return render(request, 'customer/restaurants.html', context)
 
 # Restaurant profile view
+@login_required
 def RestaurantProfileView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
 
@@ -97,6 +104,7 @@ def RestaurantProfileView(request):
         return render(request, 'customer/restaurant_profile.html', context)
 
 # Table view
+@login_required
 def TableView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
 
@@ -136,6 +144,7 @@ def TableView(request):
     return render(request, 'customer/view_table.html', context)
 
 # Confirm book table view
+@login_required
 def ConfirmBookTableView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
 
@@ -160,16 +169,16 @@ def ConfirmBookTableView(request):
         facility_details_data = list(facility_details_list.values())
         meal = request.POST.get('meal', '')
         date = request.POST['date']
-        if coins and coins.coin_quantity >= total * 10:  # Ensure coins is not None
+        if coins and coins.coin_quantity >= total * 30:  # Ensure coins is not None
             request.session['facility_details_data'] = facility_details_data
-            request.session['coin_count'] = total * 10
+            request.session['coin_count'] = total * 30
             request.session['date'] = date
             request.session['meal_time'] = meal
 
             context = {
                 'facilities': facility_details_data,
                 'head_count': total,
-                'coin_count': total * 10,
+                'coin_count': total * 30,
                 'logged_user': logged_user,
                 'customer': customer,
                 'coins': coins,
@@ -193,6 +202,7 @@ def ConfirmBookTableView(request):
     return render(request, 'customer/booking_confirmation.html', context)
 
 # BookTableView
+@login_required
 def BookTable(request):
     logged_user, customer, coins = get_customer_and_coins(request)
 
@@ -253,6 +263,7 @@ def BookTable(request):
         return redirect('restaurants')
 
 # Booking history view
+@login_required
 def BookingHistoryView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
     my_booking = BookingDetails.objects.filter(customer=customer).order_by('-date')
@@ -266,6 +277,8 @@ def BookingHistoryView(request):
     }
     return render(request, 'customer/booking_history.html', context)
 
+# Cancel Booking view
+@login_required
 def CancelBooking(request):
     logged_user, customer, coins = get_customer_and_coins(request)
     if request.method== 'POST':
@@ -274,16 +287,22 @@ def CancelBooking(request):
             booking= get_object_or_404(BookingDetails,booking_id=booking_id)
             booking.status='Cancelled'
             booking.save()
+           
+            rewarding_coins=int((booking.coins_spend/30) *10)
+            coins=get_object_or_404(Coins,user=customer)
+            coins.coin_quantity=int(coins.coin_quantity+rewarding_coins)
+            coins.save()
             date=booking.date
             meal=booking.meal_time
             facilities=booking.facility.all()
             first_facility=booking.facility.first()
             restaurant=first_facility.restaurant            
             name=restaurant.user.first_name
-            messages.success(request,f'Your booking for {date} in {name} for {meal} is cancelled ')
+            messages.success(request,f'Your booking for {date} in {name} for {meal} is cancelled.You have received {rewarding_coins} coins for successfully cancelling your Booking. Thank You.')
             
         return redirect('my_reservations')
-    
+ 
+#Helper function to generate qrcode 
 def generate_qr_code(data):
     qr = qrcode.QRCode(
         version=1,
@@ -300,6 +319,8 @@ def generate_qr_code(data):
     img.save(buffer)
     return buffer.getvalue()      
 
+#Receipt for Booking 
+@login_required
 def BookingDetailsView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
     if request.method== 'POST':
@@ -454,4 +475,33 @@ def BookingDetailsView(request):
         
     return render(request,'customer/booking_details.html')
 
+# View for changing password
+@login_required
+def ChangePasswordView(request):
+    logged_user, customer, coins = get_customer_and_coins(request)
+
+    if request.method == 'POST':
+        form = ChangePasswordForm(logged_user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('customer_home')
+        else:
+            # Check for the specific error related to old password
+            if 'old_password' in form.errors:
+                messages.error(request, 'The old password you entered is incorrect. Please try again.')
+            else:
+                messages.error(request, 'Please correct the error below.')
+    else:
+        form = ChangePasswordForm(logged_user)
+
+    context = {
+        'form': form,
+        'logged_user': logged_user,
+        'customer': customer,
+        'coins': coins, 
+    }
+
+    return render(request, 'customer/change_password.html', context)
             

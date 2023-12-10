@@ -4,14 +4,6 @@ BookAPLate | Restaurant List
 {% endblock %}
 {% block content %}
 
-{% if messages %}
-    
-        {% for message in messages %}
-            <script>alert('{{ message }}')</script>
-        {% endfor %}
-    
-{% endif %}
-
 <div class="content-wrapper">
           <div class="row">
             <div class="col-md-12 grid-margin">
@@ -49,6 +41,7 @@ BookAPLate | Restaurant List
     </tr>
   </thead>
   <tbody>
+    {% if restaurants %}
     {% for restaurant in restaurants %}
     <tr>
       <th scope="row">{{ restaurant.restaurant_id }}</th>
@@ -79,6 +72,11 @@ BookAPLate | Restaurant List
 </div></td>
     </tr>
     {% endfor %}
+    {% else %}
+      <tr>
+        <th scope="row" colspan="9" class="text-center"><p>No records to display</p></th>
+      </tr>
+      {% endif %}
    
   </tbody>
 </table></div>
@@ -99,6 +97,7 @@ BookAPLate | Restaurant List
     </tr>
   </thead>
   <tbody>
+    {%if active_restaurants %}
     {% for restaurant in active_restaurants %}
     <tr>
       <th scope="row">{{ restaurant.restaurant_id }}</th>
@@ -135,6 +134,11 @@ BookAPLate | Restaurant List
       </td>
     </tr>
     {% endfor %}
+    {% else %}
+      <tr>
+        <th scope="row" colspan="9" class="text-center"><p>No records to display</p></th>
+      </tr>
+      {% endif %}
    
   </tbody>
 </table></div>
@@ -157,6 +161,7 @@ BookAPLate | Restaurant List
     </tr>
   </thead>
   <tbody>
+    {% if inactive_restaurants %}
     {% for restaurant in inactive_restaurants %}
     <tr>
       <th scope="row">{{ restaurant.restaurant_id }}</th>
@@ -195,6 +200,11 @@ BookAPLate | Restaurant List
       
     </tr>
     {% endfor %}
+    {% else %}
+      <tr>
+        <th scope="row" colspan="9" class="text-center"><p>No records to display</p></th>
+      </tr>
+      {% endif %}
    
   </tbody>
 </table></div></div>

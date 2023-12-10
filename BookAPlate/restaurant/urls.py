@@ -1,7 +1,7 @@
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import HomeView,ProfileDetailsView, GalleryDetailsView, DeleteGalleryItem, EditGalleryItem, FacilityDetailsView, DeleteFacilityItem,EditFacilityItem,LogoutView,BookingDetailsView,BookingReceiptView,MarkAsCompleteView
+from .views import HomeView,ProfileDetailsView, GalleryDetailsView, DeleteGalleryItem, EditGalleryItem, FacilityDetailsView, DeleteFacilityItem,EditFacilityItem,LogoutView,BookingDetailsView,BookingReceiptView,MarkAsCompleteView,ChangePasswordView
 
 urlpatterns=[
     path('',HomeView,name='restaurant_home'),
@@ -15,7 +15,8 @@ urlpatterns=[
     path('reservations/',BookingDetailsView,name='reservations'),
     path('logout/',LogoutView,name='logout'), 
     path('booking_receipt/',BookingReceiptView,name='booking_receipt'),
-    path('complete/',MarkAsCompleteView,name='mark_as_complete')
+    path('complete/',MarkAsCompleteView,name='mark_as_complete'),
+    path('restaurant_change_password/',ChangePasswordView,name='restaurant_change_password'),
    
 ]
 if settings.DEBUG:

@@ -10,23 +10,18 @@ BookAPlate | UpdateFacility {% endblock %} {% block head %}
     display: none !important;
   }
 </style>
-{% endblock %} {% block content %}
-{% if messages %}
-    
-        {% for message in messages %}
-            <script>alert('{{ message }}')</script>
-        {% endfor %}
-    
-{% endif %}
+{% endblock %} {% block content %} 
 <div class="container-xxl position-relative p-0">
   <div class="container-xxl py-5 bg-dark hero-header mb-5">
     <div class="container text-center my-5 pt-5 pb-4">
-      <h1 class="display-3 text-white mb-3 animated slideInDown">Update Facility</h1>
+      <h1 class="display-3 text-white mb-3 animated slideInDown">
+        Update Facility
+      </h1>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb justify-content-center text-uppercase">
           <li class="breadcrumb-item"><a href="#">Home</a></li>
           <li class="breadcrumb-item text-white active" aria-current="page">
-          Facility-Update
+            Facility-Update
           </li>
         </ol>
       </nav>
@@ -34,35 +29,52 @@ BookAPlate | UpdateFacility {% endblock %} {% block head %}
   </div>
 </div>
 <div class="container-xxl py-5">
- 
   <div class="container">
-    
     <div class="row g-5 align-items-center">
-                    <div class="col-lg-6 col-sm-6 col-md-6">
-                        <div class="row g-3">
-                            <div class="col-6 align-content-sm-start ms-5">
-                                <img class="img-fluid rounded w-100 wow zoomIn" data-wow-delay="0.1s" src="{% static 'book_a_plate/img/facility.png' %}">
-                            </div>                         
-                                                      
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-sm-6 col-md-6">
-                        <h5 class="section-title ff-secondary text-start text-primary fw-normal">Facility Details</h5>
-                        <h1 class="mt-4 mb-4"></h1>
-                        <label class="text-primary"><b><u>Facility Number</u></b></label>&nbsp;<p class="mb-4">{{facility.facility_number}}</p>
-                        <label class="text-primary"><b><u>Seat Count</u></b></label>&nbsp;<p class="mb-4">{{facility.seat_count}}</p>                        
-                        <label class="text-primary"><b><u>Category</u></b></label>&nbsp;<p class="mb-4">{{facility.facility_name}}</p>
-                        <label class="text-primary"><b><u>Location</u></b></label>&nbsp;<p class="mb-4">{{facility.seat_arrangement}}</p>                        
-                      </div>
-                </div>
- <div class="row g-3">
-    <div class="col-sm-6"></div>
-    <div class="col-sm-6">
-      <button type="submit" class="btn btn-primary" id="myModalBtn">
-       EDIT NOW
-      </button>
+      <div class="col-lg-6 col-sm-6 col-md-6">
+        <div class="row g-3">
+          <div class="col-6 align-content-sm-start ms-5">
+            <img
+              class="img-fluid rounded w-100 wow zoomIn"
+              data-wow-delay="0.1s"
+              src="{% static 'book_a_plate/img/facility.png' %}"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-sm-6 col-md-6">
+        <h5
+          class="section-title ff-secondary text-start text-primary fw-normal"
+        >
+          Facility Details
+        </h5>
+        <h1 class="mt-4 mb-4"></h1>
+        <label class="text-primary"
+          ><b><u>Facility Number</u></b></label
+        >&nbsp;
+        <p class="mb-4">{{facility.facility_number}}</p>
+        <label class="text-primary"
+          ><b><u>Seat Count</u></b></label
+        >&nbsp;
+        <p class="mb-4">{{facility.seat_count}}</p>
+        <label class="text-primary"
+          ><b><u>Category</u></b></label
+        >&nbsp;
+        <p class="mb-4">{{facility.facility_name}}</p>
+        <label class="text-primary"
+          ><b><u>Location</u></b></label
+        >&nbsp;
+        <p class="mb-4">{{facility.seat_arrangement}}</p>
+      </div>
     </div>
-  </div>
+    <div class="row g-3">
+      <div class="col-sm-6"></div>
+      <div class="col-sm-6">
+        <button type="submit" class="btn btn-primary" id="myModalBtn">
+          EDIT NOW
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 <div class="modal" id="myModal">
@@ -109,11 +121,11 @@ BookAPlate | UpdateFacility {% endblock %} {% block head %}
 
                         <div class="col-12">
                           <input
-                      type="hidden"
-                      value="{{facility.facility_id}}"
-                      name="facility_id"
-                      id="facility_id"
-                    />
+                            type="hidden"
+                            value="{{facility.facility_id}}"
+                            name="facility_id"
+                            id="facility_id"
+                          />
                           <button
                             type="submit"
                             class="btn btn-primary w-100 py-3"
@@ -134,7 +146,6 @@ BookAPlate | UpdateFacility {% endblock %} {% block head %}
           </div>
         </div>
       </div>
-       
     </div>
   </div>
 </div>

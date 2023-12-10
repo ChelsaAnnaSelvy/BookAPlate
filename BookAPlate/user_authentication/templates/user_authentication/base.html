@@ -48,7 +48,7 @@
         <!-- Navbar & Hero Start -->
         <div class="container-xxl position-relative p-0">
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-                <a href="#" class="navbar-brand p-0">
+                <a href="{% url 'home' %}" class="navbar-brand p-0">
                     <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>BookAPlate</h1>
                     <!-- <img src="img/logo.png' %}" alt="Logo"> -->
                 </a>
@@ -57,8 +57,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav ms-auto py-0 pe-4">
-                        <a href="#" class="nav-item nav-link active">Home</a>
-                        <a href="{% url 'customer' %}" class="nav-item nav-link">About</a>
+                        <a href="{% url 'home' %}" class="nav-item nav-link active">Home</a>
                         <a href="{% url 'login' %}" class="nav-item nav-link">Login</a>
                         
                         <div class="nav-item dropdown">
@@ -69,7 +68,7 @@
                                 
                             </div>
                         </div>
-                        <a href="#" class="nav-item nav-link">Contact</a>
+                        <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
                     </div>
                     
                 </div>
@@ -78,31 +77,39 @@
             
         </div>
        
-
+{% if messages %}
+  {% for message in messages%}
+<script>
+  alert("{{ message }}");
+</script>
+{% endfor %} 
+{% endif %}
     {% block content %}
     {% endblock %}
-  
-     <!-- Footer Start -->
-        <div class="container-fluid bg-dark text-light footer pt-4 mt-2 wow fadeIn" data-wow-delay="0.1s">
-            <div class="copyright">
+    <!-- Footer Start -->
+        <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+           
+            <div class="container">
+                <div class="copyright">
                     <div class="row">
                         <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                            &copy; <a class="border-bottom" href="#">BookAPlate</a>, All Right Reserved. 
-	
+                            &copy; <a class="border-bottom" href="#">BookAPlate</a>, All Right Reserved.						
+							
                         </div>
                         <div class="col-md-6 text-center text-md-end">
                             <div class="footer-menu">
-                                <a href="#">Home</a>
-                                <a href="#">Cookies</a>
-                                <a href="#">Help</a>
-                                <a href="#">FQAs</a>
+                                <a href="{% url 'home' %}">Home</a>
+                                <a href="{% url 'login' %}">Login</a>
+                                <a href="{% url 'contact' %}">Contact</a>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
-           
+            </div>
         </div>
         <!-- Footer End -->
+     
     </div>
 <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>

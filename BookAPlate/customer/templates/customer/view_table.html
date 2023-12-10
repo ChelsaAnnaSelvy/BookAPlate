@@ -11,13 +11,7 @@
   }
 </style>
 {% endblock %} {% block content %}
- {% if messages %}
-  {% for message in messages%}
-<script>
-  alert("{{ message }}");
-</script>
-{% endfor %} 
-{% endif %}
+ 
 <div class="container-xxl position-relative p-0">
   <div class="container-xxl py-5 bg-dark hero-header mb-5">
     <div class="container text-center my-5 pt-5 pb-4">
@@ -123,6 +117,7 @@
 <form id="booking-form" method="post" action="{% url 'confirm_booking_table' %}">
     {% csrf_token %}
     <div class="row row-cols-4 row-cols-sm-4 row-cols-md-4 row-cols-lg-6 g-3 pt-3">
+      {% if facilities %}
         {% for facility in facilities %}
             <div class="cols">
                {% if facility in available %}
@@ -133,6 +128,9 @@
                 {% endif %}
             </div>
         {% endfor %}
+        {% else %}
+      <div class="cols"><p class="text-center">No records to display</p></div>
+      {% endif %}
     </div>
 
     <div class="row g-3 pt-3">
@@ -219,19 +217,6 @@
         });
     });
 </script>
-
-
-
-
-   
-      
-    
- 
-  
 </div>
-
-
 </div>
-
-
 {% endblock %}

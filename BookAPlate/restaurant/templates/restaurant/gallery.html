@@ -11,13 +11,7 @@ BookAPlate | Gallery {% endblock %} {% block head %}
   }
 </style>
 {% endblock %} {% block content %}
-{% if messages %}
-    
-        {% for message in messages %}
-            <script>alert('{{ message }}')</script>
-        {% endfor %}
-    
-{% endif %}
+
 <div class="container-xxl position-relative p-0">
   <div class="container-xxl py-5 bg-dark hero-header mb-5">
     <div class="container text-center my-5 pt-5 pb-4">
@@ -26,7 +20,7 @@ BookAPlate | Gallery {% endblock %} {% block head %}
         <ol class="breadcrumb justify-content-center text-uppercase">
           <li class="breadcrumb-item"><a href="#">Home</a></li>
           <li class="breadcrumb-item text-white active" aria-current="page">
-          Gallery
+            Gallery
           </li>
         </ol>
       </nav>
@@ -45,212 +39,297 @@ BookAPlate | Gallery {% endblock %} {% block head %}
   <div class="container">
     <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
       <h5 class="section-title ff-secondary text-center text-primary fw-normal">
-       Gallery
+        Gallery
       </h5>
       <h1 class="mb-5">{{logged_user.first_name}}'s Gallery Items</h1>
     </div>
     <div class="clearfix"></div>
     <div class="tab-class text-center wow fadeInUp mt-4" data-wow-delay="0.1s">
-   <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5" id="myTab" role="tablist">
-  <li class="nav-item" role="presentation">
-    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active" id="all-tab" data-bs-toggle="pill" data-bs-target="#all"  role="tab" aria-controls="all" aria-selected="true" >
- <i class="fa fa-camera fa-2x text-primary"></i>
-                                <div class="ps-3">
-                                  <h6 class="mt-n1 mb-0">&nbsp;&nbsp;{{logged_user.first_name}}&nbsp;&nbsp;</h6>
-                                    <small class="text-body">&nbsp;&nbsp;All Photos&nbsp;&nbsp;</small>
-                                    
-                                </div>                            
-                              </a>
-  </li>
-  <li class="nav-item" role="presentation">
-    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3" id="menu-tab" data-bs-toggle="pill" data-bs-target="#menu"  role="tab" aria-controls="menu" aria-selected="false">
-      <i class="fa fa-hamburger fa-2x text-primary"></i>
-                                <div class="ps-3">
-                                  <h6 class="mt-n1 mb-0">&nbsp;&nbsp;Menu&nbsp;&nbsp;</h6>
-                                    <small class="text-body">&nbsp;&nbsp;Gallery&nbsp;&nbsp;</small>
-                                    
-                                </div>    
-    </a>
-  </li>
-  <li class="nav-item" role="presentation">
-    <a class="d-flex align-items-center text-start mx-3 ms-0 pb-3" id="photo-tab" data-bs-toggle="pill" data-bs-target="#photo"  role="tab" aria-controls="photo" aria-selected="false">
-      <i class="fa fa-building fa-2x text-primary"></i>
-                                <div class="ps-3">
-                                    <h6 class="mt-n1 mb-0">&nbsp;&nbsp;Restaurant&nbsp;&nbsp;</h6>
-                                    <small class="text-body">&nbsp;&nbsp;Gallery&nbsp;&nbsp;</small>
-                                    
-                                </div>  
-    </a>
-  </li>
-  
-   </ul>
-   </div>
-<div class="tab-content" id="myTabContent">
-   <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+      <ul
+        class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5"
+        id="myTab"
+        role="tablist"
+      >
+        <li class="nav-item" role="presentation">
+          <a
+            class="d-flex align-items-center text-start mx-3 ms-0 pb-3 active"
+            id="all-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#all"
+            role="tab"
+            aria-controls="all"
+            aria-selected="true"
+          >
+            <i class="fa fa-camera fa-2x text-primary"></i>
+            <div class="ps-3">
+              <h6 class="mt-n1 mb-0">
+                &nbsp;&nbsp;{{logged_user.first_name}}&nbsp;&nbsp;
+              </h6>
+              <small class="text-body"
+                >&nbsp;&nbsp;All Photos&nbsp;&nbsp;</small
+              >
+            </div>
+          </a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a
+            class="d-flex align-items-center text-start mx-3 ms-0 pb-3"
+            id="menu-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#menu"
+            role="tab"
+            aria-controls="menu"
+            aria-selected="false"
+          >
+            <i class="fa fa-hamburger fa-2x text-primary"></i>
+            <div class="ps-3">
+              <h6 class="mt-n1 mb-0">&nbsp;&nbsp;Menu&nbsp;&nbsp;</h6>
+              <small class="text-body">&nbsp;&nbsp;Gallery&nbsp;&nbsp;</small>
+            </div>
+          </a>
+        </li>
+        <li class="nav-item" role="presentation">
+          <a
+            class="d-flex align-items-center text-start mx-3 ms-0 pb-3"
+            id="photo-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#photo"
+            role="tab"
+            aria-controls="photo"
+            aria-selected="false"
+          >
+            <i class="fa fa-building fa-2x text-primary"></i>
+            <div class="ps-3">
+              <h6 class="mt-n1 mb-0">&nbsp;&nbsp;Restaurant&nbsp;&nbsp;</h6>
+              <small class="text-body">&nbsp;&nbsp;Gallery&nbsp;&nbsp;</small>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="tab-content" id="myTabContent">
+      <div
+        class="tab-pane fade show active"
+        id="all"
+        role="tabpanel"
+        aria-labelledby="all-tab"
+      >
         <div class="row g-4 mt-4 mb-2">
-      {% for gallery in galleries %}
-      <div class="col-md-4">
-        <div class="wow fadeInUp" data-wow-delay="0.2s">
-          <div class="card container-fluid" style="height:600px ;overflow-y: auto;">
-            <img
-              class="card-img-top img-fluid pt-4" style="height:300px;"
-              src="{{gallery.photo.url}}"
-              alt="Card image cap"
-            />
-            <div class="card-body">
-              <h5 class="card-title">{{gallery.title}}</h5>
-              <p class="card-text">{{gallery.description}}</p>
-            </div>
-            <div class="card-body">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item"></li>
-                <li class="list-group-item">
-                  <form method="POST" action="{% url 'edit_gallery_item' %}">
-                     {% csrf_token %}
-                    <input
-                      type="hidden"
-                      value="{{gallery.gallery_id}}"
-                      name="gallery_id"
-                      id="gallery_id"
-                    />
-                    <button type="submit" class="btn btn-outline-primary" id="myEditModalBtn">
-                      VIEW DETAILS
-                    </button>
-                  </form>
-                </li>
-                <li class="list-group-item">
-                  <form method="POST" action="{% url 'delete_gallery_item' %}">
-                    {% csrf_token %}
-                    <input
-                      type="hidden"
-                      value="{{gallery.gallery_id}}"
-                      name="gallery_id"
-                      id="gallery_id"
-                    />
-                    <button type="submit" class="btn btn-primary">
-                      DELETE
-                    </button>
-                  </form>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-  </div>
-   </div>
-    <div class="tab-pane fade" id="menu" role="tabpanel" aria-labelledby="menu-tab"> 
-    <div class="row g-4 mt-4 mb-2">
-      {% for gallery in menu_galleries %}
-      <div class="col-md-4">
-        <div class="wow fadeInUp" data-wow-delay="0.2s">
-          <div class="card container-fluid" style="height:600px ;overflow-y: auto;">
-            <img
-              class="card-img-top img-fluid pt-4 " style="height:300px;"
-              src="{{gallery.photo.url}}"
-              alt="Card image cap"
-            />
-            <div class="card-body">
-              <h5 class="card-title">{{gallery.title}}</h5>
-              <p class="card-text">{{gallery.description}}</p>
-            </div>
-            <div class="card-body">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item"></li>
-                <li class="list-group-item">
-                  <form method="POST" action="{% url 'edit_gallery_item' %}">
-                     {% csrf_token %}
-                    <input
-                      type="hidden"
-                      value="{{gallery.gallery_id}}"
-                      name="gallery_id"
-                      id="gallery_id"
-                    />
-                    <button type="submit" class="btn btn-outline-primary">
-                      VIEW DETAILS
-                    </button>
-                  </form>
-                </li>
-                <li class="list-group-item">
-                  <form method="POST" action="{% url 'delete_gallery_item' %}">
-                     {% csrf_token %}
-                    <input
-                      type="hidden"
-                      value="{{gallery.gallery_id}}"
-                      name="gallery_id"
-                      id="gallery_id"
-                    />
-                    <button type="submit" class="btn btn-primary">
-                      DELETE
-                    </button>
-                  </form>
-                </li>
-              </ul>
+          {% if galleries %} {% for gallery in galleries %}
+          <div class="col-md-4">
+            <div class="wow fadeInUp" data-wow-delay="0.2s">
+              <div
+                class="card container-fluid"
+                style="height: 600px; overflow-y: auto"
+              >
+                <img
+                  class="card-img-top img-fluid pt-4"
+                  style="height: 300px"
+                  src="{{gallery.photo.url}}"
+                  alt="Card image cap"
+                />
+                <div class="card-body">
+                  <h5 class="card-title">{{gallery.title}}</h5>
+                  <p class="card-text">{{gallery.description}}</p>
+                </div>
+                <div class="card-body">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item"></li>
+                    <li class="list-group-item">
+                      <form
+                        method="POST"
+                        action="{% url 'edit_gallery_item' %}"
+                      >
+                        {% csrf_token %}
+                        <input
+                          type="hidden"
+                          value="{{gallery.gallery_id}}"
+                          name="gallery_id"
+                          id="gallery_id"
+                        />
+                        <button
+                          type="submit"
+                          class="btn btn-outline-primary"
+                          id="myEditModalBtn"
+                        >
+                          VIEW DETAILS
+                        </button>
+                      </form>
+                    </li>
+                    <li class="list-group-item">
+                      <form
+                        method="POST"
+                        action="{% url 'delete_gallery_item' %}"
+                      >
+                        {% csrf_token %}
+                        <input
+                          type="hidden"
+                          value="{{gallery.gallery_id}}"
+                          name="gallery_id"
+                          id="gallery_id"
+                        />
+                        <button type="submit" class="btn btn-primary">
+                          DELETE
+                        </button>
+                      </form>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
+          {% endfor %} {% else %}
+          <div class="col-md-12 text-center"><p>No photos to display</p></div>
+          {% endif %}
         </div>
       </div>
-      {% endfor %}
-  </div>
-  </div>
-  <div class="tab-pane fade" id="photo" role="tabpanel" aria-labelledby="photo-tab"> 
-       <div class="row g-4 mt-4 mb-2">
-      {% for gallery in photo_galleries %}
-      <div class="col-md-4">
-        <div class="wow fadeInUp" data-wow-delay="0.2s">
-          <div class="card container-fluid" style="height:600px ;overflow-y: auto;">
-            <img
-              class="card-img-top img-fluid pt-4" style="height:300px;"
-              src="{{gallery.photo.url}}"
-              alt="Card image cap"
-            />
-            <div class="card-body">
-              <h5 class="card-title">{{gallery.title}}</h5>
-              <p class="card-text">{{gallery.description}}</p>
-            </div>
-            <div class="card-body">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item"></li>
-                <li class="list-group-item">
-                  <form method="POST" action="{% url 'edit_gallery_item' %}">
-                     {% csrf_token %}
-                    <input
-                      type="hidden"
-                      value="{{gallery.gallery_id}}"
-                      name="gallery_id"
-                      id="gallery_id"
-                    />
-                    <button type="submit" class="btn btn-outline-primary" id="myEditModalBtn">
-                      VIEW DETAILS
-                    </button>
-                  </form>
-                </li>
-                <li class="list-group-item">
-                  <form method="POST" action="{% url 'delete_gallery_item' %}">
-                     {% csrf_token %}
-                    <input
-                      type="hidden"
-                      value="{{gallery.gallery_id}}"
-                      name="gallery_id"
-                      id="gallery_id"
-                    />
-                    <button type="submit" class="btn btn-primary">
-                      DELETE
-                    </button>
-                  </form>
-                </li>
-              </ul>
+      <div
+        class="tab-pane fade"
+        id="menu"
+        role="tabpanel"
+        aria-labelledby="menu-tab"
+      >
+        <div class="row g-4 mt-4 mb-2">
+          {% if menu_galleries %} {% for gallery in menu_galleries %}
+          <div class="col-md-4">
+            <div class="wow fadeInUp" data-wow-delay="0.2s">
+              <div
+                class="card container-fluid"
+                style="height: 600px; overflow-y: auto"
+              >
+                <img
+                  class="card-img-top img-fluid pt-4"
+                  style="height: 300px"
+                  src="{{gallery.photo.url}}"
+                  alt="Card image cap"
+                />
+                <div class="card-body">
+                  <h5 class="card-title">{{gallery.title}}</h5>
+                  <p class="card-text">{{gallery.description}}</p>
+                </div>
+                <div class="card-body">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item"></li>
+                    <li class="list-group-item">
+                      <form
+                        method="POST"
+                        action="{% url 'edit_gallery_item' %}"
+                      >
+                        {% csrf_token %}
+                        <input
+                          type="hidden"
+                          value="{{gallery.gallery_id}}"
+                          name="gallery_id"
+                          id="gallery_id"
+                        />
+                        <button type="submit" class="btn btn-outline-primary">
+                          VIEW DETAILS
+                        </button>
+                      </form>
+                    </li>
+                    <li class="list-group-item">
+                      <form
+                        method="POST"
+                        action="{% url 'delete_gallery_item' %}"
+                      >
+                        {% csrf_token %}
+                        <input
+                          type="hidden"
+                          value="{{gallery.gallery_id}}"
+                          name="gallery_id"
+                          id="gallery_id"
+                        />
+                        <button type="submit" class="btn btn-primary">
+                          DELETE
+                        </button>
+                      </form>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
+          {% endfor %} {% else %}
+          <div class="col-md-12 text-center"><p>No photos to display</p></div>
+          {% endif %}
         </div>
       </div>
-      {% endfor %}
+      <div
+        class="tab-pane fade"
+        id="photo"
+        role="tabpanel"
+        aria-labelledby="photo-tab"
+      >
+        <div class="row g-4 mt-4 mb-2">
+          {% if photo_galleries %} {% for gallery in photo_galleries %}
+          <div class="col-md-4">
+            <div class="wow fadeInUp" data-wow-delay="0.2s">
+              <div
+                class="card container-fluid"
+                style="height: 600px; overflow-y: auto"
+              >
+                <img
+                  class="card-img-top img-fluid pt-4"
+                  style="height: 300px"
+                  src="{{gallery.photo.url}}"
+                  alt="Card image cap"
+                />
+                <div class="card-body">
+                  <h5 class="card-title">{{gallery.title}}</h5>
+                  <p class="card-text">{{gallery.description}}</p>
+                </div>
+                <div class="card-body">
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item"></li>
+                    <li class="list-group-item">
+                      <form
+                        method="POST"
+                        action="{% url 'edit_gallery_item' %}"
+                      >
+                        {% csrf_token %}
+                        <input
+                          type="hidden"
+                          value="{{gallery.gallery_id}}"
+                          name="gallery_id"
+                          id="gallery_id"
+                        />
+                        <button
+                          type="submit"
+                          class="btn btn-outline-primary"
+                          id="myEditModalBtn"
+                        >
+                          VIEW DETAILS
+                        </button>
+                      </form>
+                    </li>
+                    <li class="list-group-item">
+                      <form
+                        method="POST"
+                        action="{% url 'delete_gallery_item' %}"
+                      >
+                        {% csrf_token %}
+                        <input
+                          type="hidden"
+                          value="{{gallery.gallery_id}}"
+                          name="gallery_id"
+                          id="gallery_id"
+                        />
+                        <button type="submit" class="btn btn-primary">
+                          DELETE
+                        </button>
+                      </form>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <div class="col-md-12 text-center"><p>No photos to display</p></div>
+          {% endif %}
+        </div>
       </div>
-   
-  </div>
- 
-</div>
+    </div>
   </div>
 </div>
 <div class="modal" id="myModal">
@@ -316,7 +395,6 @@ BookAPlate | Gallery {% endblock %} {% block head %}
           </div>
         </div>
       </div>
-       
     </div>
   </div>
 </div>

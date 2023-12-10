@@ -146,12 +146,6 @@ class BookingDetails(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     booked_date= models.DateField(auto_now_add=True)
 
-class Feedback(models.Model):
-    feedback_id = models.AutoField(primary_key=True)
-    rating = models.DecimalField(max_digits=2, decimal_places=1, null=True)
-    feedback = models.TextField()
-    booking = models.ForeignKey(BookingDetails, on_delete=models.CASCADE)
-
 class Coins(models.Model):
     coin_id = models.AutoField(primary_key=True)
     coin_quantity = models.IntegerField(default= 2000)

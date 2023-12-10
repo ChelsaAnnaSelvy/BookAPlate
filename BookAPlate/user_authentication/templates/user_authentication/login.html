@@ -1,3 +1,4 @@
+
 {% extends 'user_authentication/base.html'%}
 {% load static %}
 {% block title %}
@@ -5,13 +6,7 @@
 {% endblock %}
 
 {% block content %}
-{% if messages %}
-  {% for message in messages%}
-<script>
-  alert("{{ message }}");
-</script>
-{% endfor %} 
-{% endif %}
+
     
 <div class="container-xxl position-relative p-0">
     <div class="container-xxl py-5 bg-dark hero-header mb-5">
@@ -33,46 +28,113 @@
                    
                 </div>
                 <div class="row g-4">
-                    <div class="col-12">
-                        <div class="row gy-4">
-                         
-                        </div>
+                     <div  class="col-lg-5 col-sm-5 d-flex align-items-center justify-content-center">
+              <div class="auth-form-transparent text-left p-3">
+                <div class="brand-logo">
+                  <a href="#" class="navbar-brand p-0">
+                    <h1 class="text-primary m-0">
+                      <i class="fa fa-utensils me-3"></i>BookAPlate
+                    </h1>
+                  </a>
+                </div>
+                <h4>Welcome back!</h4>
+                <h6 class="font-weight-light">Login As A Customer!</h6>
+                <form
+                  method="post"
+                  action="{% url 'login'%}"
+                  enctype="multipart/form-data"
+                >
+                  {% csrf_token %}
+                  <div class="row g-3">
+                    {% for field in form %}
+                    <div class="col-md-12">
+                      {{ field.label_tag }} {{ field }}{% if field.errors %}
+                      <ul class="errorlist">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
+                      {% endif %}
                     </div>
-                    <div class="col-md-6" data-wow-delay="0.1s">
-                        <img class="w-100 h-50"
-                            src="{% static 'book_a_plate/img/login.jpg'%}"/>
+
+                    {% endfor %}
+                  </div>
+                  
+                <div class="my-2 d-flex justify-content-between align-items-center">
+                  <div class="form-check">
+                    <label class="form-check-label text-muted">
+                      <input type="checkbox" class="form-check-input">
+                      Keep me signed in
+                    </label>
+                  </div>
+                  <a href="{% url 'forgot_password' %}" class="auth-link text-black">Forgot password?</a>
+                </div>
+                <div class="text-center">
+                    <input type="hidden" name="user_type" value="customer">
+                  <button type="submit" class="btn btn-block btn-primary">LOGIN</button>
+                </div>
+                
+                <div class="text-center mt-4 font-weight-light">
+                  Don't have an account? <a href="{% url 'customer' %}" class="text-primary">Create</a>
+                </div>
+                </form>
+              </div>
+            </div>
+            <div class=" col-sm-2 d-flex align-items-center justify-content-center">
+                <h4 class="text-primary">OR</h4>
+            </div>
+            <div  class="col-lg-5 col-sm-5 d-flex align-items-center justify-content-center">
+              <div class="auth-form-transparent text-left p-3">
+                <div class="brand-logo">
+                  <a href="#" class="navbar-brand p-0">
+                    <h1 class="text-primary m-0">
+                      <i class="fa fa-utensils me-3"></i>BookAPlate
+                    </h1>
+                  </a>
+                </div>
+                <h4>Welcome back!</h4>
+                <h6 class="font-weight-light">Login As A Restaurant!</h6>
+                <form
+                  method="post"
+                  action="{% url 'login'%}"
+                  enctype="multipart/form-data"
+                >
+                  {% csrf_token %}
+                  <div class="row g-3">
+                    {% for field in form %}
+                    <div class="col-md-12">
+                      {{ field.label_tag }} {{ field }}{% if field.errors %}
+                      <ul class="errorlist">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
+                      {% endif %}
                     </div>
-                    <div class="col-md-6">
-                        <div class="wow fadeInUp" data-wow-delay="0.2s">
-                           <form method="post" action="{% url 'login'%}" enctype="multipart/form-data">
-        {% csrf_token %}
-         <div class="row g-3">
-        
-            {% for field in form %}
-             <div class="col-md-12">
-                     
-                 {{ field.label_tag }}  {{ field }}{% if field.errors %}
-                            <ul class="errorlist">
-                                {% for error in field.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %} 
-                        
-                        </div>      
-        
-            {% endfor %} 
-           
-           
-      <div class="col-12">
-      
-            <button type="submit" class="btn btn-primary w-100 py-3">Login</button>
-        </div>
-         
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+
+                    {% endfor %}
+                  </div>
+                  
+                <div class="my-2 d-flex justify-content-between align-items-center">
+                  <div class="form-check">
+                    <label class="form-check-label text-muted">
+                      <input type="checkbox" class="form-check-input">
+                      Keep me signed in
+                    </label>
+                  </div>
+                  <a href="{% url 'forgot_password' %}" class="auth-link text-black">Forgot password?</a>
+                </div>
+                <div class="text-center">
+                    <input type="hidden" name="user_type" value="restaurant">
+                  <button type="submit" class="btn btn-block btn-primary">LOGIN</button>
+                </div>
+                
+                <div class="text-center mt-4 font-weight-light">
+                  Don't have an account? <a href="{% url 'restaurant' %}" class="text-primary">Create</a>
+                </div>
+                </form>
+              </div>
+            </div>
                 </div>
             </div>
         </div>

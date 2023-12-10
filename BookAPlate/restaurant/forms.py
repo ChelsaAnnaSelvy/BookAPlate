@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from admin_workbench.models import FacilityDetails,Gallery,Restaurant
+from admin_workbench.forms import ChangePasswordForm
 
 class AboutForm(forms.ModelForm):
     

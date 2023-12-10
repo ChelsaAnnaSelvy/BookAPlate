@@ -1,7 +1,7 @@
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import HomeView, CustomerListView, CustomerStatus, CustomerDetailsView, RestaurantListView, RestaurantStatus, RestaurantDetailsView,LogoutView
+from .views import HomeView, CustomerListView, CustomerStatus, CustomerDetailsView, RestaurantListView, RestaurantStatus, RestaurantDetailsView,LogoutView,ChangePasswordView
 
 urlpatterns=[
     path('',HomeView,name='admin_home'),
@@ -11,6 +11,7 @@ urlpatterns=[
     path('restaurant_list/',RestaurantListView,name='restaurant_list'),
     path('restaurant_status/',RestaurantStatus,name='restaurant_status'),
     path('restaurant_details/',RestaurantDetailsView,name='restaurant_details'),
+    path('change_password/',ChangePasswordView,name='change_password'),
     path('logout/',LogoutView,name='logout'),
 ]
 if settings.DEBUG:

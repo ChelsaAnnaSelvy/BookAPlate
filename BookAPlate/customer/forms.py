@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
-from admin_workbench.models import Customer,Restaurant,FacilityDetails,Feedback,Coins,BookingDetails,Gallery
-
+from admin_workbench.forms import ChangePasswordForm
+from admin_workbench.models import Customer,Restaurant,FacilityDetails,Coins,BookingDetails,Gallery
+ 
 
 class UserForm(forms.ModelForm):   
     class Meta:

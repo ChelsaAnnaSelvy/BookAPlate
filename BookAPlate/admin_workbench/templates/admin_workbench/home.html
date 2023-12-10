@@ -9,13 +9,74 @@ BookAPLate | Home
               <h5 class="card-title fw-semibold mb-4">Dashboard</h5>
               <div class="card">
                 <div class="card-body p-4">
-                  <p>Greetings dear {{logged_user}} Admin</p>
+
+                   <!-- row end -->
+          <div class="row">
+           
+            <div class="col-md-3 grid-margin stretch-card">
+              <div class="card bg-info d-flex align-items-center">
+                <div class="card-body py-5">
+                  <div
+                    class="d-flex flex-row align-items-center flex-wrap justify-content-md-center justify-content-xl-start py-1">
+                    <i class="mdi mdi-view-dashboard text-white icon-lg"></i>
+                    <div class="ml-3 ml-md-0 ml-xl-3">
+                      <h5 class="text-white font-weight-bold">{{all_count}} USERS</h5>
+                      <p class="mt-2 text-white card-text">Your site is growing </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 grid-margin stretch-card">
+              <div class="card bg-success d-flex align-items-center">
+                <div class="card-body py-5">
+                  <div
+                    class="d-flex flex-row align-items-center flex-wrap justify-content-md-center justify-content-xl-start py-1">
+                    <i class="mdi mdi-account text-white icon-lg"></i>
+                    <div class="ml-3 ml-md-0 ml-xl-3">
+                      <h5 class="text-white font-weight-bold">{{customer_count}} CUSTOMERS</h5>
+                      <p class="mt-2 text-white card-text">They contribute a lot!!! </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>            
+            <div class="col-md-3 grid-margin stretch-card">
+              <div class="card bg-primary d-flex align-items-center">
+                <div class="card-body py-5">
+                  <div
+                    class="d-flex flex-row align-items-center flex-wrap justify-content-md-center justify-content-xl-start py-1">
+                    <i class="mdi mdi-office-building text-white icon-lg"></i>
+                    <div class="ml-3 ml-md-0 ml-xl-3">
+                      <h5 class="text-white font-weight-bold">{{diner_count}} DINERS</h5>
+                      <p class="mt-2 text-white card-text">Service  </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3 grid-margin stretch-card">
+              <div class="card bg-danger d-flex align-items-center">
+                <div class="card-body py-5">
+                  <div
+                    class="d-flex flex-row align-items-center flex-wrap justify-content-md-center justify-content-xl-start py-1">
+                    <i class="mdi mdi-view-list text-white icon-lg"></i>
+                    <div class="ml-3 ml-md-0 ml-xl-3">
+                      <h5 class="text-white font-weight-bold">{{booking_count}} BOOKINGS</h5>
+                      <p class="mt-2 text-white card-text">BookAPlate owes a lot </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+          <!-- row end -->
+                </div>
+                
+              </div>
+              
+            </div>
+          </div>
         </div>
-
-
-
+        
 {% endblock %}

@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
 from admin_workbench.models import User, Customer, Restaurant 
 
+
 class LoginForm(AuthenticationForm):
      # Define a custom widget for the password fields
     username = forms.CharField(
@@ -90,7 +91,6 @@ class RestaurantAuthenticationForm(UserCreationForm):
             'username': forms.TextInput(attrs={'class': 'form-control w-100 py-3', 'placeholder': 'Username'}),
              }
 
-
 class RestaurantRegistrationForm(forms.ModelForm):
     class Meta:
         model= Restaurant
@@ -117,4 +117,15 @@ class RestaurantRegistrationForm(forms.ModelForm):
             'license_number': forms.TextInput(attrs={'placeholder': 'License Number', 'class': 'form-control w-100 py-3'}),
             'profile_photo': forms.ClearableFileInput(attrs={'accept': 'image/*', 'class': 'form-control w-100 py-3'}),
             'pancard': forms.ClearableFileInput(attrs={'accept': 'image/*', 'class': 'form-control w-100 py-3'}),
+        }
+
+class ForgotPasswordForm(forms.ModelForm):
+    class Meta:
+        model = User  # It's generally better to use the actual model class, not a string
+        fields = ['email']
+        labels = {
+            'email': ''
+        }
+        widgets = {
+            'email': forms.EmailInput(attrs={'class': 'form-control w-100 py-3', 'placeholder': 'Enter Your Registered Email'}),
         }

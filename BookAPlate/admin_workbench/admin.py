@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Customer, Restaurant, BookingDetails, FacilityDetails, Gallery, Feedback, Coins
+from .models import Customer, Restaurant, BookingDetails, FacilityDetails, Gallery, Coins
 
 # Register your models here.
 
@@ -37,9 +37,7 @@ class BookingDetailsAdmin(admin.ModelAdmin):
     list_display = ('booking_id', 'date', 'status', 'meal_time', 'customer')
     search_fields = ['booking_id']
 
-class FeedbackAdmin(admin.ModelAdmin):
-    list_display = ('feedback_id', 'rating', 'feedback', 'booking')
-    search_fields = ['feedback_id']
+
 
 class CoinsAdmin(admin.ModelAdmin):
     list_display = ('coin_id', 'coin_quantity', 'user')
@@ -51,5 +49,4 @@ admin.site.register(Restaurant, RestaurantAdmin)
 admin.site.register(FacilityDetails, FacilityDetailsAdmin)
 admin.site.register(Gallery, GalleryAdmin)
 admin.site.register(BookingDetails, BookingDetailsAdmin)
-admin.site.register(Feedback, FeedbackAdmin)
 admin.site.register(Coins, CoinsAdmin)

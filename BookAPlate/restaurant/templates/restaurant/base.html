@@ -65,7 +65,30 @@
                         <a href="{% url 'facility_details' %}" class="nav-item nav-link">Facilities</a>                        
                         <a href="{% url 'gallery_details' %}" class="nav-item nav-link">Gallery</a>
                         <a href="{% url 'reservations' %}" class="nav-item nav-link">Booking</a>
-                        <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a> 
+                         <div class="collapse navbar-collapse justify-content-end px-0" id="navbarNav">
+        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+           <li class="nav-item dropdown">
+                <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-cog" ></i>             
+                  
+                </a>
+                <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop2">
+                    <div class="message-body">
+                        <!-- Dropdown items -->
+                       
+                        <a href="{% url 'restaurant_change_password' %}" class="d-flex align-items-center gap-2 dropdown-item">
+                            <i class="fa fa-lock"></i>
+                            <p class="mb-0">Change Password</p>
+                        </a>
+                        <a href="{% url 'logout' %}" class="btn btn-outline-primary mx-3 mt-2 d-block">Logout</a>
+                    </div>
+                </div>
+              
+            
+            </li>
+            </ul>
+                       
+                        
                     </div>
                     
                 </div>
@@ -75,7 +98,13 @@
         </div>
        
 
-    
+     {% if messages %}
+    {% for message in messages %}
+      <script>
+        alert("{{ message }}");
+      </script>
+    {% endfor %}
+  {% endif %}
     {% block content %}
     {% endblock %}
     
@@ -91,10 +120,10 @@
                         </div>
                         <div class="col-md-6 text-center text-md-end">
                             <div class="footer-menu">
-                                <a href="#">Home</a>
-                                <a href="#">Cookies</a>
-                                <a href="#">Help</a>
-                                <a href="#">FQAs</a>
+                                <a href="{% url 'home' %}">Home</a>
+                                <a href="{% url 'login' %}">Login</a>
+                                <a href="{% url 'contact' %}">Contact</a>
+                                
                             </div>
                         </div>
                     </div>
@@ -117,6 +146,9 @@
 
     <!-- Template Javascript -->
     <script src="{% static 'book_a_plate/js/main.js' %}"></script>
+   
+  
+
 </body>
 
 </html>

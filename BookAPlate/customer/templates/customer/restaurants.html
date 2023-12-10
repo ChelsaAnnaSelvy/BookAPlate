@@ -11,13 +11,6 @@
   }
 </style>
 {% endblock %} {% block content %}
- {% if messages %} 
- {% for message in messages%}
-<script>
-  alert("{{ message }}");
-</script>
-{% endfor %} 
-{% endif %}
 <div class="container-xxl position-relative p-0">
   <div class="container-xxl py-5 bg-dark hero-header mb-5">
     <div class="container text-center my-5 pt-5 pb-4">
@@ -61,7 +54,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for restaurant in restaurants %}
+                {% if restaurants %} {% for restaurant in restaurants %}
                 <tr>
                   <th scope="row">{{ restaurant.restaurant_id }}</th>
                   <td>
@@ -134,7 +127,13 @@
                     </div>
                   </td>
                 </tr>
-                {% endfor %}
+                {% endfor %} {% else %}
+                <tr>
+                  <th scope="row" colspan="8" class="text-center">
+                    <p>No records to display</p>
+                  </th>
+                </tr>
+                {% endif %}
               </tbody>
             </table>
           </div>

@@ -75,6 +75,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'BookAPlate.wsgi.application'
 
 
+LOGIN_URL = '/login/'  # Set this to the URL of your login page
+
+
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -136,4 +140,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'chelsa.faithinfo@gmail.com'
+EMAIL_HOST_PASSWORD = 'bqosqyztvzsfwrhf'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'chelsa.faithinfo@gmail.com'
 
