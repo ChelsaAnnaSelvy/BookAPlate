@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Customer, Restaurant, BookingDetails, FacilityDetails, Gallery, Coins
+from .models import Customer, Restaurant, BookingDetails, FacilityDetails, Gallery, Coins,Feedback
 
 # Register your models here.
 
@@ -42,6 +42,10 @@ class BookingDetailsAdmin(admin.ModelAdmin):
 class CoinsAdmin(admin.ModelAdmin):
     list_display = ('coin_id', 'coin_quantity', 'user')
     search_fields = ['coin_id']
+    
+class FeedbackAdmin(admin.ModelAdmin):
+    list_display = ('feedback_id', 'rating', 'booking')
+    search_fields = ['feedback_id']
 
 # Register the models with the admin site
 admin.site.register(Customer, CustomerAdmin)
@@ -50,3 +54,4 @@ admin.site.register(FacilityDetails, FacilityDetailsAdmin)
 admin.site.register(Gallery, GalleryAdmin)
 admin.site.register(BookingDetails, BookingDetailsAdmin)
 admin.site.register(Coins, CoinsAdmin)
+admin.site.register(Feedback, FeedbackAdmin)

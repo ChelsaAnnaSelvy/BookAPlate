@@ -68,15 +68,15 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
               <li class="nav-item" role="presentation">
                 <button
                   class="nav-link"
-                  id="completed-tab"
+                  id="attended-tab"
                   data-bs-toggle="tab"
-                  data-bs-target="#completed"
+                  data-bs-target="#attended"
                   type="button"
                   role="tab"
-                  aria-controls="completed"
+                  aria-controls="attended"
                   aria-selected="false"
                 >
-                  Completed
+                  Attended
                 </button>
               </li>
               <li class="nav-item" role="presentation">
@@ -91,6 +91,20 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                   aria-selected="false"
                 >
                   Cancelled
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="completed-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#completed"
+                  type="button"
+                  role="tab"
+                  aria-controls="completed"
+                  aria-selected="false"
+                >
+                  Completed
                 </button>
               </li>
             </ul>
@@ -110,6 +124,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                         <th scope="col">Customer</th>
                         <th scope="col">Facilities Booked</th>
                         <th scope="col">Contact Number</th>
+                        <th scope="col">Current Status</th>                        
                         <th scope="col">Contact Email</th>
                       </tr>
                     </thead>
@@ -124,6 +139,15 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                         <td>{{ booking.facility.count }}</td>
                         <td>{{ booking.customer.phone }}</td>
                         <td>{{ booking.customer.user.email}}</td>
+                        {% if booking.status == 'Booked' %}
+                        <td><p class="btn btn-success">{{ booking.status }}</p></td>
+                        {% elif booking.status == 'Attended' %}
+                        <td><p class="btn btn-primary">{{ booking.status }}</p></td>
+                        {% elif booking.status == 'Cancelled' %}
+                        <td><p class="btn btn-danger">{{ booking.status }}</p></td>
+                        {% else %}
+                        <td><p class="btn btn-secondary">{{ booking.status }}</p></td>
+                        {% endif %}
                         <td>
                           <div class="btn-group">
                             <button
@@ -238,7 +262,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                                 <!-- Your form goes here -->
                                 <form
                                   method="POST"
-                                  action="{% url 'mark_as_complete' %}"
+                                  action="{% url 'mark_as_attended' %}"
                                 >
                                   {% csrf_token %}
                                   <input
@@ -251,7 +275,161 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                                     type="submit"
                                     class="dropdown-item text-secondary"
                                   >
-                                    MARK AS COMPLETE
+                                    MARK AS ATTENDED
+                                  </button>
+                                </form>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endfor %} {% else %}
+                      <tr>
+                        <th scope="row" colspan="6" class="text-center">
+                          <p>No records to display</p>
+                        </th>
+                      </tr>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+               <div
+                class="tab-pane fade"
+                id="attended"
+                role="tabpanel"
+                aria-labelledby="attended-tab"
+              >
+                <div class="table-responsive-sm">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Facilities Booked</th>
+                        <th scope="col">Contact Number</th>
+                        <th scope="col">Contact Email</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if attended %} {% for booking in attended %}
+                      <tr>
+                        <th scope="row">{{ booking.booking_id }}</th>
+                        <td>{{booking.date}}</td>
+                        <td>
+                          {{booking.customer.user.first_name}}&nbsp;{{booking.customer.user.last_name}}
+                        </td>
+                        <td>{{ booking.facility.count }}</td>
+                        <td>{{ booking.customer.phone }}</td>
+                        <td>{{ booking.customer.user.email}}</td>
+                        
+                        <td>
+                          <div class="btn-group">
+                            <button
+                              type="button"
+                              class="btn btn-outline-secondary dropdown-toggle"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              <i class="fas fa-cog"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li>
+                                <form
+                                  method="POST"
+                                  action="{% url 'booking_receipt' %}"
+                                >
+                                  {% csrf_token %}
+                                  <input
+                                    type="hidden"
+                                    value="{{ booking.booking_id }}"
+                                    name="booking_id"
+                                    id="booking_id"
+                                  />
+                                  <button
+                                    type="submit"
+                                    class="dropdown-item text-secondary"
+                                  >
+                                    BOOKING DETAILS
+                                  </button>
+                                </form>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endfor %} {% else %}
+                      <tr>
+                        <th scope="row" colspan="6" class="text-center">
+                          <p>No records to display</p>
+                        </th>
+                      </tr>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="cancelled"
+                role="tabpanel"
+                aria-labelledby="cancelled-tab"
+              >
+                <div class="table-responsive-sm">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Facilities Booked</th>
+                        <th scope="col">Contact Number</th>
+                        <th scope="col">Contact Email</th>
+                        <th scope="col">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if cancelled %} {% for booking in cancelled %}
+                      <tr>
+                        <th scope="row">{{ booking.booking_id }}</th>
+                        <td>{{booking.date}}</td>
+                        <td>
+                          {{booking.customer.user.first_name}}&nbsp;{{booking.customer.user.last_name}}
+                        </td>
+                        <td>{{ booking.facility.count }}</td>
+                        <td>{{ booking.customer.phone }}</td>
+                        <td>{{ booking.customer.user.email}}</td>
+                        
+                        <td>
+                          <div class="btn-group">
+                            <button
+                              type="button"
+                              class="btn btn-outline-secondary dropdown-toggle"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              <i class="fas fa-cog"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li>
+                                <form
+                                  method="POST"
+                                  action="{% url 'booking_receipt' %}"
+                                >
+                                  {% csrf_token %}
+                                  <input
+                                    type="hidden"
+                                    value="{{ booking.booking_id }}"
+                                    name="booking_id"
+                                    id="booking_id"
+                                  />
+                                  <button
+                                    type="submit"
+                                    class="dropdown-item text-secondary"
+                                  >
+                                    BOOKING DETAILS
                                   </button>
                                 </form>
                               </li>
@@ -350,83 +528,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                   </table>
                 </div>
               </div>
-              <div
-                class="tab-pane fade"
-                id="cancelled"
-                role="tabpanel"
-                aria-labelledby="cancelled-tab"
-              >
-                <div class="table-responsive-sm">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Facilities Booked</th>
-                        <th scope="col">Contact Number</th>
-                        <th scope="col">Contact Email</th>
-                        <th scope="col">Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% if cancelled %} {% for booking in cancelled %}
-                      <tr>
-                        <th scope="row">{{ booking.booking_id }}</th>
-                        <td>{{booking.date}}</td>
-                        <td>
-                          {{booking.customer.user.first_name}}&nbsp;{{booking.customer.user.last_name}}
-                        </td>
-                        <td>{{ booking.facility.count }}</td>
-                        <td>{{ booking.customer.phone }}</td>
-                        <td>{{ booking.customer.user.email}}</td>
-
-                        <td>
-                          <div class="btn-group">
-                            <button
-                              type="button"
-                              class="btn btn-outline-secondary dropdown-toggle"
-                              data-bs-toggle="dropdown"
-                              aria-expanded="false"
-                            >
-                              <i class="fas fa-cog"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li>
-                                <form
-                                  method="POST"
-                                  action="{% url 'booking_receipt' %}"
-                                >
-                                  {% csrf_token %}
-                                  <input
-                                    type="hidden"
-                                    value="{{ booking.booking_id }}"
-                                    name="booking_id"
-                                    id="booking_id"
-                                  />
-                                  <button
-                                    type="submit"
-                                    class="dropdown-item text-secondary"
-                                  >
-                                    BOOKING DETAILS
-                                  </button>
-                                </form>
-                              </li>
-                            </ul>
-                          </div>
-                        </td>
-                      </tr>
-                      {% endfor %} {% else %}
-                      <tr>
-                        <th scope="row" colspan="6" class="text-center">
-                          <p>No records to display</p>
-                        </th>
-                      </tr>
-                      {% endif %}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+              
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from admin_workbench.forms import ChangePasswordForm
-from admin_workbench.models import Customer,Restaurant,FacilityDetails,Coins,BookingDetails,Gallery
+from admin_workbench.models import Customer,Feedback
  
 
 class UserForm(forms.ModelForm):   
@@ -43,4 +43,16 @@ class EditCustomerForm(forms.ModelForm):
             'place': forms.TextInput(attrs={'placeholder': 'Place', 'class': 'form-control w-100 py-3'}),
             'profile_photo': forms.ClearableFileInput(attrs={'accept': 'image/*', 'class': 'form-control w-100 py-3'}),
             'id_proof': forms.ClearableFileInput(attrs={'accept': 'image/*', 'class': 'form-control w-100 py-3'}),
+        }
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model= Feedback
+        fields=['message']
+        labels={
+            'message':'' ,           
+            
+        }
+        widgets = {
+            'message':  forms.Textarea(attrs={'class': 'form-control w-100 py-3','rows':10,'cols':50}),
         }

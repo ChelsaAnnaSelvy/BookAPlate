@@ -270,6 +270,7 @@ def BookingDetailsView(request):
         'booked':bookings.filter(status='Booked'),
         'completed':bookings.filter(status='Completed'),
         'cancelled':bookings.filter(status='Cancelled'),
+        'attended':bookings.filter(status='Attended'),
         'logged_user': logged_user,
         'restaurant': logged_restaurant,
         
@@ -378,7 +379,7 @@ def BookingReceiptView(request):
     return render(request,'restaurant/booking_receipt.html')
 
 @login_required
-def MarkAsCompleteView(request):
+def MarkAsAttendedView(request):
     logged_user = request.user
     logged_restaurant = Restaurant.objects.filter(user=logged_user).first()
     if request.method== 'POST':
@@ -386,14 +387,14 @@ def MarkAsCompleteView(request):
         
         if booking_id != 0 :
             booking= get_object_or_404(BookingDetails,booking_id=booking_id)
-            booking.status='Completed'
+            booking.status='Attended'
             booking.save()
             customer=booking.customer
             rewarding_coins=int((booking.coins_spend/30) *20)
             coins=get_object_or_404(Coins,user=customer)
             coins.coin_quantity=int(coins.coin_quantity+rewarding_coins)
             coins.save()
-            messages.success(request,'The booking is completed and the resources are free to be booked')
+            messages.success(request,'The status is updated.Now wait for their feedback')
     
     return redirect('reservations')
 

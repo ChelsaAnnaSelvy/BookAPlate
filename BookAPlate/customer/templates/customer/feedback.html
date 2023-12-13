@@ -1,0 +1,163 @@
+{% extends 'customer/base.html'%} {% load static %} {% block title %} BookAPlate
+| RateUs {% endblock %} {% block head %}
+<style>
+    .stars {
+      display: inline-block;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .stars:hover:before,
+    .stars:hover ~ .star:before {
+      content: '\2605'; /* Unicode character for a filled star */
+      color: #fea116;
+    }
+
+    .star {
+      display: inline-block;
+    }
+
+    input[type="hidden"] {
+      display: none;
+    }
+  </style>
+{% endblock %} {% block content %}
+ 
+<div class="container-xxl position-relative p-0">
+  <div class="container-xxl py-5 bg-dark hero-header mb-5">
+    <div class="container text-center my-5 pt-5 pb-4">
+      <h1 class="display-3 text-white mb-3 animated slideInDown">
+        Rate Us
+      </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center text-uppercase">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">Booking History</a></li>
+          <li class="breadcrumb-item text-white active" aria-current="page">
+            Rate Us
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+<div class="container py-5">
+
+  <div class="row g-5">
+    <div class="col-lg-12 text-center">
+    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Give Feedback</h5>
+    <p>Your opinion matters the most...</p>
+</div>
+   </div> 
+   <div class="row g-5">
+   <div class="col-lg-6 col-md-6 col-sm-6 text-center"><img src="{% static 'book_a_plate/img/feedback.jpg'%}" class="img-fluid"/></div>
+<div class="col-lg-6 col-md-6 col-sm-6 text-center">
+ <form
+                      method="post"
+                      action="{% url 'rate_us'%}"
+                      enctype="multipart/form-data"
+                    >
+                      {% csrf_token %}
+
+                      <div class="row g-3">
+                        
+                        <div class="col-md-12">
+                            <div class="stars" data-rating="0">
+                                <span class="star">&#9733;</span>
+                                <span class="star">&#9733;</span>
+                                <span class="star">&#9733;</span>
+                                <span class="star">&#9733;</span>
+                                <span class="star">&#9733;</span>
+                                <input type="hidden" name="rating" id="rating" value="0">
+                            </div>
+                            <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating');
+
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                const ratingValue = index + 1;
+                ratingInput.value = ratingValue;
+                ratingInput.setAttribute('required', 'false');
+                updateStars(ratingValue);
+            });
+
+            star.addEventListener('mouseover', () => {
+                const hoverRating = index + 1;
+                updateStars(hoverRating);
+            });
+
+            star.addEventListener('mouseout', () => {
+                const currentRating = ratingInput.value || 0;
+                updateStars(currentRating);
+            });
+        });
+
+        function updateStars(rating) {
+            stars.forEach((star, index) => {
+                star.innerHTML = index < rating ? '&#9733;' : '&#9734;';
+                star.style.color = index < rating ? '#fea116' : 'black';
+            });
+        }
+
+        // Set default value for the rating field
+        const defaultRating = 0; // Set your default rating here
+        ratingInput.value = defaultRating;
+        updateStars(defaultRating);
+    });
+</script>
+
+                            <!-- <script>
+                                const stars = document.querySelectorAll('.star');
+                                const ratingInput = document.getElementById('rating');
+
+                                stars.forEach((star, index) => {
+                                    star.addEventListener('click', () => {
+                                    const ratingValue = index + 1;
+                                    ratingInput.value = ratingValue;
+                                    updateStars(ratingValue);
+                                    });
+                                });
+
+                                function updateStars(rating) {
+                                    stars.forEach((star, index) => {
+                                    if (index < rating) {
+                                        star.innerHTML = '&#9733;'; // Filled star
+                                        star.style.color = '#fea116';
+                                    } else {
+                                        star.innerHTML = '&#9734;'; // Empty star
+                                        star.style.color = 'black';
+                                    }
+                                    });
+                                }
+                            </script> -->
+                        </div>
+                     <div class="col-md-12">
+    {{ form.message.label_tag }}
+    {{ form.message }}{% if form.message.errors %}
+    <ul class="errorlist">
+        {% for error in form.message.errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
+                        
+                        <div class="col-md-12">
+                          <button
+                            type="submit"
+                            class="btn btn-primary w-100 py-3"
+                          >
+                           SUBMIT YOUR REVIEW
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+
+</div>
+</div>
+   </div>
+   {% endblock %}
+   

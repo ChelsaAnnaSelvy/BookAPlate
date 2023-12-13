@@ -1,0 +1,144 @@
+{% extends 'customer/base.html'%} {% load static %} {% block title %} BookAPlate
+| My Reviews {% endblock %} {% block head %}
+<style>
+    /* Add custom CSS styles here */
+    #starRating i {
+      color: #fea116;
+    }
+  </style>
+{% endblock %} {% block content %}
+<div class="container-xxl position-relative p-0">
+  <div class="container-xxl py-5 bg-dark hero-header mb-5">
+    <div class="container text-center my-5 pt-5 pb-4">
+      <h1 class="display-3 text-white mb-3 animated slideInDown">My Reviews</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center text-uppercase">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item text-white active" aria-current="page">
+            Feedback History
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<!-- Service Start -->
+<div class="container-xxl py-5">
+  <div class="container">
+    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+      <h5 class="section-title ff-secondary text-center text-primary fw-normal">
+        Reviews
+      </h5>
+      <h1 class="mb-5">My Feedbacks</h1>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-12 col-sm-12 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="p-4">
+          <div class="table-responsive-sm">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Review</th>
+                  <th scope="col">Rating</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if feedbacks %} {% for feedback in feedbacks %}
+                <tr>
+                  <th scope="row">{{ feedback.feedback_id }}</th>
+                  <td>{{feedback.message}}</td>
+                  
+                  <td>
+                    <div id="starRating"></div>
+
+<script>
+  
+  // Retrieve the rating value from Django template syntax
+  var rating = {{ feedback.rating }}; // Default to 0 if rating is undefined
+
+  
+  // Round the rating to the nearest half
+  var roundedRating = Math.round(rating * 2) / 2;
+
+  // Create HTML for star rating
+  var starRatingHTML = '';
+  for (var i = 1; i <= 5; i++) {
+    if (i <= roundedRating) {
+      // Full star
+      starRatingHTML += '<i class="fas fa-star"></i>';
+    } else if (i - 0.5 === roundedRating) {
+      // Half star
+      starRatingHTML += '<i class="fas fa-star-half-alt"></i>';
+    } else {
+      // Empty star
+      starRatingHTML += '<i class="far fa-star"></i>';
+    }
+  }
+
+  // Display the star rating
+  document.getElementById('starRating').innerHTML = starRatingHTML;
+</script>
+                  </td>
+                  
+
+                  <td>
+                    <div class="btn-group">
+                      <button
+                        type="button"
+                        class="btn btn-outline-secondary dropdown-toggle"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i class="fas fa-cog"></i>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li>
+                          <form
+                            method="POST"
+                            action="{% url 'booking_details'%}"
+                          >
+                            {% csrf_token %}
+                            <input
+                              type="hidden"
+                              value="{{ feedback.booking.booking_id }}"
+                              name="booking_id"
+                              id="booking_id"
+                            />
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              BOOKING DETAILS
+                            </button>
+                          </form>
+                        </li>
+                       
+                      
+                      
+                        
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %} 
+                {% else %}
+                <tr>
+                  <th scope="row" colspan="7" class="text-center">
+                    <p>No records to display</p>
+                  </th>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Service End -->
+</div>
+
+{% endblock %}

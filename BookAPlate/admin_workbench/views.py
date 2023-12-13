@@ -158,3 +158,4 @@ def ChangePasswordView(request):
     }
 
     return render(request, 'admin_workbench/change_password.html', context)
+

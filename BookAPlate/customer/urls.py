@@ -1,7 +1,7 @@
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
-from .views import HomeView, CustomerProfileView, RestaurantListView, RestaurantProfileView, TableView, ConfirmBookTableView, BookTable,BookingHistoryView,BookingDetailsView,LogoutView,CancelBooking,ChangePasswordView
+from .views import HomeView, CustomerProfileView, RestaurantListView, RestaurantProfileView, TableView, ConfirmBookTableView, BookTable,BookingHistoryView,BookingDetailsView,LogoutView,CancelBooking,ChangePasswordView,FeedBackAndRating,MyFeedbackList
 urlpatterns=[
     path('',HomeView,name='customer_home'),
     path('profile/',CustomerProfileView,name='customer_profile'),
@@ -13,6 +13,8 @@ urlpatterns=[
     path('reservations/',BookingHistoryView,name='my_reservations'),
     path('booking_details/',BookingDetailsView,name='booking_details'),
     path('cancel_booking/',CancelBooking,name='cancel_booking'),
+    path('rate_us/',FeedBackAndRating,name='rate_us'),
+    path('feedbacks/',MyFeedbackList,name='feedbacks'),
     path('logout/',LogoutView,name='logout'),
     path('customer_change_password/',ChangePasswordView,name='customer_change_password'),
     

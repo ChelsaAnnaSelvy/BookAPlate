@@ -4,8 +4,8 @@ import qrcode
 from datetime import datetime
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.models import User
-from admin_workbench.models import Customer,Restaurant,FacilityDetails,Coins,BookingDetails,Gallery
-from .forms import EditCustomerForm,UserForm,ChangePasswordForm
+from admin_workbench.models import Customer,Restaurant,FacilityDetails,Coins,BookingDetails,Gallery,Feedback
+from .forms import EditCustomerForm,UserForm,ChangePasswordForm,FeedbackForm
 from django.contrib.auth import logout,update_session_auth_hash
 from django.contrib import messages
 from io import BytesIO
@@ -267,12 +267,14 @@ def BookTable(request):
 def BookingHistoryView(request):
     logged_user, customer, coins = get_customer_and_coins(request)
     my_booking = BookingDetails.objects.filter(customer=customer).order_by('-date')
+     
     
     context = {
         'bookings': my_booking,
         'logged_user': logged_user,
         'customer': customer,
         'coins': coins,
+        
         
     }
     return render(request, 'customer/booking_history.html', context)
@@ -504,4 +506,55 @@ def ChangePasswordView(request):
     }
 
     return render(request, 'customer/change_password.html', context)
+
+def FeedBackAndRating(request):
+    logged_user, customer, coins = get_customer_and_coins(request)
+
+    if request.method == 'POST':
+        booking_id=request.POST.get('booking_id',0) 
+        if booking_id!=0:
+            request.session['booking_id']=booking_id
+        booking_id=request.session.get('booking_id',0)
+        booking=get_object_or_404(BookingDetails, booking_id=booking_id)
+        
+        form = FeedbackForm(request.POST)              
+        
+        if form.is_valid():
+            feedback = form.save(commit= False)
+            feedback.booking= booking
+            feedback.rating=request.POST['rating']
+            feedback.save()
+            coins.coin_quantity=coins.coin_quantity + 50
+            coins.save()                  
+            booking.status='Completed'
+            booking.save()
+            messages.success(request, 'You have successfully provided feedback for the services provided!')
+            return redirect('feedbacks')
+        
+    else:
+        form = FeedbackForm()
+
+    context = {
+        'form': form,
+        'logged_user': logged_user,
+        'customer': customer,
+        'coins': coins, 
+    }
+
+    return render(request, 'customer/feedback.html', context)
+
+def MyFeedbackList(request):
+    logged_user, customer, coins = get_customer_and_coins(request)
+    
+    booking=BookingDetails.objects.filter(customer=customer)
+    feedbacks=Feedback.objects.filter(booking__customer=customer)
+    context = {
+        'feedbacks':feedbacks,
+        'logged_user': logged_user,
+        'customer': customer,
+        'coins': coins,
+        'booking': booking,
+    }
+    return render(request,'customer/feedback_history.html',context)
+
             

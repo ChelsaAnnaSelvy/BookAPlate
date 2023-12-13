@@ -61,6 +61,8 @@
                   <td>{{ booking.facility.count }}</td>
                   {% if booking.status == 'Booked' %}
                   <td><p class="btn btn-success">{{ booking.status}}</p></td>
+                  {% elif booking.status == 'Attended' %}
+                  <td><p class="btn btn-primary">{{ booking.status}}</p></td>
                   {% elif booking.status == 'Cancelled' %}
                   <td><p class="btn btn-danger">{{ booking.status}}</p></td>
                    {% else %}
@@ -146,6 +148,31 @@
                             />
                           </form>
                         </li>
+                        {% if booking.status == 'Attended'%}
+                        <hr />
+                         <li>
+                          <form
+                            method="POST"
+                            action="{% url 'rate_us' %}"
+                          >
+                            {% csrf_token %}
+                            <input
+                              type="hidden"
+                              value="{{ booking.booking_id }}"
+                              name="booking_id"
+                              id="booking_id"
+                            />
+                            <button
+                              type="submit"
+                              class="dropdown-item text-secondary"
+                            >
+                              RATE US
+                            </button>
+                          </form>
+                        </li>
+                        {% endif %}
+                      
+                        
                       </ul>
                     </div>
                   </td>

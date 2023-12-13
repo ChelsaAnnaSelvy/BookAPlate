@@ -130,7 +130,8 @@ class BookingDetails(models.Model):
     STATUS_CHOICES = [
         ('Booked', 'Booked'),
         ('Completed', 'Completed'), 
-        ('Cancelled','Cancelled') ,    
+        ('Cancelled','Cancelled') , 
+        ('Attended','Attended')   
     ]
     status =models.CharField(max_length=100, choices=STATUS_CHOICES,default='Requested') 
     # Define meal choices as a list of tuples
@@ -151,3 +152,8 @@ class Coins(models.Model):
     coin_quantity = models.IntegerField(default= 2000)
     user = models.ForeignKey(Customer,on_delete=models.CASCADE)
 
+class Feedback(models.Model):
+    feedback_id= models.AutoField(primary_key=True)
+    rating =models.DecimalField(max_digits=2,decimal_places=1,default=0.0)
+    message=models.TextField()
+    booking= models.ForeignKey(BookingDetails,on_delete=models.CASCADE)
