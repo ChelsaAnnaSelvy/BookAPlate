@@ -1,26 +1,57 @@
 {% extends 'customer/base.html'%} {% load static %} {% block title %} BookAPlate
 | RateUs {% endblock %} {% block head %}
 <style>
-    .stars {
-      display: inline-block;
-      font-size: 24px;
-      cursor: pointer;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-    .stars:hover:before,
-    .stars:hover ~ .star:before {
-      content: '\2605'; /* Unicode character for a filled star */
-      color: #fea116;
-    }
+        .star-container {
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+        }
 
-    .star {
-      display: inline-block;
-    }
+        .star-container .star {
+            display: inline-block;
+            margin-right: 4px;
+            width: 1em;
+            height: 1em;
+            position: relative;
+            color: #ccc;
+        }
 
-    input[type="hidden"] {
-      display: none;
-    }
-  </style>
+        .star-container .star:before {
+            content: "\2606"; /* Unicode character for an outline star */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1em;
+            height: 1em;
+            color: #fea116;
+        }
+
+        .star-container .star.half:before {
+            content: "\2605"; /* Unicode character for a filled star */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0.5em;
+            overflow: hidden;
+            color: #fea116;
+        }
+
+        .star-container .star:hover:before,
+        .star-container .star.clicked:before,
+        .star-container .star.clicked.half:before {
+            content: "\2605"; /* Unicode character for a filled star */
+            color:#fea116;
+        }
+    </style>
 {% endblock %} {% block content %}
  
 <div class="container-xxl position-relative p-0">
@@ -62,91 +93,73 @@
                       <div class="row g-3">
                         
                         <div class="col-md-12">
-                            <div class="stars" data-rating="0">
-                                <span class="star">&#9733;</span>
-                                <span class="star">&#9733;</span>
-                                <span class="star">&#9733;</span>
-                                <span class="star">&#9733;</span>
-                                <span class="star">&#9733;</span>
-                                <input type="hidden" name="rating" id="rating" value="0">
-                            </div>
-                            <script>
-    document.addEventListener('DOMContentLoaded', function () {
+                            <div class="star-container" onclick="handleRating(event)">
+    <div class="star" data-value="1.0"></div>
+    <div class="star" data-value="2.0"></div>
+    <div class="star" data-value="3.0"></div>
+    <div class="star" data-value="4.0"></div>
+    <div class="star" data-value="5.0"></div>
+</div>
+
+<script>
+    let rating = 0;
+
+    function handleRating(event) {
+        const starValue = event.target.getAttribute('data-value');
+        
+        if (starValue) {
+            rating = parseFloat(starValue);
+            updateStars();
+            updateRatingInput();
+        }
+    }
+
+    function updateStars() {
         const stars = document.querySelectorAll('.star');
-        const ratingInput = document.getElementById('rating');
 
         stars.forEach((star, index) => {
-            star.addEventListener('click', () => {
-                const ratingValue = index + 1;
-                ratingInput.value = ratingValue;
-                ratingInput.setAttribute('required', 'false');
-                updateStars(ratingValue);
-            });
+            const starValue = parseFloat(star.getAttribute('data-value'));
 
-            star.addEventListener('mouseover', () => {
-                const hoverRating = index + 1;
-                updateStars(hoverRating);
-            });
-
-            star.addEventListener('mouseout', () => {
-                const currentRating = ratingInput.value || 0;
-                updateStars(currentRating);
-            });
+            if (rating >= starValue) {
+                star.classList.add('clicked');
+            } else {
+                star.classList.remove('clicked');
+            }
         });
+    }
 
-        function updateStars(rating) {
-            stars.forEach((star, index) => {
-                star.innerHTML = index < rating ? '&#9733;' : '&#9734;';
-                star.style.color = index < rating ? '#fea116' : 'black';
-            });
-        }
-
-        // Set default value for the rating field
-        const defaultRating = 0; // Set your default rating here
-        ratingInput.value = defaultRating;
-        updateStars(defaultRating);
-    });
+    function updateRatingInput() {
+        const ratingInput = document.getElementById('rating');
+        ratingInput.value = rating;
+    }
 </script>
 
-                            <!-- <script>
-                                const stars = document.querySelectorAll('.star');
-                                const ratingInput = document.getElementById('rating');
 
-                                stars.forEach((star, index) => {
-                                    star.addEventListener('click', () => {
-                                    const ratingValue = index + 1;
-                                    ratingInput.value = ratingValue;
-                                    updateStars(ratingValue);
-                                    });
-                                });
 
-                                function updateStars(rating) {
-                                    stars.forEach((star, index) => {
-                                    if (index < rating) {
-                                        star.innerHTML = '&#9733;'; // Filled star
-                                        star.style.color = '#fea116';
-                                    } else {
-                                        star.innerHTML = '&#9734;'; // Empty star
-                                        star.style.color = 'black';
-                                    }
-                                    });
-                                }
-                            </script> -->
-                        </div>
-                     <div class="col-md-12">
-    {{ form.message.label_tag }}
-    {{ form.message }}{% if form.message.errors %}
-    <ul class="errorlist">
-        {% for error in form.message.errors %}
-        <li>{{ error }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+<!-- Add a hidden input field to store the selected rating -->
+<input type="hidden" value="{{ rating }}" id="rating" name="rating"/>
 </div>
+                     <div class="col-md-12">
+                      
+                    {% for field in form %}
+                    <div class="col-md-12">
+                      {{ field.label_tag }} {{ field }}{% if field.errors %}
+                      <ul class="errorlist">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
+                      {% endif %}
+                    </div>
+
+                    {% endfor %}
+                
+   
+                      </div>
 
                         
                         <div class="col-md-12">
-                          <button
+                              <button
                             type="submit"
                             class="btn btn-primary w-100 py-3"
                           >

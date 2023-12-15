@@ -52,7 +52,7 @@
                   <td>{{feedback.message}}</td>
                   
                   <td>
-                    <div id="starRating"></div>
+                    <div id="starRating{{ feedback.feedback_id }}"></div>
 
 <script>
   
@@ -79,7 +79,8 @@
   }
 
   // Display the star rating
-  document.getElementById('starRating').innerHTML = starRatingHTML;
+  document.getElementById('starRating{{ feedback.feedback_id }}').innerHTML = starRatingHTML;
+
 </script>
                   </td>
                   

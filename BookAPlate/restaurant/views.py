@@ -3,7 +3,7 @@ import base64
 from io import BytesIO
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from admin_workbench.models import Restaurant, FacilityDetails, BookingDetails, Gallery, Coins
+from admin_workbench.models import Restaurant, FacilityDetails, BookingDetails, Gallery, Coins,Feedback
 from .forms import AboutForm, FacilityDetailsForm, GalleryDetailsForm, EditRestaurantAuthenticationForm, EditRestaurantRegistrationForm,ChangePasswordForm
 from django.contrib import messages
 from django.contrib.auth import logout,update_session_auth_hash
@@ -28,6 +28,20 @@ def HomeView(request):
     """
     logged_user = request.user
     logged_restaurant = Restaurant.objects.filter(user=logged_user).first()
+    # Fetch facilities owned by the restaurant
+    facilities =FacilityDetails.objects.filter(restaurant=logged_restaurant)
+
+    # Fetch bookings associated with the facilities
+    bookings = BookingDetails.objects.filter(facility__in=facilities)
+
+    # Fetch feedbacks associated with the bookings
+    feedbacks = Feedback.objects.filter(booking__in=bookings)
+    count=feedbacks.count()
+    rating= 0
+    if count !=0:
+        for feedback in feedbacks:
+            rating= rating+feedback.rating
+        rating=rating/count
     galleries=Gallery.objects.filter(restaurant=logged_restaurant)
     if logged_restaurant:
         if request.method == 'POST':
@@ -42,7 +56,9 @@ def HomeView(request):
                 'logged_user': logged_user,
                 'restaurant':logged_restaurant,
                 'menu_galleries':galleries.filter(category='Menu'),
-                'restaurant_galleries':galleries.filter(category='Gallery')
+                'restaurant_galleries':galleries.filter(category='Gallery'),
+                'feedbacks':feedbacks,
+                'overall_rating':rating,
                 }
             return render(request, 'restaurant/home.html', context)
     else:

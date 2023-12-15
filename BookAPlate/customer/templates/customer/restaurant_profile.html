@@ -4,11 +4,11 @@
 BookAPlate | RestaurantProfile
 {% endblock %}
 {% block content %}
-<div class="container-xxl position-relative p-0" >
-    <div class="container-xxl py-5 bg-dark hero-header mb-5" style="background-image: url('{{restaurant_user.restaurant.profile_photo.url}}');">
+
+<div class="container-xxl position-relative" >
+    <div class="container-xxl py-5 bg-dark hero-header mb-5" style="background-image: url('{{logged_user.restaurant.profile_photo.url}}');">
                 <div class="container text-center my-5 pt-5 pb-5">
                    
-                    
                 </div>
             </div>
 </div>
@@ -16,18 +16,68 @@ BookAPlate | RestaurantProfile
              <!-- About Start -->
         <div class="container-xxl py-5">
             <div class="container">
+              <div class="row g-5">
+                 <div class="col-lg-10 text-center"></div>
+                  <div class="col-lg-2 text-center">
+          {% with overall_rating as value %}
+            {% with integer_part=value|floatformat:0 %}
+            {% for i in "12345" %}
+                {% if value >= forloop.counter %}
+                    <span>&#9733;</span>
+                {% else %}
+                    <span>&#9734;</span>
+                {% endif %}
+            {% endfor %}
+            {% if value > integer_part %}
+                <!-- Add a partially filled star for the decimal part -->
+                <span style="width: '{{ value|floatformat:1|default:'0.0' }}0%'">&#9733;</span>
+
+                  {% endif %}
+            <span>{{ value }}</span>
+        {% endwith %}
+    {% endwith %}
+</div>
+
+  <div></div>
+              </div>
                 <div class="row g-5 align-items-center">
                     
                     <div class="col-lg-12 text-center">
                         
                     <h5 class="section-title ff-secondary text-center text-primary fw-normal">About Us</h5>
-                        <h1 class="mb-4">Welcome to <i class="fa fa-utensils text-primary me-2"></i>{{restaurant_user.first_name}}&nbsp;{{restaurant_user.last_name}}</h1>
+                        <h1 class="mb-4">Welcome to <i class="fa fa-utensils text-primary me-2"></i>{{logged_user.first_name}}&nbsp;{{logged_user.last_name}}</h1>
                         <div class="wow fadeInUp justify-content-between ms-sm-4 me-sm-4" data-wow-delay="0.2s">
-          {% if restaurant_user.restaurant.description %} 
-                <p class="mb-4">{{restaurant_user.restaurant.description}}</p>
+          {% if restaurant.description %} 
+                <p class="mb-4">{{restaurant.description}}</p>
           {% else %}
 
-          <p>No Description is available</p>
+          <form
+            method="post"
+            action="{% url 'restaurant_home' %}"
+            enctype="multipart/form-data"
+          >
+            {% csrf_token %}
+            <div class="row g-3">
+              {% for field in form %}
+              <div class="col-md-12">
+                {{ field.label_tag }} {{ field }}
+                {% if field.errors %}
+                <ul class="errorlist">
+                  {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+              {% endfor %}           
+
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary w-100 py-3">
+                  Add About Section
+                </button>
+              </div>
+            </div>
+          </form>
           {% endif %}
         </div>
                     </div>
@@ -37,15 +87,12 @@ BookAPlate | RestaurantProfile
                 
         <!-- About End -->
         <!-- Reservation Start -->
-       
-
-
-        <!-- Team Start -->
+       <!-- Team Start -->
         <div class="container-xxl pt-5 pb-3">
             <div class="container">
                 <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                     <h5 class="section-title ff-secondary text-center text-primary fw-normal">Gallery</h5>
-                    <h1 class="mb-5">{{restaurant_user.first_name}}&nbsp;{{restaurant_user.last_name}}</h1>
+                    <h1 class="mb-5">{{restaurant.user.first_name}}&nbsp;{{restaurant.user.last_name}}</h1>
                 </div>
                 <div class="row g-4">
                     {% if restaurant_galleries %}
@@ -76,12 +123,76 @@ BookAPlate | RestaurantProfile
             </div>
         </div>
         <!-- Team End -->
+         {% if feedbacks %}
+          <!-- Testimonial Start -->
+        <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="container">
+                <div class="text-center">
+                    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Testimonial</h5>
+                    <h1 class="mb-5">Our Clients Say!!!</h1>
+                </div>
+                <div class="owl-carousel testimonial-carousel">
+                   
+                    {% for feedback in feedbacks %}
+                    <div class="testimonial-item bg-transparent border rounded p-4">
+                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
+                        <p>{{feedback.message}}</p>
+                        <div class="d-flex align-items-center">
+                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{{feedback.booking.customer.profile_photo.url}}" style="width: 50px; height: 50px;">
+                            <div class="ps-3">
+                                <h5 class="mb-1">{{feedback.booking.customer.user.first_name}}&nbsp;{{feedback.booking.customer.user.last_name}}</h5>
+                               <small><small><div id="starRating{{ feedback.feedback_id }}"></div></small>
+</small>
+<script>
+  // Retrieve the rating value from Django template syntax
+  var rating = '{{ feedback.rating }}'; // Default to 0 if rating is undefined
+
+  // Round the rating to the nearest half
+  var roundedRating = Math.round(rating * 2) / 2;
+
+  // Create HTML for star rating
+  var starRatingHTML = '';
+  for (var i = 1; i <= 5; i++) {
+    if (i <= roundedRating) {
+      // Full star
+      starRatingHTML += '<i class="fas fa-star"></i>';
+    } else if (i - 0.5 === roundedRating && roundedRating % 1 !== 0) {
+      // Half star
+      starRatingHTML += '<i class="fas fa-star-half-alt"></i>';
+    } else {
+      // Empty star
+      starRatingHTML += '<i class="far fa-star"></i>';
+    }
+  }
+
+  // Display the star rating
+ document.getElementById('starRating{{ feedback.feedback_id }}').innerHTML = starRatingHTML;
+</script>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                   
+                   
+                    
+                </div>
+            </div>
+        
+       
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+   
+
+    </div>
+     {% endif %}
+
         <!-- Team Start -->
         <div class="container-xxl pt-5 pb-3">
             <div class="container">
                 <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                     <h5 class="section-title ff-secondary text-center text-primary fw-normal">Menu</h5>
-                    <h1 class="mb-5">{{restaurant_user.first_name}}&nbsp;{{restaurant_user.last_name}}</h1>
+                    <h1 class="mb-5">{{restaurant.user.first_name}}&nbsp;{{restaurant.user.last_name}}</h1>
                 </div>
                 <div class="row g-4">
                     {% if menu_galleries %}
@@ -128,7 +239,7 @@ BookAPlate | RestaurantProfile
                     </div>
                     <div class="col-lg-6">
                         <h5 class="section-title ff-secondary text-start text-primary fw-normal">Contact Us</h5>
-                        <h1 class="mb-4">{{restaurant_user.first_name}}&nbsp;{{restaurant_user.last_name}}</h1>
+                        <h1 class="mb-4">{{restaurant.user.first_name}}&nbsp;{{restaurant.user.last_name}}</h1>
                         
                         
                             <h6 class="mb-4"><i class="fa fa-home"></i>&nbsp;&nbsp;Address:</h6>
@@ -137,7 +248,7 @@ BookAPlate | RestaurantProfile
                                 {{restaurant.place}},
                                 {{restaurant.state}}</p>
                         
-                        <h6 class="mb-4"><i class="fa fa-envelope"></i>&nbsp;&nbsp;Email :</h6><p>{{restaurant_user.email}}</p>
+                        <h6 class="mb-4"><i class="fa fa-envelope"></i>&nbsp;&nbsp;Email :</h6><p>{{restaurant.user.email}}</p>
                         <h6 class="mb-4"><i class="fa fa-phone-square"></i>&nbsp;&nbsp;Phone :</h6><p>{{restaurant.phone}}</p>
                         
                        
@@ -147,67 +258,8 @@ BookAPlate | RestaurantProfile
             </div>
         </div>
         <!-- About End -->
-        <!-- Testimonial Start -->
-        <!-- <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-            <div class="container">
-                <div class="text-center">
-                    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Testimonial</h5>
-                    <h1 class="mb-5">Our Clients Say!!!</h1>
-                </div>
-                <div class="owl-carousel testimonial-carousel">
-                    <div class="testimonial-item bg-transparent border rounded p-4">
-                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                        <div class="d-flex align-items-center">
-                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-1.jpg' %}" style="width: 50px; height: 50px;">
-                            <div class="ps-3">
-                                <h5 class="mb-1">Client Name</h5>
-                                <small>Profession</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item bg-transparent border rounded p-4">
-                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                        <div class="d-flex align-items-center">
-                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-2.jpg' %}" style="width: 50px; height: 50px;">
-                            <div class="ps-3">
-                                <h5 class="mb-1">Client Name</h5>
-                                <small>Profession</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item bg-transparent border rounded p-4">
-                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                        <div class="d-flex align-items-center">
-                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-3.jpg' %}" style="width: 50px; height: 50px;">
-                            <div class="ps-3">
-                                <h5 class="mb-1">Client Name</h5>
-                                <small>Profession</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item bg-transparent border rounded p-4">
-                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                        <div class="d-flex align-items-center">
-                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-4.jpg' %}" style="width: 50px; height: 50px;">
-                            <div class="ps-3">
-                                <h5 class="mb-1">Client Name</h5>
-                                <small>Profession</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      
         
-       
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-   
-
-    </div> -->
-
         </div>
 
 {% endblock %}

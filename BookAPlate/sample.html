@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Rating</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .star-container {
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .star-container .star {
+            display: inline-block;
+            margin-right: 4px;
+            width: 1em;
+            height: 1em;
+            position: relative;
+            color: #ccc;
+        }
+
+        .star-container .star:before {
+            content: "\2606"; /* Unicode character for an outline star */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1em;
+            height: 1em;
+            color: gold;
+        }
+
+        .star-container .star.half:before {
+            content: "\2605"; /* Unicode character for a filled star */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0.5em;
+            overflow: hidden;
+            color: gold;
+        }
+
+        .star-container .star:hover:before,
+        .star-container .star.clicked:before,
+        .star-container .star.clicked.half:before {
+            content: "\2605"; /* Unicode character for a filled star */
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="star-container" onclick="handleRating(event)">
+    <div class="star" data-value="0.5"></div>
+    <div class="star" data-value="1.0"></div>
+    <div class="star" data-value="1.5"></div>
+    <div class="star" data-value="2.0"></div>
+    <div class="star" data-value="2.5"></div>
+</div>
+
+<script>
+    let rating = 0;
+
+    function handleRating(event) {
+        const starValue = event.target.getAttribute('data-value');
+        
+        if (starValue) {
+            rating = parseFloat(starValue);
+            updateStars();
+        }
+    }
+
+    function updateStars() {
+        const stars = document.querySelectorAll('.star');
+
+        stars.forEach((star, index) => {
+            const starValue = parseFloat(star.getAttribute('data-value'));
+
+            if (rating >= starValue) {
+                star.classList.add('clicked');
+                star.classList.remove('half');
+            } else if (rating > starValue - 0.5) {
+                star.classList.add('half');
+                star.classList.remove('clicked');
+            } else {
+                star.classList.remove('clicked');
+                star.classList.remove('half');
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

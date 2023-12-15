@@ -90,6 +90,20 @@ def RestaurantProfileView(request):
     if request.method == 'POST':
         restaurant_id = request.POST.get('restaurant_id', 0)
         restaurant = get_object_or_404(Restaurant, restaurant_id=restaurant_id)
+         # Fetch facilities owned by the restaurant
+    facilities =FacilityDetails.objects.filter(restaurant=restaurant)
+
+    # Fetch bookings associated with the facilities
+    bookings = BookingDetails.objects.filter(facility__in=facilities)
+
+    # Fetch feedbacks associated with the bookings
+    feedbacks = Feedback.objects.filter(booking__in=bookings)
+    count=feedbacks.count()
+    rating= 0
+    if count !=0:
+        for feedback in feedbacks:
+            rating= rating+feedback.rating
+        rating=rating/count
         restaurant_user = restaurant.user
         galleries = Gallery.objects.filter(restaurant=restaurant)
         context = {
@@ -100,7 +114,9 @@ def RestaurantProfileView(request):
             'menu_galleries': galleries.filter(category='Menu'),
             'restaurant_user': restaurant_user,
             'coins': coins,
-        }
+            'feedbacks':feedbacks,
+            'overall_rating':rating,
+            }
         return render(request, 'customer/restaurant_profile.html', context)
 
 # Table view

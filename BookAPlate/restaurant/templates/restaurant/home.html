@@ -9,7 +9,6 @@ Home
     <div class="container-xxl py-5 bg-dark hero-header mb-5" style="background-image: url('{{logged_user.restaurant.profile_photo.url}}');">
                 <div class="container text-center my-5 pt-5 pb-5">
                    
-                    
                 </div>
             </div>
 </div>
@@ -17,6 +16,30 @@ Home
              <!-- About Start -->
         <div class="container-xxl py-5">
             <div class="container">
+              <div class="row g-5">
+                 <div class="col-lg-10 text-center"></div>
+                  <div class="col-lg-2 text-center">
+          {% with overall_rating as value %}
+            {% with integer_part=value|floatformat:0 %}
+            {% for i in "12345" %}
+                {% if value >= forloop.counter %}
+                    <span>&#9733;</span>
+                {% else %}
+                    <span>&#9734;</span>
+                {% endif %}
+            {% endfor %}
+            {% if value > integer_part %}
+                <!-- Add a partially filled star for the decimal part -->
+                <span style="width: '{{ value|floatformat:1|default:'0.0' }}0%'">&#9733;</span>
+
+                  {% endif %}
+            <span>{{ value }}</span>
+        {% endwith %}
+    {% endwith %}
+</div>
+
+  <div></div>
+              </div>
                 <div class="row g-5 align-items-center">
                     
                     <div class="col-lg-12 text-center">
@@ -64,16 +87,7 @@ Home
                 
         <!-- About End -->
         <!-- Reservation Start -->
-       
-
-
-                   
-        <!-- About End -->
-        <!-- Reservation Start -->
-       
-
-
-        <!-- Team Start -->
+       <!-- Team Start -->
         <div class="container-xxl pt-5 pb-3">
             <div class="container">
                 <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
@@ -109,6 +123,70 @@ Home
             </div>
         </div>
         <!-- Team End -->
+         {% if feedbacks %}
+          <!-- Testimonial Start -->
+        <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+            <div class="container">
+                <div class="text-center">
+                    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Testimonial</h5>
+                    <h1 class="mb-5">Our Clients Say!!!</h1>
+                </div>
+                <div class="owl-carousel testimonial-carousel">
+                   
+                    {% for feedback in feedbacks %}
+                    <div class="testimonial-item bg-transparent border rounded p-4">
+                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
+                        <p>{{feedback.message}}</p>
+                        <div class="d-flex align-items-center">
+                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{{feedback.booking.customer.profile_photo.url}}" style="width: 50px; height: 50px;">
+                            <div class="ps-3">
+                                <h5 class="mb-1">{{feedback.booking.customer.user.first_name}}&nbsp;{{feedback.booking.customer.user.last_name}}</h5>
+                               <small><small><div id="starRating{{ feedback.feedback_id }}"></div></small>
+</small>
+<script>
+  // Retrieve the rating value from Django template syntax
+  var rating = '{{ feedback.rating }}'; // Default to 0 if rating is undefined
+
+  // Round the rating to the nearest half
+  var roundedRating = Math.round(rating * 2) / 2;
+
+  // Create HTML for star rating
+  var starRatingHTML = '';
+  for (var i = 1; i <= 5; i++) {
+    if (i <= roundedRating) {
+      // Full star
+      starRatingHTML += '<i class="fas fa-star"></i>';
+    } else if (i - 0.5 === roundedRating && roundedRating % 1 !== 0) {
+      // Half star
+      starRatingHTML += '<i class="fas fa-star-half-alt"></i>';
+    } else {
+      // Empty star
+      starRatingHTML += '<i class="far fa-star"></i>';
+    }
+  }
+
+  // Display the star rating
+ document.getElementById('starRating{{ feedback.feedback_id }}').innerHTML = starRatingHTML;
+</script>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                   
+                   
+                    
+                </div>
+            </div>
+        
+       
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+   
+
+    </div>
+     {% endif %}
+
         <!-- Team Start -->
         <div class="container-xxl pt-5 pb-3">
             <div class="container">
@@ -180,67 +258,7 @@ Home
             </div>
         </div>
         <!-- About End -->
-        <!-- Testimonial Start -->
-        <!-- <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
-            <div class="container">
-                <div class="text-center">
-                    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Testimonial</h5>
-                    <h1 class="mb-5">Our Clients Say!!!</h1>
-                </div>
-                <div class="owl-carousel testimonial-carousel">
-                    <div class="testimonial-item bg-transparent border rounded p-4">
-                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                        <div class="d-flex align-items-center">
-                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-1.jpg' %}" style="width: 50px; height: 50px;">
-                            <div class="ps-3">
-                                <h5 class="mb-1">Client Name</h5>
-                                <small>Profession</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item bg-transparent border rounded p-4">
-                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                        <div class="d-flex align-items-center">
-                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-2.jpg' %}" style="width: 50px; height: 50px;">
-                            <div class="ps-3">
-                                <h5 class="mb-1">Client Name</h5>
-                                <small>Profession</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item bg-transparent border rounded p-4">
-                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                        <div class="d-flex align-items-center">
-                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-3.jpg' %}" style="width: 50px; height: 50px;">
-                            <div class="ps-3">
-                                <h5 class="mb-1">Client Name</h5>
-                                <small>Profession</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item bg-transparent border rounded p-4">
-                        <i class="fa fa-quote-left fa-2x text-primary mb-3"></i>
-                        <p>Dolor et eos labore, stet justo sed est sed. Diam sed sed dolor stet amet eirmod eos labore diam</p>
-                        <div class="d-flex align-items-center">
-                            <img class="img-fluid flex-shrink-0 rounded-circle" src="{% static 'book_a_plate/img/testimonial-4.jpg' %}" style="width: 50px; height: 50px;">
-                            <div class="ps-3">
-                                <h5 class="mb-1">Client Name</h5>
-                                <small>Profession</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-       
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-   
-
-    </div> -->
-
+      
         
         </div>
 
