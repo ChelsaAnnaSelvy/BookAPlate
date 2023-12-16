@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Star Rating</title>
-    <style>
+{% extends 'customer/base.html'%} {% load static %} {% block title %} BookAPlate
+| RateUs {% endblock %} {% block head %}
+<style>
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -36,7 +32,7 @@
             left: 0;
             width: 1em;
             height: 1em;
-            color: gold;
+            color: #fea116;
         }
 
         .star-container .star.half:before {
@@ -46,27 +42,58 @@
             left: 0;
             width: 0.5em;
             overflow: hidden;
-            color: gold;
+            color: #fea116;
         }
 
         .star-container .star:hover:before,
         .star-container .star.clicked:before,
         .star-container .star.clicked.half:before {
             content: "\2605"; /* Unicode character for a filled star */
-            color: gold;
+            color:#fea116;
         }
     </style>
-</head>
-<body>
-
-<div class="star-container" onclick="handleRating(event)">
-    <div class="star" data-value="0.5"></div>
-    <div class="star" data-value="1.0"></div>
-    <div class="star" data-value="1.5"></div>
-    <div class="star" data-value="2.0"></div>
-    <div class="star" data-value="2.5"></div>
+{% endblock %} {% block content %}
+ 
+<div class="container-xxl position-relative p-0">
+  <div class="container-xxl py-5 bg-dark hero-header mb-5">
+    <div class="container text-center my-5 pt-5 pb-4">
+      <h1 class="display-3 text-white mb-3 animated slideInDown">
+        Rate Us
+      </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center text-uppercase">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">Booking History</a></li>
+          <li class="breadcrumb-item text-white active" aria-current="page">
+            Rate Us
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
 </div>
+<div class="container py-5">
 
+  <div class="row g-5">
+    <div class="col-lg-12 text-center">
+    <h5 class="section-title ff-secondary text-center text-primary fw-normal">Give Feedback</h5>
+    <p>Your opinion matters the most...</p>
+</div>
+   </div> 
+   <div class="row g-5">
+   <div class="col-lg-6 col-md-6 col-sm-6 text-center"><img src="{% static 'book_a_plate/img/feedback.jpg'%}" class="img-fluid"/></div>
+<div class="col-lg-6 col-md-6 col-sm-6 text-center">
+ <form
+                      method="post"
+                      action="{% url 'rate_us'%}"
+                      enctype="multipart/form-data"
+                    >
+                      {% csrf_token %}
+
+                      <div class="row g-3">
+                        
+                        <div class="col-md-12">
+                            
 <script>
     let rating = 0;
 
@@ -76,6 +103,7 @@
         if (starValue) {
             rating = parseFloat(starValue);
             updateStars();
+            updateRatingInput();
         }
     }
 
@@ -87,17 +115,58 @@
 
             if (rating >= starValue) {
                 star.classList.add('clicked');
-                star.classList.remove('half');
-            } else if (rating > starValue - 0.5) {
-                star.classList.add('half');
-                star.classList.remove('clicked');
             } else {
                 star.classList.remove('clicked');
-                star.classList.remove('half');
             }
         });
     }
-</script>
 
-</body>
-</html>
+    function updateRatingInput() {
+        const ratingInput = document.getElementById('rating');
+        ratingInput.value = rating;
+    }
+</script>
+<!-- Add a hidden input field to store the selected rating -->
+<input type="hidden" value="{{ rating }}" id="rating" name="rating"/>
+</div>
+                     <div class="col-md-12">
+                      <div class="star-container" onclick="handleRating(event)">
+    <div class="star" data-value="1.0"></div>
+    <div class="star" data-value="2.0"></div>
+    <div class="star" data-value="3.0"></div>
+    <div class="star" data-value="4.0"></div>
+    <div class="star" data-value="5.0"></div>
+</div>
+                    {% for field in form %}
+                    <div class="col-md-12">
+                      {{ field.label_tag }} {{ field }}{% if field.errors %}
+                      <ul class="errorlist">
+                        {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                        {% endfor %}
+                      </ul>
+                      {% endif %}
+                    </div>
+
+                    {% endfor %}
+                
+   
+                      </div>
+
+                        
+                        <div class="col-md-12">
+                              <button
+                            type="submit"
+                            class="btn btn-primary w-100 py-3"
+                          >
+                           SUBMIT YOUR REVIEW
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+
+</div>
+</div>
+   </div>
+   {% endblock %}
+   

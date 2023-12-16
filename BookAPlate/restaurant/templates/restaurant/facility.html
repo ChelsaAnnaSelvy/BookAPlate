@@ -59,75 +59,75 @@ BookAPlate | Facility {% endblock %} {% block head %}
               </thead>
               <tbody>
                 {% if facilities %} {% for facility in facilities %}
-                <tr>
-                  <th scope="row" class="text-center">
-                    {{ facility.facility_id }}
-                  </th>
-                  <td class="text-center">{{facility.facility_name}}</td>
-                  <td class="text-center">{{facility.facility_number}}</td>
-                  <td class="text-center">{{facility.seat_count}}</td>
-                  <td class="text-center">{{facility.seat_arrangement}}</td>
+                  <tr>
+                    <th scope="row" class="text-center">
+                      {{ facility.facility_id }}
+                    </th>
+                    <td class="text-center">{{facility.facility_name}}</td>
+                    <td class="text-center">{{facility.facility_number}}</td>
+                    <td class="text-center">{{facility.seat_count}}</td>
+                    <td class="text-center">{{facility.seat_arrangement}}</td>
 
-                  <td class="text-center">
-                    <div class="btn-group">
-                      <button
-                        type="button"
-                        class="btn btn-outline-primary dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                        id="my_actions"
-                      >
-                        <span class="bi bi-three-dots-vertical"></span>
-                      </button>
-                      <ul class="dropdown-menu">
-                        {% if logged_user.is_authenticated %}
-                        <li>
-                          <form
-                            method="POST"
-                            action="{% url 'edit_facility_item' %}"
-                          >
-                            {% csrf_token %}
-                            <button type="submit" class="dropdown-item">
-                              View
-                            </button>
-                            <input
-                              type="hidden"
-                              value="{{ facility.facility_id }}"
-                              name="facility_id"
-                              id="facility_id"
-                            />
-                          </form>
-                        </li>
-                        <li>
-                          <!-- Your form goes here -->
-                          <form
-                            method="POST"
-                            action="{% url 'delete_facility_item' %}"
-                          >
-                            {% csrf_token %}
-                            <button type="submit" class="dropdown-item">
-                              Delete
-                            </button>
+                    <td class="text-center">
+                      <div class="btn-group">
+                        <button
+                          type="button"
+                          class="btn btn-outline-primary dropdown-toggle"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                          id="my_actions"
+                        >
+                          <span class="bi bi-three-dots-vertical"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                          {% if logged_user.is_authenticated %}
+                          <li>
+                            <form
+                              method="POST"
+                              action="{% url 'edit_facility_item' %}"
+                            >
+                              {% csrf_token %}
+                              <button type="submit" class="dropdown-item">
+                                View
+                              </button>
+                              <input
+                                type="hidden"
+                                value="{{ facility.facility_id }}"
+                                name="facility_id"
+                                id="facility_id"
+                              />
+                            </form>
+                          </li>
+                          <li>
+                            <!-- Your form goes here -->
+                            <form
+                              method="POST"
+                              action="{% url 'delete_facility_item' %}"
+                            >
+                              {% csrf_token %}
+                              <button type="submit" class="dropdown-item">
+                                Delete
+                              </button>
 
-                            <input
-                              type="hidden"
-                              value="{{ facility.facility_id }}"
-                              name="facility_id"
-                              id="facility_id"
-                            />
-                          </form>
-                        </li>
-                        {% endif %}
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
+                              <input
+                                type="hidden"
+                                value="{{ facility.facility_id }}"
+                                name="facility_id"
+                                id="facility_id"
+                              />
+                            </form>
+                          </li>
+                          {% endif %}
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
                 {% endfor %} {% else %}
-                <tr>
-                  <th scope="row" colspan="6" class="text-center">
-                    <p>No records to display</p>
-                  </th>
-                </tr>
+                  <tr>
+                    <th scope="row" colspan="6" class="text-center">
+                      <p>No records to display</p>
+                    </th>
+                  </tr>
                 {% endif %}
               </tbody>
             </table>

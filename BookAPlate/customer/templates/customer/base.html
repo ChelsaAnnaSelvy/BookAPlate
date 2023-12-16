@@ -242,17 +242,7 @@
     <!-- Template Javascript -->
     <script src="{% static 'book_a_plate/js/main.js' %}"></script>
     
- {% if not logged_user.is_authenticated and request.session.logged_out %}
-    <script>
-       // Disable the back button
-        history.pushState(null, null, document.URL);
-        window.addEventListener('popstate', function () {
-            history.pushState(null, null, document.URL);
-        });
-        // Redirect to login page if the user has logged out
-        window.location.href = "{% url 'login' %}";
-    </script>
-{% endif %}
+ 
   
 
   </body>

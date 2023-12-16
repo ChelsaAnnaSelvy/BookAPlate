@@ -37,7 +37,7 @@
             {% csrf_token %}
   <div class="row g-5">
     <div class="col-lg-3 col-md-3 col-sm-3 mb-3"> 
-      <input type="date" class="form-control w-100 py-3" placeholder="DD-MM-YYYY" id="due_date" name="due_date" value="{{date}}"/>
+      <input type="date" class="form-control w-100 py-3" placeholder="DD-MM-YYYY" id="due_date" name="due_date" value="{{date}}" required/>
     <script>
   var dueDateInput = document.getElementById("due_date");
 
@@ -94,7 +94,16 @@
                 {% endfor%}
               </select>
           </div>
-          
+          <div class="col-lg-3 col-md-3 col-sm-3 mb-3">
+            <select class="form-select w-100 py-3" id="seating_arrangement" name="seating_arrangement" aria-label="Default select example" >
+               
+                {% for i in seating_arrangement %}
+                {% if i.0 != seating_arrangement %}
+                <option value="{{i.0}}">{{i.1}}</option>
+                {% endif %}
+                {% endfor%}
+              </select>
+          </div>
         <div class="col-lg-3 col-md-3 col-sm-3 mb-3">
                
             <input type="hidden" value="{{restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>

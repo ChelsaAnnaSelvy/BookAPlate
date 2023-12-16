@@ -67,7 +67,26 @@ BookAPLate | Restaurant List
         <button type="submit" class="dropdown-item">Details</button>        
         <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
       </form></li>
-   
+   <li> <form method="POST" action="{% url 'facility_list' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Facilities</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
+      <li> <form method="POST" action="{% url 'gallery_list' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Galleries</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
+      <li> <form method="POST" action="{% url 'booking' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Bookings</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
+      <li> <form method="POST" action="{% url 'feedbacks' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Feedbacks</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
   </ul>
 </div></td>
     </tr>
@@ -129,6 +148,26 @@ BookAPLate | Restaurant List
         <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
       </form>
     </li>
+      <li> <form method="POST" action="{% url 'facility_list' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Facilities</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
+      <li> <form method="POST" action="{% url 'gallery_list' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Galleries</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
+      <li> <form method="POST" action="{% url 'booking' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Bookings</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
+      <li> <form method="POST" action="{% url 'feedbacks' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Feedbacks</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
   </ul>
 </div>
       </td>
@@ -193,6 +232,26 @@ BookAPLate | Restaurant List
         <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
       </form>
     </li>
+      <li> <form method="POST" action="{% url 'facility_list' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Facilities</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
+      <li> <form method="POST" action="{% url 'gallery_list' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Galleries</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
+      <li> <form method="POST" action="{% url 'booking' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Bookings</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
+      <li> <form method="POST" action="{% url 'feedbacks' %}">
+        {% csrf_token %}
+        <button type="submit" class="dropdown-item">Feedbacks</button>
+        <input type="hidden" value="{{ restaurant.restaurant_id }}" name="restaurant_id" id="restaurant_id"/>
+      </form></li>
   </ul>
 </div>
 

@@ -90,22 +90,20 @@ def RestaurantProfileView(request):
     if request.method == 'POST':
         restaurant_id = request.POST.get('restaurant_id', 0)
         restaurant = get_object_or_404(Restaurant, restaurant_id=restaurant_id)
-         # Fetch facilities owned by the restaurant
-    facilities =FacilityDetails.objects.filter(restaurant=restaurant)
-
-    # Fetch bookings associated with the facilities
-    bookings = BookingDetails.objects.filter(facility__in=facilities)
-
-    # Fetch feedbacks associated with the bookings
-    feedbacks = Feedback.objects.filter(booking__in=bookings)
-    count=feedbacks.count()
-    rating= 0
-    if count !=0:
-        for feedback in feedbacks:
-            rating= rating+feedback.rating
-        rating=rating/count
         restaurant_user = restaurant.user
         galleries = Gallery.objects.filter(restaurant=restaurant)
+         # Fetch facilities owned by the restaurant
+        facilities =FacilityDetails.objects.filter(restaurant=restaurant)
+         # Fetch bookings associated with the facilities
+        bookings = BookingDetails.objects.filter(facility__in=facilities)
+        # Fetch feedbacks associated with the bookings        
+        feedbacks = Feedback.objects.filter(booking__in=bookings)
+        count=feedbacks.count()
+        rating= 0
+        if count !=0:
+            for feedback in feedbacks:
+                rating= rating+feedback.rating
+            rating=rating/count
         context = {
             'logged_user': logged_user,
             'customer': customer,
@@ -116,7 +114,9 @@ def RestaurantProfileView(request):
             'coins': coins,
             'feedbacks':feedbacks,
             'overall_rating':rating,
-            }
+            'review_count':feedbacks.count(),   
+            
+        }
         return render(request, 'customer/restaurant_profile.html', context)
 
 # Table view
@@ -127,9 +127,11 @@ def TableView(request):
     if request.method == 'POST':
         restaurant_id = request.POST.get('restaurant_id', 0)
         restaurant = get_object_or_404(Restaurant, restaurant_id=restaurant_id)
-        facilities = FacilityDetails.objects.filter(restaurant=restaurant, facility_name='Table')
         date = request.POST.get('due_date', None)
         meal_time = request.POST.get('meal_time', '')
+        seating_arrangement= request.POST.get('seating_arrangement', '')
+        facilities = FacilityDetails.objects.filter(restaurant=restaurant, facility_name='Table', seat_arrangement=seating_arrangement)
+        
 
         # Get booked facility IDs
         exclude_facility_ids = BookingDetails.objects.filter(date=date, meal_time=meal_time,status= 'Booked').values_list('facility__facility_id', flat=True)
@@ -147,6 +149,7 @@ def TableView(request):
             'date': date,
             'meal': meal_time,
             'coins': coins,
+            'seating_arrangement':FacilityDetails.SEATING_LOCATION_CHOICES,
         }
         return render(request, 'customer/view_table.html', context)
 
@@ -523,6 +526,7 @@ def ChangePasswordView(request):
 
     return render(request, 'customer/change_password.html', context)
 
+
 def FeedBackAndRating(request):
     logged_user, customer, coins = get_customer_and_coins(request)
 
@@ -558,6 +562,7 @@ def FeedBackAndRating(request):
     }
 
     return render(request, 'customer/feedback.html', context)
+
 
 def MyFeedbackList(request):
     logged_user, customer, coins = get_customer_and_coins(request)

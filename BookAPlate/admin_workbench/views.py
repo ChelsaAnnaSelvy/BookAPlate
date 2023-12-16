@@ -1,10 +1,13 @@
+import base64
 from datetime import datetime
+from io import BytesIO
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import update_session_auth_hash, logout
+import qrcode
 from.forms import ChangePasswordForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from .models import Customer,Restaurant,BookingDetails
+from .models import Customer,Restaurant,BookingDetails,FacilityDetails,BookingDetails,Gallery,Feedback
 from django.contrib import messages
 
 
@@ -158,4 +161,209 @@ def ChangePasswordView(request):
     }
 
     return render(request, 'admin_workbench/change_password.html', context)
+@login_required
+def FacilitiesView(request):
+    logged_user = request.user
+    restaurant = None  # Initialize restaurant outside of the if statement
 
+    if request.method == 'POST':
+        restaurant_id = request.POST.get('restaurant_id')  # Use get to avoid KeyError if not present
+        # You might want to add some validation for restaurant_id here
+
+        # Assuming restaurant_id is a unique identifier for the restaurant
+        restaurant = Restaurant.objects.filter(restaurant_id=restaurant_id).first()
+
+    if restaurant:
+        facilities = FacilityDetails.objects.filter(restaurant=restaurant)
+    else:
+        facilities = FacilityDetails.objects.none()  # Return an empty queryset if no restaurant is selected
+
+    context = {
+        'logged_user': logged_user,
+        'facilities': facilities,
+        'restaurant': restaurant,        
+    }
+
+    return render(request, 'admin_workbench/facilities.html', context)
+
+@login_required
+def GalleriesView(request):
+    logged_user = request.user
+    restaurant = None  # Initialize restaurant outside of the if statement
+
+    if request.method == 'POST':
+        restaurant_id = request.POST.get('restaurant_id')  # Use get to avoid KeyError if not present
+        # You might want to add some validation for restaurant_id here
+
+        # Assuming restaurant_id is a unique identifier for the restaurant
+        restaurant = Restaurant.objects.filter(restaurant_id=restaurant_id).first()
+
+    if restaurant:
+        galleries = Gallery.objects.filter(restaurant=restaurant)
+    else:
+        galleries = Gallery.objects.none()  # Return an empty queryset if no restaurant is selected
+
+    context = {
+        'logged_user': logged_user,
+        'galleries': galleries,
+        'restaurant': restaurant,        
+    }
+
+    return render(request, 'admin_workbench/gallery.html', context)
+
+@login_required
+def BookingHistoryView(request):
+    logged_user = request.user
+    restaurant = None  # Initialize restaurant outside of the if statement
+
+    if request.method == 'POST':
+        restaurant_id = request.POST.get('restaurant_id')  # Use get to avoid KeyError if not present
+        # You might want to add some validation for restaurant_id here
+
+        # Assuming restaurant_id is a unique identifier for the restaurant
+        restaurant = Restaurant.objects.filter(restaurant_id=restaurant_id).first()
+
+    if restaurant:
+        facilities = FacilityDetails.objects.filter(restaurant=restaurant)
+        bookings = BookingDetails.objects.filter(facility__restaurant=restaurant).order_by('date').distinct()
+        feedbacks=Feedback.objects.filter(booking__facility__restaurant=restaurant).distinct()
+    else:
+        facilities = FacilityDetails.objects.none()  # Return an empty queryset if no restaurant is selected
+
+    context = {
+        'logged_user': logged_user,
+        'facilities': facilities,
+        'bookings': bookings,
+        'restaurant': restaurant,
+        'feedbacks':feedbacks,
+    }
+
+    return render(request, 'admin_workbench/bookings.html', context)
+
+def generate_qr_code(data):
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=1,
+        border=1,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+
+    buffer = BytesIO()
+    img.save(buffer)
+    return buffer.getvalue()      
+
+@login_required
+def BookingReceiptView(request):
+    logged_user = request.user
+    
+
+    if request.method== 'POST':
+        booking_id = request.POST['booking_id']
+        
+        if booking_id != 0 :
+            booking= get_object_or_404(BookingDetails,booking_id=booking_id)
+            customer=booking.customer
+            facilities=booking.facility.all()
+            first_facility=booking.facility.first()
+            restaurant=first_facility.restaurant
+            my_facilities = " "
+            for facility in facilities:
+              my_facilities=my_facilities+ facility.facility_number +" "
+            # Generate QR code for the booking_id
+            # qr_code_data = f"Booking ID: {booking_id}"
+            if booking.meal_time == 'Breakfast':
+              time='8:00 AM - 12:00 PM'
+            elif booking.meal_time == 'Lunch':
+              time='12:00 PM - 4:00 PM'
+            else:
+              time='4:00 PM - 8:00 PM'
+            
+            qr_code_data = f"""           
+                        This is a receipt
+            ----------------------------------------------------                     
+            BOOKING ID:       {booking_id}
+            DATE OF BOOKING:  {booking.booked_date}
+            ----------------------------------------------------
+                        CUSTOMER DETAILS
+            ----------------------------------------------------
+            
+            Customer's Name: {customer.user.first_name} {customer.user.last_name}
+            Phone: {customer.phone}
+            Email: {customer.user.email}
+
+            ----------------------------------------------------
+                        BOOKING DETAILS
+            ----------------------------------------------------
+            
+            Date of Dining: {booking.date}
+            Meal: {booking.meal_time}
+            Time Allotted: {time}
+            Tables Reserved: { my_facilities}
+            Seats reserved: For {int(booking.coins_spend/10)} People
+            
+            ----------------------------------------------------
+                    RESTAURANT DETAILS                
+            ----------------------------------------------------
+            
+            Retaurant's Name: {logged_user.first_name}
+            Email: {logged_user.email}
+            Phone: {restaurant.phone}
+            Address:  {restaurant.address},
+                              {restaurant.place},
+                              {restaurant.state}. 
+                          
+            ----------------------------------------------------
+            Happy Dining!!! See You Soon...        
+            ----------------------------------------------------
+            
+            
+            
+            """
+            qr_code_image = generate_qr_code(qr_code_data)
+
+            # Convert the binary data to a base64-encoded string
+            qr_code_base64 = base64.b64encode(qr_code_image).decode("utf-8")
+            context={
+            'booking':booking,
+            'logged_user': logged_user,
+            'customer': customer,
+            'facilities':facilities,  
+            'head_count':int(booking.coins_spend/10), 
+            'restaurant':restaurant,
+            'qr_code':qr_code_base64,  
+            }
+            return render(request,'admin_workbench/booking_receipt.html',context)
+    
+    return render(request,'admin_workbench/booking_receipt.html')
+
+def FeedbackList(request):
+    logged_user = request.user
+    restaurant = None  # Initialize restaurant outside of the if statement
+
+    if request.method == 'POST':
+        restaurant_id = request.POST.get('restaurant_id')  # Use get to avoid KeyError if not present
+        # You might want to add some validation for restaurant_id here
+
+        # Assuming restaurant_id is a unique identifier for the restaurant
+        restaurant = Restaurant.objects.filter(restaurant_id=restaurant_id).first()
+
+    if restaurant:
+        facilities = FacilityDetails.objects.filter(restaurant=restaurant)
+        bookings = BookingDetails.objects.filter(facility__restaurant=restaurant).order_by('date').distinct()
+        feedbacks=Feedback.objects.filter(booking__facility__restaurant=restaurant).distinct()
+    else:
+        facilities = FacilityDetails.objects.none()  # Return an empty queryset if no restaurant is selected
+
+    context = {
+        'logged_user': logged_user,
+        'facilities': facilities,
+        'bookings': bookings,
+        'restaurant': restaurant,
+        'feedbacks':feedbacks,        
+    }
+
+    return render(request, 'admin_workbench/feedbacks.html', context)

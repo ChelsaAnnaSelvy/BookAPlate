@@ -1,0 +1,45 @@
+{% extends 'admin_workbench/base.html'%}
+{% block title %}
+BookAPLate | Gallery
+{% endblock %}
+{% block content %}
+
+<div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <h5 class="card-title fw-semibold mb-4">Gallery</h5>
+               <div class="row g-4 mt-4 mb-2">
+          {% if galleries %} {% for gallery in galleries %}
+          <div class="col-md-4">
+            <div class="wow fadeInUp" data-wow-delay="0.2s">
+              <div
+                class="card container-fluid"
+                style="height: 420px; overflow-y: auto"
+              >
+                <img
+                  class="card-img-top img-fluid pt-4"
+                  style="height: 300px"
+                  src="{{gallery.photo.url}}"
+                  alt="Card image cap"
+                />
+                <div class="card-body">
+                  <h5 class="card-title">{{gallery.title}}</h5>
+                  <p class="card-text">{{gallery.description}}</p>
+                  <small>{{gallery.category}} Item</small>
+                </div>
+               
+              </div>
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <div class="col-md-12 text-center"><p>No photos to display</p></div>
+          {% endif %}
+        </div>
+              
+            </div>
+          </div>
+</div>
+
+
+{% endblock %}
+

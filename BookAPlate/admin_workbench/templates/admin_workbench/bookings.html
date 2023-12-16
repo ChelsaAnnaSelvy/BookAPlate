@@ -1,0 +1,109 @@
+{% extends 'admin_workbench/base.html'%}
+{% block title %}
+BookAPLate | BookingHistory
+{% endblock %}
+{% block head %}
+<style>
+  /* Hide the Bootstrap dropdown arrow */
+  #my_actions::after {
+    display: none !important;
+  }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <h5 class="card-title fw-semibold mb-4">Bookings</h5>
+              <div class="card">
+                <div class="card-body p-4">
+                   <div class="table-responsive-sm">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Facilities Booked</th>
+                        <th scope="col">Contact Number</th>
+                        <th scope="col">Contact Email</th>
+                        <th scope="col">Current Status</th>                        
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if bookings %} {% for booking in bookings %}
+                      <tr>
+                        <th scope="row">{{ booking.booking_id }}</th>
+                        <td>{{booking.date}}</td>
+                        <td>
+                          {{booking.customer.user.first_name}}&nbsp;{{booking.customer.user.last_name}}
+                        </td>
+                        <td>{{ booking.facility.count }}</td>
+                        <td>{{ booking.customer.phone }}</td>
+                        <td>{{ booking.customer.user.email}}</td>
+                        {% if booking.status == 'Booked' %}
+                        <td><p class="btn btn-success">{{ booking.status }}</p></td>
+                        {% elif booking.status == 'Attended' %}
+                        <td><p class="btn btn-primary">{{ booking.status }}</p></td>
+                        {% elif booking.status == 'Cancelled' %}
+                        <td><p class="btn btn-danger">{{ booking.status }}</p></td>
+                        {% else %}
+                        <td><p class="btn btn-secondary">{{ booking.status }}</p></td>
+                        {% endif %}                                              
+                      
+                          <div class="btn-group">
+                            <button
+                              type="button"
+                              class="btn btn-outline-secondary dropdown-toggle"
+                              data-bs-toggle="dropdown"
+                              aria-expanded="false"
+                            >
+                              <i class="fas fa-cog"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li>
+                                <form
+                                  method="POST"
+                                  action="{% url 'booking_receipt' %}"
+                                >
+                                  {% csrf_token %}
+                                  <input
+                                    type="hidden"
+                                    value="{{ booking.booking_id }}"
+                                    name="booking_id"
+                                    id="booking_id"
+                                  />
+                                  <button
+                                    type="submit"
+                                    class="dropdown-item text-secondary"
+                                  >
+                                    BOOKING DETAILS
+                                  </button>
+                                </form>
+                              </li>
+                            </ul>
+                          </div>
+                        </td>
+                      </tr>
+                      {% endfor %} {% else %}
+                      <tr>
+                        <th scope="row" colspan="6" class="text-center">
+                          <p>No records to display</p>
+                        </th>
+                      </tr>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+
+{% endblock %}
+

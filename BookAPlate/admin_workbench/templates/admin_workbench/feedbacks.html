@@ -1,0 +1,89 @@
+{% extends 'admin_workbench/base.html'%}
+{% block title %}
+BookAPLate | FacilityList
+{% endblock %}
+{% block content %}
+
+<div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <h5 class="card-title fw-semibold mb-4">Feedbacks</h5>
+              <div class="card">
+                <div class="card-body p-4">
+                <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Booking ID</th>
+                  <th scope="col">Booking Date</th>
+                  <th scope="col">Review</th>
+                  <th scope="col">Rating</th>
+                 
+                </tr>
+              </thead>
+              <tbody>
+                {% if feedbacks %} {% for feedback in feedbacks %}
+                <tr>
+                  <th scope="row">{{ feedback.feedback_id }}</th>
+                  <td>{{feedback.booking.customer.user.first_name}}&nbsp;{{feedback.booking.customer.user.last_name}}</td>
+                  <td>{{feedback.booking.booking_id}}</td>
+                   <td>{{feedback.booking.date}}</td>
+                  <td>{{feedback.message}}</td>
+                  
+                  <td>
+                    <div id="starRating{{ feedback.feedback_id }}"></div>
+
+<script>
+  
+  // Retrieve the rating value from Django template syntax
+  var rating = '{{ feedback.rating }}'; // Default to 0 if rating is undefined
+
+  
+  // Round the rating to the nearest half
+  var roundedRating = Math.round(rating * 2) / 2;
+
+  // Create HTML for star rating
+  var starRatingHTML = '';
+  for (var i = 1; i <= 5; i++) {
+    if (i <= roundedRating) {
+      // Full star
+      starRatingHTML += '<i class="fas fa-star"></i>';
+    } else if (i - 0.5 === roundedRating) {
+      // Half star
+      starRatingHTML += '<i class="fas fa-star-half-alt"></i>';
+    } else {
+      // Empty star
+      starRatingHTML += '<i class="far fa-star"></i>';
+    }
+  }
+
+  // Display the star rating
+  document.getElementById('starRating{{ feedback.feedback_id }}').innerHTML = starRatingHTML;
+
+</script>
+                  </td>
+                  
+
+                  
+                </tr>
+                {% endfor %} 
+                {% else %}
+                <tr>
+                  <th scope="row" colspan="7" class="text-center">
+                    <p>No records to display</p>
+                  </th>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+
+{% endblock %}
+

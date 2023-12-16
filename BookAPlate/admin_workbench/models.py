@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
 
 # Define your models here
 
@@ -116,9 +117,8 @@ class FacilityDetails(models.Model):
     facility_number =models.CharField(max_length=10)
     seat_count = models.IntegerField(default=2)     
     SEATING_LOCATION_CHOICES = [
-        ('','Select Location'),
-        ('Outdoor','Outdoor'),
         ('Indoor','Indoor'),
+        ('Outdoor','Outdoor'),
        
     ]
     seat_arrangement =  models.CharField(max_length=100, choices=SEATING_LOCATION_CHOICES, default= 'Indoor',null=True) 
@@ -146,7 +146,26 @@ class BookingDetails(models.Model):
     facility = models.ManyToManyField(FacilityDetails, related_name='booking_facilities')
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     booked_date= models.DateField(auto_now_add=True)
+    def save(self, *args, **kwargs):
+        # Generate a custom booking ID
+        if not self.booking_id:
+            last_booking = BookingDetails.objects.order_by('-booking_id').first()
+            last_id = last_booking.booking_id if last_booking else 999
+            self.booking_id = last_id + 1
 
+        # Set the date and time components
+        now = datetime.now()
+        year_last_two_digits = str(now.year)[2:]
+        month = str(now.month).zfill(2)
+        day = str(now.day).zfill(2)
+        hour = str(now.hour).zfill(2)
+
+        # Concatenate the components to form the booking ID
+        self.booking_id = f"1000{year_last_two_digits}{month}{now.year}{day}{hour}"
+
+        # Call the original save method
+        super().save(*args, **kwargs)
+    
 class Coins(models.Model):
     coin_id = models.AutoField(primary_key=True)
     coin_quantity = models.IntegerField(default= 2000)

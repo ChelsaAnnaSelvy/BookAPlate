@@ -124,8 +124,9 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                         <th scope="col">Customer</th>
                         <th scope="col">Facilities Booked</th>
                         <th scope="col">Contact Number</th>
-                        <th scope="col">Current Status</th>                        
                         <th scope="col">Contact Email</th>
+                        <th scope="col">Current Status</th>                        
+                        
                       </tr>
                     </thead>
                     <tbody>
@@ -209,7 +210,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                         <th scope="col">Customer</th>
                         <th scope="col">Facilities Booked</th>
                         <th scope="col">Contact Number</th>
-                        <th scope="col">Contact Email</th>
+                         <th scope="col">Contact Email</th>   
                         <th scope="col">Actions</th>
                       </tr>
                     </thead>
@@ -309,7 +310,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                         <th scope="col">Customer</th>
                         <th scope="col">Facilities Booked</th>
                         <th scope="col">Contact Number</th>
-                        <th scope="col">Contact Email</th>
+                         <th scope="col">Contact Email</th>  
                         <th scope="col">Actions</th>
                       </tr>
                     </thead>
@@ -323,8 +324,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                         </td>
                         <td>{{ booking.facility.count }}</td>
                         <td>{{ booking.customer.phone }}</td>
-                        <td>{{ booking.customer.user.email}}</td>
-                        
+                        <td>{{ booking.customer.user.email}}</td>                        
                         <td>
                           <div class="btn-group">
                             <button
@@ -385,8 +385,8 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                         <th scope="col">Date</th>
                         <th scope="col">Customer</th>
                         <th scope="col">Facilities Booked</th>
-                        <th scope="col">Contact Number</th>
-                        <th scope="col">Contact Email</th>
+                        <th scope="col">Contact Number</th>                        
+                         <th scope="col">Contact Email</th>  
                         <th scope="col">Actions</th>
                       </tr>
                     </thead>
@@ -510,7 +510,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                                   </button>
                                 </form>
                               </li>
-                              <hr />
+                              
 
                             
                             </ul>

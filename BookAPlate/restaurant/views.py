@@ -59,6 +59,7 @@ def HomeView(request):
                 'restaurant_galleries':galleries.filter(category='Gallery'),
                 'feedbacks':feedbacks,
                 'overall_rating':rating,
+                'review_count':feedbacks.count(),
                 }
             return render(request, 'restaurant/home.html', context)
     else:

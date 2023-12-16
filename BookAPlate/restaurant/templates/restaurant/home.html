@@ -17,8 +17,8 @@ Home
         <div class="container-xxl py-5">
             <div class="container">
               <div class="row g-5">
-                 <div class="col-lg-10 text-center"></div>
-                  <div class="col-lg-2 text-center">
+                 <div class="col-lg-9 text-center"></div>
+                  <div class="col-lg-3 text-center">
           {% with overall_rating as value %}
             {% with integer_part=value|floatformat:0 %}
             {% for i in "12345" %}
@@ -36,6 +36,7 @@ Home
             <span>{{ value }}</span>
         {% endwith %}
     {% endwith %}
+    <small>({{review_count}} reviews)</small>
 </div>
 
   <div></div>

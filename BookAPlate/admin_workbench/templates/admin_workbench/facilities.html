@@ -1,0 +1,58 @@
+{% extends 'admin_workbench/base.html'%}
+{% block title %}
+BookAPLate | FacilityList
+{% endblock %}
+{% block content %}
+
+<div class="content-wrapper">
+          <div class="row">
+            <div class="col-md-12 grid-margin">
+              <h5 class="card-title fw-semibold mb-4">Facilities</h5>
+              <div class="card">
+                <div class="card-body p-4">
+                 <table class="table table-hover ">
+  
+    <thead>
+    <tr>
+        <th scope="row" class="text-center">ID</th>
+        <th scope="col" class="text-center">Facility Name</th>
+        <th scope="col" class="text-center">Facility Number</th>
+        <th scope="col" class="text-center">Number of Seats</th>
+        <th scope="col" class="text-center">Seat Arrangement</th>
+        <th scope="col" class="text-center"></th>     
+    </tr>
+  </thead>
+  <tbody>  
+    
+    {% if facilities %} 
+    {% for facility in facilities %}
+                <tr>
+                  <th scope="row" class="text-center">
+                    {{ facility.facility_id }}
+                  </th>
+                  <td class="text-center">{{facility.facility_name}}</td>
+                  <td class="text-center">{{facility.facility_number}}</td>
+                  <td class="text-center">{{facility.seat_count}}</td>
+                  <td class="text-center">{{facility.seat_arrangement}}</td>
+                </tr>
+                {% endfor %} 
+                {% else %}
+                <tr>
+                  <th scope="row" colspan="6" class="text-center">
+                    <p>No records to display</p>
+                  </th>
+                </tr>
+                {% endif %}
+    
+  </tbody>
+</table>
+
+                </div>
+              </div>
+            </div>
+          </div>
+</div>
+
+
+{% endblock %}
+
