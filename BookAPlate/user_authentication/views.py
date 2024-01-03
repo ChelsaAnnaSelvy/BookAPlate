@@ -77,8 +77,6 @@ def CustomerRegistrationView(request):
 
     return render(request, 'user_authentication/customer_registration.html', {'form': userform, 'form1': customerdetailsform})
 
-
-
 # View for registering Restaurants
 def RestaurantRegistrationView(request):
     if request.method == 'POST':
@@ -99,8 +97,6 @@ def RestaurantRegistrationView(request):
         restaurantdetailsform = RestaurantRegistrationForm()
 
     return render(request, 'user_authentication/restaurant_registration.html', {'form': userform, 'form1': restaurantdetailsform})
-
-
 
 # View for generating and sending an email with a random code
 def generate_and_send(request):
@@ -162,7 +158,6 @@ def VerifyOneTimePassword(request):
             messages.error(request, 'Invalid code. Please try again.')
     
     return render(request, 'user_authentication/otp.html')
-
 
 # View for resetting the password
 

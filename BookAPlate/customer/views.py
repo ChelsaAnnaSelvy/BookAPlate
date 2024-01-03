@@ -244,6 +244,7 @@ def BookTable(request):
             meal_time=meal_time,
             customer=customer,
             coins_spend= coin_count,
+            booked_date=datetime.now()
         )
 
         # Get or create Facility instances and add them to the booking
@@ -324,12 +325,28 @@ def CancelBooking(request):
         return redirect('my_reservations')
  
 #Helper function to generate qrcode 
+# def generate_qr_code(data):
+#     qr = qrcode.QRCode(
+#         version=1,
+#         error_correction=qrcode.constants.ERROR_CORRECT_L,
+#         box_size=1,
+#         border=1,
+#     )
+#     qr.add_data(data)
+#     qr.make(fit=True)
+
+#     img = qr.make_image(fill_color="black", back_color="white")
+
+#     buffer = BytesIO()
+#     img.save(buffer)
+#     return buffer.getvalue()    
+    # Helper function to generate qrcode
 def generate_qr_code(data):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=1,
-        border=1,
+        box_size=2,
+        border=4,
     )
     qr.add_data(data)
     qr.make(fit=True)
@@ -337,8 +354,9 @@ def generate_qr_code(data):
     img = qr.make_image(fill_color="black", back_color="white")
 
     buffer = BytesIO()
-    img.save(buffer)
-    return buffer.getvalue()      
+    img.save(buffer, format="PNG")  # Explicitly set the image format to PNG
+
+    return buffer.getvalue()  
 
 #Receipt for Booking 
 @login_required
@@ -385,7 +403,7 @@ def BookingDetailsView(request):
             Meal: {booking.meal_time}
             Time Allotted: {time}
             Tables Reserved: { my_facilities}
-            Seats reserved: For {int(booking.coins_spend/10)} People
+            Seats reserved: For {int(booking.coins_spend)/30} People
             
             ----------------------------------------------------
                     RESTAURANT DETAILS                
@@ -415,7 +433,7 @@ def BookingDetailsView(request):
             'customer': customer,
             'coins': coins, 
             'facilities':facilities,  
-            'head_count':int(booking.coins_spend/10), 
+            'head_count':int(booking.coins_spend/30), 
             'restaurant':restaurant,
             'qr_code':qr_code_base64,  
             }
@@ -526,34 +544,59 @@ def ChangePasswordView(request):
 
     return render(request, 'customer/change_password.html', context)
 
-
+@login_required
 def FeedBackAndRating(request):
+    # Assuming get_customer_and_coins is a function you've defined elsewhere
     logged_user, customer, coins = get_customer_and_coins(request)
 
     if request.method == 'POST':
-        booking_id=request.POST.get('booking_id',0) 
-        if booking_id!=0:
-            request.session['booking_id']=booking_id
-        booking_id=request.session.get('booking_id',0)
-        booking=get_object_or_404(BookingDetails, booking_id=booking_id)
+        # Get the booking_id from the POST data
+        booking_id = request.POST.get('booking_id', 0) 
+
+        # Store the booking_id in the session for later retrieval
+        if booking_id != 0:
+            request.session['booking_id'] = booking_id
+
+        # Retrieve the booking_id from the session
+        booking_id = int(request.session.get('booking_id', 0))
+
+        # Get the BookingDetails object using the booking_id
+        booking = get_object_or_404(BookingDetails, booking_id=booking_id)
         
+        # Initialize the form with POST data
         form = FeedbackForm(request.POST)              
         
         if form.is_valid():
-            feedback = form.save(commit= False)
-            feedback.booking= booking
-            feedback.rating=request.POST['rating']
+            # Create a Feedback object but don't save it to the database yet
+            feedback = form.save(commit=False)
+
+            # Associate the feedback with the booking
+            feedback.booking = booking
+
+            # Set the rating from the POST data
+            feedback.rating = request.POST['rating']
+
+            # Save the feedback object to the database
             feedback.save()
-            coins.coin_quantity=coins.coin_quantity + 50
-            coins.save()                  
-            booking.status='Completed'
-            booking.save()
+
+            # Update the coins for the customer
+            coins.coin_quantity = coins.coin_quantity + 50
+            coins.save()
+
+            # Update the booking status to 'Completed'
+            my_booking =BookingDetails.objects.get(booking_id=booking_id)
+            my_booking.status = 'Completed'
+            my_booking.save()
+
+            # Display a success message and redirect to 'my_feedbacks'
             messages.success(request, 'You have successfully provided feedback for the services provided!')
-            return redirect('feedbacks')
+            return redirect('my_feedbacks')
         
     else:
+        # If the request method is not POST, initialize an empty form
         form = FeedbackForm()
 
+    # Prepare the context for rendering the template
     context = {
         'form': form,
         'logged_user': logged_user,
@@ -561,9 +604,10 @@ def FeedBackAndRating(request):
         'coins': coins, 
     }
 
+    # Render the feedback.html template with the context
     return render(request, 'customer/feedback.html', context)
 
-
+@login_required
 def MyFeedbackList(request):
     logged_user, customer, coins = get_customer_and_coins(request)
     

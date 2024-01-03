@@ -145,11 +145,16 @@ class BookingDetails(models.Model):
     coins_spend = models.IntegerField(default=0)
     facility = models.ManyToManyField(FacilityDetails, related_name='booking_facilities')
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    booked_date= models.DateField(auto_now_add=True)
+    booked_date= models.DateField()
+    from datetime import datetime
+
+class YourModel(models.Model):
+    # your model fields here
+
     def save(self, *args, **kwargs):
         # Generate a custom booking ID
         if not self.booking_id:
-            last_booking = BookingDetails.objects.order_by('-booking_id').first()
+            last_booking = YourModel.objects.order_by('-booking_id').first()
             last_id = last_booking.booking_id if last_booking else 999
             self.booking_id = last_id + 1
 
@@ -159,12 +164,16 @@ class BookingDetails(models.Model):
         month = str(now.month).zfill(2)
         day = str(now.day).zfill(2)
         hour = str(now.hour).zfill(2)
+        minute = str(now.minute).zfill(2)
+        second = str(now.second).zfill(2)
+        microsecond = now.microsecond
 
         # Concatenate the components to form the booking ID
-        self.booking_id = f"1000{year_last_two_digits}{month}{now.year}{day}{hour}"
+        self.booking_id = f"1000{year_last_two_digits}{month}{day}{hour}{minute}{second}{microsecond}"
 
         # Call the original save method
         super().save(*args, **kwargs)
+
     
 class Coins(models.Model):
     coin_id = models.AutoField(primary_key=True)

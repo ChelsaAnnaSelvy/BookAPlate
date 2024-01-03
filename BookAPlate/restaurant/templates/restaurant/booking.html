@@ -15,7 +15,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
         <ol class="breadcrumb justify-content-center text-uppercase">
           <li class="breadcrumb-item"><a href="#">Home</a></li>
           <li class="breadcrumb-item text-white active" aria-current="page">
-            Bookings History
+            Booking History
           </li>
         </ol>
       </nav>
@@ -163,7 +163,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                               <li>
                                 <form
                                   method="POST"
-                                  action="{% url 'booking_receipt' %}"
+                                  action="{% url 'receipt' %}"
                                 >
                                   {% csrf_token %}
                                   <input
@@ -240,7 +240,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                               <li>
                                 <form
                                   method="POST"
-                                  action="{% url 'booking_receipt' %}"
+                                  action="{% url 'receipt' %}"
                                 >
                                   {% csrf_token %}
                                   <input
@@ -339,7 +339,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                               <li>
                                 <form
                                   method="POST"
-                                  action="{% url 'booking_receipt' %}"
+                                  action="{% url 'receipt' %}"
                                 >
                                   {% csrf_token %}
                                   <input
@@ -493,7 +493,7 @@ BookAPlate | OurReservations {% endblock %} {% block head %}
                               <li>
                                 <form
                                   method="POST"
-                                  action="{% url 'booking_receipt' %}"
+                                  action="{% url 'receipt' %}"
                                 >
                                   {% csrf_token %}
                                   <input

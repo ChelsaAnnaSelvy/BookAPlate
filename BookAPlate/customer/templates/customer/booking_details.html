@@ -43,36 +43,13 @@
           </tr>
           <tr>
             <th scope="row" colspan="2" class="ps-2">
-              <h5>BookingNumber:{{booking.booking_id}}</h5>
+              <h5>BookingNumber:&nbsp;&nbsp;{{booking.booking_id}}</h5>
             </th>
             <th colspan="2"><p>Date:&nbsp;&nbsp;{{booking.booked_date}}</p></th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th colspan="4" class="ps-2">
-              <p class="text-primary">YOUR DETAILS</p>
-            </th>
-          </tr>
-          <tr>
-            <th scope="row" colspan="2" class="ps-5">Name</th>
-            <td>
-              {{logged_user.first_name}}&nbsp;{{logged_user.last_name}}
-            </td>
-            <th rowspan="3" class="text-center">
-              {% if qr_code %}
-              <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />
-              {% endif %}
-            </th>
-          </tr>
-          <tr>
-            <th scope="row" colspan="2" class="ps-5">Email</th>
-            <td>{{logged_user.email}}</td>
-          </tr>
-          <tr>
-            <th scope="row" colspan="2" class="ps-5">Phone Number</th>
-            <td>{{customer.phone}}</td>
-          </tr>
+          
           <tr>
             <th colspan="4" class="ps-2">
               <p class="text-primary">BOOKING DETAILS</p>
@@ -138,11 +115,17 @@
           <tr>
             <th scope="row" colspan="2" class="ps-5">Address</th>
             <td colspan="2">
-              {{restaurant.address}},<br />
-              {{restaurant.place}},<br />
-              {{restaurant.state}}<br />
+              {{restaurant.address}},
+              {{restaurant.place}},
+              {{restaurant.state}}
             </td>
           </tr>
+          <tr>
+            <th scope="row" colspan="4" class="ps-2 text-center">
+              {% if qr_code %}
+              <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />
+              {% endif %}
+            </th></tr>
         </tbody>
       </table>
     </div>

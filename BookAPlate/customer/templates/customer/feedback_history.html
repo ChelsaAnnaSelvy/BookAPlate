@@ -57,7 +57,7 @@
 <script>
   
   // Retrieve the rating value from Django template syntax
-  var rating = {{ feedback.rating }}; // Default to 0 if rating is undefined
+  var rating = '{{ feedback.rating }}'; // Default to 0 if rating is undefined
 
   
   // Round the rating to the nearest half

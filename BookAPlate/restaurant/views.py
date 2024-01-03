@@ -313,7 +313,7 @@ def generate_qr_code(data):
     return buffer.getvalue()      
 
 @login_required
-def BookingReceiptView(request):
+def ReceiptView(request):
     logged_user = request.user
     restaurant = Restaurant.objects.filter(user=logged_user).first()
     if request.method== 'POST':
@@ -391,9 +391,9 @@ def BookingReceiptView(request):
             'restaurant':restaurant,
             'qr_code':qr_code_base64,  
             }
-            return render(request,'restaurant/booking_receipt.html',context)
+            return render(request,'restaurant/receipt.html',context)
     
-    return render(request,'restaurant/booking_receipt.html')
+    return render(request,'restaurant/receipt.html')
 
 @login_required
 def MarkAsAttendedView(request):
