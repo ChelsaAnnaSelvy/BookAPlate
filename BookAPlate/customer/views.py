@@ -325,22 +325,6 @@ def CancelBooking(request):
         return redirect('my_reservations')
  
 #Helper function to generate qrcode 
-# def generate_qr_code(data):
-#     qr = qrcode.QRCode(
-#         version=1,
-#         error_correction=qrcode.constants.ERROR_CORRECT_L,
-#         box_size=1,
-#         border=1,
-#     )
-#     qr.add_data(data)
-#     qr.make(fit=True)
-
-#     img = qr.make_image(fill_color="black", back_color="white")
-
-#     buffer = BytesIO()
-#     img.save(buffer)
-#     return buffer.getvalue()    
-    # Helper function to generate qrcode
 def generate_qr_code(data):
     qr = qrcode.QRCode(
         version=1,
@@ -385,7 +369,7 @@ def BookingDetailsView(request):
             qr_code_data = f"""           
                         This is a receipt
             ----------------------------------------------------                     
-            BOOKING ID:       {booking_id}
+            BOOKING ID:{booking_id}
             DATE OF BOOKING:  {booking.booked_date}
             ----------------------------------------------------
                         CUSTOMER DETAILS

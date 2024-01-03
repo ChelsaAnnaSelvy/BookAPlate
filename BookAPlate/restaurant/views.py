@@ -300,8 +300,8 @@ def generate_qr_code(data):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=1,
-        border=1,
+        box_size=2,
+        border=4,
     )
     qr.add_data(data)
     qr.make(fit=True)
@@ -309,8 +309,9 @@ def generate_qr_code(data):
     img = qr.make_image(fill_color="black", back_color="white")
 
     buffer = BytesIO()
-    img.save(buffer)
-    return buffer.getvalue()      
+    img.save(buffer, format="PNG")  # Explicitly set the image format to PNG
+
+    return buffer.getvalue()  
 
 @login_required
 def ReceiptView(request):
@@ -340,7 +341,7 @@ def ReceiptView(request):
             qr_code_data = f"""           
                         This is a receipt
             ----------------------------------------------------                     
-            BOOKING ID:       {booking_id}
+            BOOKING ID:{booking_id}
             DATE OF BOOKING:  {booking.booked_date}
             ----------------------------------------------------
                         CUSTOMER DETAILS
@@ -358,7 +359,7 @@ def ReceiptView(request):
             Meal: {booking.meal_time}
             Time Allotted: {time}
             Tables Reserved: { my_facilities}
-            Seats reserved: For {int(booking.coins_spend/10)} People
+            Seats reserved: For {int(booking.coins_spend/30)} People
             
             ----------------------------------------------------
                     RESTAURANT DETAILS                
@@ -387,7 +388,7 @@ def ReceiptView(request):
             'logged_user': logged_user,
             'customer': customer,
             'facilities':facilities,  
-            'head_count':int(booking.coins_spend/10), 
+            'head_count':int(booking.coins_spend/30), 
             'restaurant':restaurant,
             'qr_code':qr_code_base64,  
             }

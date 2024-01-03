@@ -5,39 +5,39 @@
 
 {% endblock %}
 {% block content %}
- 
-  <div class="container-xxl position-relative p-0">
-    <div class="container-xxl py-5 bg-dark hero-header mb-5">
-      <div class="container text-center my-5 pt-5 pb-4">
-        <h1 class="display-3 text-white mb-3 animated slideInDown">
-          Booking Receipt
-        </h1>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb justify-content-center text-uppercase">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">My Booking</a></li>
-            <li class="breadcrumb-item"><a href="#"> Details</a></li>
-            <li class="breadcrumb-item text-white active" aria-current="page">
-              Booking Receipt
-            </li>
-          </ol>
-        </nav>
-      </div>
+<div class="container-xxl position-relative p-0">
+  <div class="container-xxl py-5 bg-dark hero-header mb-5">
+    <div class="container text-center my-5 pt-5 pb-4">
+      <h1 class="display-3 text-white mb-3 animated slideInDown">
+        Booking Receipt
+      </h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb justify-content-center text-uppercase">
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">My BookingS</a></li>
+          <li class="breadcrumb-item"><a href="#"> Receipt</a></li>
+          <li class="breadcrumb-item text-white active" aria-current="page">
+            Booking Receipt
+          </li>
+        </ol>
+      </nav>
     </div>
   </div>
+</div>
+
   <div class="container py-5">
   <div class="row g-5">
-    <div class="col-sm-12 col-md-12 col-lg-12">
+    <div class="col-sm-12 col-md-12 col-lg-12 g-5" >
       <!-- Your table content goes here -->
       <table class="table table-responsive" id="print_table">
         <thead>
           <tr>
-            <td scope="row" colspan="4" class="text-center">
+            <td scope="row" colspan="2" class="text-center">
               <small>This is a receipt</small>
             </td>
           </tr>
           <tr>
-            <th scope="row" colspan="4" class="ps-2">
+            <th scope="row" colspan="2" class="ps-2">
               <h1 class="text-primary m-0">
                 <i class="fa fa-utensils me-3"></i>BookAPlate
               </h1>
@@ -46,69 +46,65 @@
             
           </tr>
           <tr>
-            <th scope="row" colspan="2" class="ps-2">
+            <th scope="row"  class="ps-2">
               <h5>BookingNumber:{{booking.booking_id}}</h5>
             </th>
-            <th colspan="2"><p>Date:&nbsp;&nbsp;{{booking.booked_date}}</p></th>
+            <th ><p>Date:&nbsp;&nbsp;{{booking.booked_date}}</p></th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th colspan="4" class="ps-2">
-              <p class="text-primary">YOUR DETAILS</p>
+            <th colspan="2" class="ps-2">
+              <p class="text-primary">CUSTOMER DETAILS</p>
             </th>
           </tr>
           <tr>
-            <th scope="row" colspan="2" class="ps-5">Name</th>
+            <th scope="row"  class="ps-5">Name</th>
             <td>
               {{logged_user.first_name}}&nbsp;{{logged_user.last_name}}
             </td>
-            <th rowspan="3" class="text-center">
-              {% if qr_code %}
-              <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />
-              {% endif %}
-            </th>
+            
           </tr>
           <tr>
-            <th scope="row" colspan="2" class="ps-5">Email</th>
+            <th scope="row"  class="ps-5">Email</th>
             <td>{{logged_user.email}}</td>
           </tr>
           <tr>
-            <th scope="row" colspan="2" class="ps-5">Phone Number</th>
+            <th scope="row"  class="ps-5">Phone Number</th>
             <td>{{customer.phone}}</td>
           </tr>
           <tr>
-            <th colspan="4" class="ps-2">
+            <th colspan="2" class="ps-2">
               <p class="text-primary">BOOKING DETAILS</p>
             </th>
           </tr>
           <tr>
-            <th scope="row" colspan="2" class="ps-5">Date</th>
-            <td colspan="2">{{booking.date}}</td>
+            <th scope="row"  class="ps-5">Date</th>
+            <td >{{booking.date}}</td>
           </tr>
           <tr>
-            <th scope="row" colspan="2" class="ps-5">Meal</th>
-            <td colspan="2">{{booking.meal_time}}</td>
+            <th scope="row"  class="ps-5">Meal</th>
+            <td >{{booking.meal_time}}</td>
           </tr>
           {% if booking.meal_time == 'Breakfast' %}
           <tr>
-            <th scope="row" colspan="2" class="ps-5">Time</th>
-            <td colspan="2"><p>8:00 AM - 12:00 PM</p></td>
+            <th scope="row"  class="ps-5">Time</th>
+            <td ><p>8:00 AM - 12:00 PM</p></td>
           </tr>
           {% elif booking.meal_time == 'Lunch' %}
           <tr>
-            <th scope="row" colspan="2" class="ps-5">Time</th>
-            <td colspan="2"><p>12:00 PM - 4:00 PM</p></td>
+            <th scope="row"  class="ps-5">Time</th>
+            <td ><p>12:00 PM - 4:00 PM</p></td>
           </tr>
           {% else %}
           <tr>
-            <th scope="row" colspan="2" class="ps-5">Time</th>
-            <td colspan="2"><p>4:00 PM - 8:00 PM</p></td>
+            <th scope="row"  class="ps-5">Time</th>
+            <td ><p>4:00 PM - 8:00 PM</p></td>
           </tr>
           {% endif %}
           <tr>
-            <th scope="row" colspan="2" class="ps-5">Tables Reserved</th>
-            <td colspan="2">
+            <th scope="row"  class="ps-5">Tables Reserved</th>
+            <td >
               <div class="row">
                 {% for facility in facilities %}
                 <div class="col-sm-2">{{ facility.facility_number }}&nbsp;</div>
@@ -117,36 +113,16 @@
             </td>
           </tr>
           <tr>
-            <th scope="row" colspan="2" class="ps-5">Seats Reserved</th>
-            <td colspan="2">{{head_count}} people</td>
+            <th scope="row"  class="ps-5">Seats Reserved</th>
+            <td >{{head_count}} people</td>
           </tr>
-          <tr>
-            <th colspan="4">
-              <p class="text-primary ps-2">RESTAURANT DETAILS</p>
-            </th>
-          </tr>
-          <tr>
-            <th scope="row" colspan="2" class="ps-5">Name of the Restaurant</th>
-            <td colspan="2">
-              {{restaurant.user.first_name}}&nbsp;{{restaurant.user.last_name}}
-            </td>
-          </tr>
-          <tr>
-            <th scope="row" colspan="2" class="ps-5">Email</th>
-            <td colspan="2">{{restaurant.user.email}}</td>
-          </tr>
-          <tr>
-            <th scope="row" colspan="2" class="ps-5">Phone Number</th>
-            <td colspan="2">{{restaurant.phone}}</td>
-          </tr>
-          <tr>
-            <th scope="row" colspan="2" class="ps-5">Address</th>
-            <td colspan="2">
-              {{restaurant.address}},<br />
-              {{restaurant.place}},<br />
-              {{restaurant.state}}<br />
-            </td>
-          </tr>
+          
+         <tr>
+              <th scope="row" colspan="4" class="ps-2 text-center">
+            {% if qr_code %}
+            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />
+            {% endif %}
+          </th></tr>
         </tbody>
       </table>
     </div>
